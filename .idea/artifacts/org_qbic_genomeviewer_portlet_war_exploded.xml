@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="org.qbic.genomeviewer.portlet:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/org_qbic_genomeviewer_portlet_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="org.qbic.genomeviewer.portlet/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="org.qbic.genomeviewer.portlet" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Vaadin Server" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
