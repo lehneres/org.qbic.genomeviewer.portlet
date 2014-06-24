@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="org.qbic.genomeviewer.portlet:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/org_qbic_genomeviewer_portlet_war</output-path>
+    <root id="archive" name="org.qbic.genomeviewer.portlet_war.war">
+      <element id="artifact" artifact-name="org.qbic.genomeviewer.portlet:war exploded" />
+    </root>
+  </artifact>
+</component>

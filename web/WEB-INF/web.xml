@@ -8,7 +8,7 @@
         <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
         <init-param>
             <param-name>UI</param-name>
-            <param-value>org.qbic.GenomeViewerUI</param-value>
+            <param-value>org.qbic.genomeviewer.portlet</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

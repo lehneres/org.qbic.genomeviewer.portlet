@@ -1,5 +1,5 @@
-/*! genome-viewer June 14, 2014 13:59:53 */
-/*! lib June 14, 2014 13:59:51 */
+/*! genome-viewer June 24, 2014 10:07:42 */
+/*! lib June 24, 2014 10:07:40 */
 /*
  * Copyright (c) 2012 Francisco Salavert (ICM-CIPF)
  * Copyright (c) 2012 Ruben Sanchez (ICM-CIPF)
@@ -25,6 +25,11 @@ var Utils = {
     //properties
     characters: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
 
+    number: {
+        sign: function (x) {
+            return x ? x < 0 ? -1 : 1 : 0;
+        }
+    },
     //Methods
     formatNumber: function ( position ) {
         return position.toString().replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1," );
@@ -220,7 +225,7 @@ Utils.images = {
 //    bucket: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB90BCg4hBcbCoOMAAABsSURBVDjLY2RgYFBjYGCIZCAPLGeBam4g0wAGJgYKARMDA8NZCvSfZYQy6sk0oJEFiUNqODRQLQxGDYCAb2To/YZswEsyDHiJbMAHMgz4gO6F5aTkQpgXYElZkoGBgZeEbL2cgYHhMwMDw3MA93ARk+mSg4gAAAAASUVORK5CYII=",
     bucket: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QkQDC8RTstxRAAAAGBJREFUOMtjYBgswIWBgeE/idiFgYGBgRFqwH8GBoYGEi1tYGBgYGRBE9QjUvMlGANmgCsDA8NuElzRANXDwAQV2ENGuO1BNoBsMGoAlQ3wJTIdNEDVYgU+ROQBH6rmQgAWgB19xco60wAAAABJRU5ErkJggg==",
 //    dir: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAAKT2lDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNnVFPpFj333vRCS4iAlEtvUhUIIFJCi4AUkSYqIQkQSoghodkVUcERRUUEG8igiAOOjoCMFVEsDIoK2AfkIaKOg6OIisr74Xuja9a89+bN/rXXPues852zzwfACAyWSDNRNYAMqUIeEeCDx8TG4eQuQIEKJHAAEAizZCFz/SMBAPh+PDwrIsAHvgABeNMLCADATZvAMByH/w/qQplcAYCEAcB0kThLCIAUAEB6jkKmAEBGAYCdmCZTAKAEAGDLY2LjAFAtAGAnf+bTAICd+Jl7AQBblCEVAaCRACATZYhEAGg7AKzPVopFAFgwABRmS8Q5ANgtADBJV2ZIALC3AMDOEAuyAAgMADBRiIUpAAR7AGDIIyN4AISZABRG8lc88SuuEOcqAAB4mbI8uSQ5RYFbCC1xB1dXLh4ozkkXKxQ2YQJhmkAuwnmZGTKBNA/g88wAAKCRFRHgg/P9eM4Ors7ONo62Dl8t6r8G/yJiYuP+5c+rcEAAAOF0ftH+LC+zGoA7BoBt/qIl7gRoXgugdfeLZrIPQLUAoOnaV/Nw+H48PEWhkLnZ2eXk5NhKxEJbYcpXff5nwl/AV/1s+X48/Pf14L7iJIEyXYFHBPjgwsz0TKUcz5IJhGLc5o9H/LcL//wd0yLESWK5WCoU41EScY5EmozzMqUiiUKSKcUl0v9k4t8s+wM+3zUAsGo+AXuRLahdYwP2SycQWHTA4vcAAPK7b8HUKAgDgGiD4c93/+8//UegJQCAZkmScQAAXkQkLlTKsz/HCAAARKCBKrBBG/TBGCzABhzBBdzBC/xgNoRCJMTCQhBCCmSAHHJgKayCQiiGzbAdKmAv1EAdNMBRaIaTcA4uwlW4Dj1wD/phCJ7BKLyBCQRByAgTYSHaiAFiilgjjggXmYX4IcFIBBKLJCDJiBRRIkuRNUgxUopUIFVIHfI9cgI5h1xGupE7yAAygvyGvEcxlIGyUT3UDLVDuag3GoRGogvQZHQxmo8WoJvQcrQaPYw2oefQq2gP2o8+Q8cwwOgYBzPEbDAuxsNCsTgsCZNjy7EirAyrxhqwVqwDu4n1Y8+xdwQSgUXACTYEd0IgYR5BSFhMWE7YSKggHCQ0EdoJNwkDhFHCJyKTqEu0JroR+cQYYjIxh1hILCPWEo8TLxB7iEPENyQSiUMyJ7mQAkmxpFTSEtJG0m5SI+ksqZs0SBojk8naZGuyBzmULCAryIXkneTD5DPkG+Qh8lsKnWJAcaT4U+IoUspqShnlEOU05QZlmDJBVaOaUt2ooVQRNY9aQq2htlKvUYeoEzR1mjnNgxZJS6WtopXTGmgXaPdpr+h0uhHdlR5Ol9BX0svpR+iX6AP0dwwNhhWDx4hnKBmbGAcYZxl3GK+YTKYZ04sZx1QwNzHrmOeZD5lvVVgqtip8FZHKCpVKlSaVGyovVKmqpqreqgtV81XLVI+pXlN9rkZVM1PjqQnUlqtVqp1Q61MbU2epO6iHqmeob1Q/pH5Z/YkGWcNMw09DpFGgsV/jvMYgC2MZs3gsIWsNq4Z1gTXEJrHN2Xx2KruY/R27iz2qqaE5QzNKM1ezUvOUZj8H45hx+Jx0TgnnKKeX836K3hTvKeIpG6Y0TLkxZVxrqpaXllirSKtRq0frvTau7aedpr1Fu1n7gQ5Bx0onXCdHZ4/OBZ3nU9lT3acKpxZNPTr1ri6qa6UbobtEd79up+6Ynr5egJ5Mb6feeb3n+hx9L/1U/W36p/VHDFgGswwkBtsMzhg8xTVxbzwdL8fb8VFDXcNAQ6VhlWGX4YSRudE8o9VGjUYPjGnGXOMk423GbcajJgYmISZLTepN7ppSTbmmKaY7TDtMx83MzaLN1pk1mz0x1zLnm+eb15vft2BaeFostqi2uGVJsuRaplnutrxuhVo5WaVYVVpds0atna0l1rutu6cRp7lOk06rntZnw7Dxtsm2qbcZsOXYBtuutm22fWFnYhdnt8Wuw+6TvZN9un2N/T0HDYfZDqsdWh1+c7RyFDpWOt6azpzuP33F9JbpL2dYzxDP2DPjthPLKcRpnVOb00dnF2e5c4PziIuJS4LLLpc+Lpsbxt3IveRKdPVxXeF60vWdm7Obwu2o26/uNu5p7ofcn8w0nymeWTNz0MPIQ+BR5dE/C5+VMGvfrH5PQ0+BZ7XnIy9jL5FXrdewt6V3qvdh7xc+9j5yn+M+4zw33jLeWV/MN8C3yLfLT8Nvnl+F30N/I/9k/3r/0QCngCUBZwOJgUGBWwL7+Hp8Ib+OPzrbZfay2e1BjKC5QRVBj4KtguXBrSFoyOyQrSH355jOkc5pDoVQfujW0Adh5mGLw34MJ4WHhVeGP45wiFga0TGXNXfR3ENz30T6RJZE3ptnMU85ry1KNSo+qi5qPNo3ujS6P8YuZlnM1VidWElsSxw5LiquNm5svt/87fOH4p3iC+N7F5gvyF1weaHOwvSFpxapLhIsOpZATIhOOJTwQRAqqBaMJfITdyWOCnnCHcJnIi/RNtGI2ENcKh5O8kgqTXqS7JG8NXkkxTOlLOW5hCepkLxMDUzdmzqeFpp2IG0yPTq9MYOSkZBxQqohTZO2Z+pn5mZ2y6xlhbL+xW6Lty8elQfJa7OQrAVZLQq2QqboVFoo1yoHsmdlV2a/zYnKOZarnivN7cyzytuQN5zvn//tEsIS4ZK2pYZLVy0dWOa9rGo5sjxxedsK4xUFK4ZWBqw8uIq2Km3VT6vtV5eufr0mek1rgV7ByoLBtQFr6wtVCuWFfevc1+1dT1gvWd+1YfqGnRs+FYmKrhTbF5cVf9go3HjlG4dvyr+Z3JS0qavEuWTPZtJm6ebeLZ5bDpaql+aXDm4N2dq0Dd9WtO319kXbL5fNKNu7g7ZDuaO/PLi8ZafJzs07P1SkVPRU+lQ27tLdtWHX+G7R7ht7vPY07NXbW7z3/T7JvttVAVVN1WbVZftJ+7P3P66Jqun4lvttXa1ObXHtxwPSA/0HIw6217nU1R3SPVRSj9Yr60cOxx++/p3vdy0NNg1VjZzG4iNwRHnk6fcJ3/ceDTradox7rOEH0x92HWcdL2pCmvKaRptTmvtbYlu6T8w+0dbq3nr8R9sfD5w0PFl5SvNUyWna6YLTk2fyz4ydlZ19fi753GDborZ752PO32oPb++6EHTh0kX/i+c7vDvOXPK4dPKy2+UTV7hXmq86X23qdOo8/pPTT8e7nLuarrlca7nuer21e2b36RueN87d9L158Rb/1tWeOT3dvfN6b/fF9/XfFt1+cif9zsu72Xcn7q28T7xf9EDtQdlD3YfVP1v+3Njv3H9qwHeg89HcR/cGhYPP/pH1jw9DBY+Zj8uGDYbrnjg+OTniP3L96fynQ89kzyaeF/6i/suuFxYvfvjV69fO0ZjRoZfyl5O/bXyl/erA6xmv28bCxh6+yXgzMV70VvvtwXfcdx3vo98PT+R8IH8o/2j5sfVT0Kf7kxmTk/8EA5jz/GMzLdsAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAAKNJREFUeNrEk7sNwkAQBefQ5m6BTiAAQssZiMh0QFUIMrAEpKYD8ynAJeD4nXQEkJHgu4CXv9GsdteFEEjJgMQ4gPli+aWx227cLwAD8FK8QZ4XTyCL6B6qal+YlzLgCpSn87HpbTCdzAKwAkpg1Bdgn/nbmDLQmby6hC3W5qUGGEcCGpNUJwBq09tgHdO+Pe61eamNvIMLgEkaxuoDuL9/42sAM20/EZafbV8AAAAASUVORK5CYII=",
-    dir: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QkQDBgWQKhE0wAAADRJREFUOMtjYBhowMjAwPCfCDU4AQuUNsQhf54aLmAgxgW9ZOovZqI0EEcNGBYGUJwSKQYAJoEFGqo9ooAAAAAASUVORK5CYII=",
+    dir: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpDNzU0RUNBNzU3OEIxMUUyOEM3QzkxOEZDOTU1RTdFMCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpDNzU0RUNBODU3OEIxMUUyOEM3QzkxOEZDOTU1RTdFMCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkM3NTRFQ0E1NTc4QjExRTI4QzdDOTE4RkM5NTVFN0UwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkM3NTRFQ0E2NTc4QjExRTI4QzdDOTE4RkM5NTVFN0UwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+S/WxbAAAAERJREFUeNpi/P//PwMlgJFSA1g2bNiAzYQLQOwIxB8IGcCEQ9wAiPcDsQBBF+CRAxnynlwXEA1GDRg1gCqZiWIDAAIMADidE0PBoGsZAAAAAElFTkSuQmCC",
     r: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB90CDRIvNbHTpbwAAADjSURBVDjLpZFBbsIwEEUfVRZYahcVK3qKXoauMFK5C91nkyUB+xC5BqeAA7SKq1B5ugl2EiC04UkjayzN17NnROTRWvvJFbTWL8CBHqbGWOlSlqVkWSbGWAGm3aGHZiMiAByPP6FOd1rP2W7NvhvSCvDe10E+VJPFQpPnm1ZIcsmgPgJVVZGmaejX63y/XL4/AV/JJYPTCeDcN7PZWyuwKAqA8wARqSsGKDVGqXGjV8H07AnRQPq21TK8+YSBAQMN4hb6Df7wB/5eA+4zmEyehxk451itPrhFksSxUeP+lf+z+wXwdayJk/mqtgAAAABJRU5ErkJggg==",
     box: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wMHAwRAVvTmTAAAAK/SURBVDjLpZM9bFxFGEXPNzPvZ+39sb2xHceREjDQBwlDCqqIiiotokAghYKEjvSkQkKJkEiB0lOkoAHaBAokFCQKUATIIOLIMbHWrHfX+7zvvZk3MzQODUgU3PJK5+g2F/5n5N/Kb66/1NNK3hAxr4HcFqVuvfju18V/Cu58sPmMVnJZ4K32Qr+t8za+KnCz4kCUuiGibm5euTv5h+CL958/nxj1XivVF+e6C9TVhPmFdbROgEhwNU1d4m09UaJuInLjhct3DgDUh5ee7j14PLxulLvYP/0seadPkub88Wib0eB3bDkmxgbRoFPpxeCuKvjsyQIzOyqImT7/y8Mh++NveW7jLFmrx6m1NlWxz6PHA7otQ7tloAmYJE9isOeeCJRtIrULLLUTjsqG7+//xs72z7jZgCTNONlVJKEiuobW0jqSaoiet19dFQATJcc2FSFEciNoLYwOHcPDASvdjM5cQntxlbR9gqacoFSK84VsnOrkH11Zdmp0FFXjobSeCFgXSDS0Eo11ge7yGXSaU092UUlCaEpC8FK4tDcu4rzZ2a/S+bWI94HSAgFigDQD24Cvp4gIOp0juBJvC2L07B1Uc/Mtg9k7sHMbywZrA3lLECV4AtaCpAp79CcmzXHlhOBrAJrGyNbOVBY7qTO1C9r5EKyPSttAiJEs01SuQStFkrdp6gKd5AzHjixVxCDxp+1paZRUxoc4Kp36bndYbS53U5WlCq0CMYIPMY7GI0mNpiqmGK0oK4jIveGkPgRqfTBt3A8Pqtvrq52HtglnGh9XIaKUkCQ6nj6RyWBsmdXCtFI/bu2Fq5c+3roGzIAgWokCDNACOhfOLb781Ip+vd+RC2dXWibROkxKvvp1z376yZe7d4HpMdz8/YVjiQYyoA30Ti6la2++0n/n83vTW/e3ix1gcgzXgPchBoC/AFu/UBF5InryAAAAAElFTkSuQmCC",
     bluebox: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wMHAwTE5pcivoAAALsSURBVDjLXZPPaxxlGMc/77wz+3N2k822tWsTIrQFe/BWEKxKCV5UohdFhJ60p6rgUfpP6C0K4kHx0ENEkV7aElHwUikhFVosRGoTm83+3pnZnXfed2beHtItIQ98+Z6+H57nga8AsNYKDkYcEofcHvKZEEJYcSTszPzqL3fmf3+w/+a51tytby9d6D0N5UecGeBZ8MPv/jh9fy/6dKzMpVPHmvWdbl/XCvKn5Wbl6+ufrNwGssMgYa2VgFj58sZr7VB/LqX3zlKrydJzTTzXxdqcx90hO+0Bk2l8Z74i1z6+cOba5VfOqGeAb3579M/NR53T40xwrDGHFALPEUjn4LoMi0ktwWTKXqCIqAVrbyycvHj2hHYBR+bO8Q/Ov0imEzZ2xrRDRalQwC9LLBalUgaJQy+tU6gvIBJbv3j2RA4IFxDdICFa9ulMCrz/UgOs5kEwpeh57I4Nt/dzsmLOYlEThgFjUePp33IHoD9SJAbuTVyudRweixJvnVtg3/i00wpLPiwQ0hkO6YYKawWj0UjONqAfKHwDkxTqqeW/RHA3hO2+Zqk05e5wTD9KmOqMKDEUqoLNzU0PyF2AQaBoaIhiw0h6TIwgUDCODb5NiWJNlKREyhAozXwOW1tbFSmlcAHbD2KaytCdGgyWglfEs4LeNKeaa4axYRgpwlgTTTXVDDqdTslaewAYh4kNlKUbZsTGonOwCYwm1vq5Ft1AMYgU08SQR5o0gziOcRxHuoCNtdl6uPHX6/Vmi3Yyh9I5IoEgMdkgT9x+qJhEGrdQo77cJMuy+4DJskwLa60DOCtf3HhZpfZKtVx+L3x+sfCv8CFxTINd72HfodQ4aQp5fP24/v/Hd4Nf/5RSJmma6lkXZn1wPvvq5qndsbhS9esf/Zy/UEtzxnURfn8+/fuHV7m353mecV1XSym1lDI72kaxvr5e3N7eruyP0tpG/e3LK/rW2mLNUb7vm3K5nFarVdNqtbJer2dXV1fzJ6cDpboAZRAGAAAAAElFTkSuQmCC",
@@ -963,60 +968,60 @@ FeatureBinarySearchTree.prototype = {
  */
 
 var CellBaseManager = {
-    get: function ( args ) {
+    get: function (args) {
         var success = args.success;
         var error = args.error;
-        var async = (_.isUndefined( args.async ) || _.isNull( args.async ) ) ? true : args.async;
-        var urlConfig = _.omit( args, ['success', 'error', 'async'] );
+        var async = (_.isUndefined(args.async) || _.isNull(args.async) ) ? true : args.async;
+        var urlConfig = _.omit(args, ['success', 'error', 'async']);
 
-        var url = CellBaseManager.url( urlConfig );
-        if ( typeof url === 'undefined' ) {
+        var url = CellBaseManager.url(urlConfig);
+        if(typeof url === 'undefined'){
             return;
         }
-        console.log( url );
+        console.log(url);
 
         var d;
-        $.ajax( {
+        $.ajax({
             type: "GET",
             url: url,
             dataType: 'json',//still firefox 20 does not auto serialize JSON, You can force it to always do the parsing by adding dataType: 'json' to your call.
             async: async,
-            success: function ( data, textStatus, jqXHR ) {
-                if ( $.isPlainObject( data ) || $.isArray( data ) ) {
+            success: function (data, textStatus, jqXHR) {
+                if($.isPlainObject(data) || $.isArray(data)){
 //                    data.params = args.params;
 //                    data.resource = args.resource;
 //                    data.category = args.category;
 //                    data.subCategory = args.subCategory;
-                    if ( _.isFunction( success ) ) success( data );
+                    if (_.isFunction(success)) success(data);
                     d = data;
-                } else {
-                    console.log( 'Cellbase returned a non json object or list, please check the url.' );
-                    console.log( url );
-                    console.log( data )
+                }else{
+                    console.log('Cellbase returned a non json object or list, please check the url.');
+                    console.log(url);
+                    console.log(data)
                 }
             },
-            error: function ( jqXHR, textStatus, errorThrown ) {
-                console.log( "CellBaseManager: Ajax call returned : " + errorThrown + '\t' + textStatus + '\t' + jqXHR.statusText + " END" );
-                if ( _.isFunction( error ) ) error( jqXHR, textStatus, errorThrown );
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("CellBaseManager: Ajax call returned : " + errorThrown + '\t' + textStatus + '\t' + jqXHR.statusText + " END");
+                if (_.isFunction(error)) error(jqXHR, textStatus, errorThrown);
             }
-        } );
+        });
         return d;
     },
-    url: function ( args ) {
-        if ( !$.isPlainObject( args ) ) args = {};
-        if ( !$.isPlainObject( args.params ) ) args.params = {};
+    url: function (args) {
+        if (!$.isPlainObject(args)) args = {};
+        if (!$.isPlainObject(args.params)) args.params = {};
 
         var version = 'latest';
-        if ( typeof args.version !== 'undefined' && args.version != null ) {
+        if(typeof args.version !== 'undefined' && args.version != null){
             version = args.version
         }
 
         var host;
-        if ( typeof args.host !== 'undefined' && args.host != null ) {
-            host = args.host;
+        if (typeof args.host !== 'undefined' && args.host != null) {
+            host =  args.host;
         }
-        if ( typeof host === 'undefined' ) {
-            console.log( "CellBase host is not configured" );
+        if(typeof host === 'undefined'){
+            console.log("CellBase host is not configured");
             return;
         }
 
@@ -1032,24 +1037,24 @@ var CellBaseManager = {
             of: 'json'
         };
 
-        _.extend( config, args );
-        _.extend( config.params, params );
+        _.extend(config, args);
+        _.extend(config.params, params);
 
         var query = '';
-        if ( typeof config.query !== 'undefined' && config.query != null ) {
-            if ( $.isArray( config.query ) ) {
+        if(typeof config.query !== 'undefined' && config.query != null){
+            if ($.isArray(config.query)) {
                 config.query = config.query.toString();
             }
             query = '/' + config.query;
         }
 
         //species can be the species code(String) or an object with text attribute
-        if ( $.isPlainObject( config.species ) ) {
-            config.species = Utils.getSpeciesCode( config.species.text );
+        if ($.isPlainObject(config.species)) {
+            config.species = Utils.getSpeciesCode(config.species.text);
         }
 
         var url = config.host + '/' + config.version + '/' + config.species + '/' + config.category + '/' + config.subCategory + query + '/' + config.resource;
-        url = Utils.addQueryParamtersToUrl( config.params, url );
+        url = Utils.addQueryParamtersToUrl(config.params, url);
         return url;
     }
 };
@@ -6053,79 +6058,706 @@ VCFVariantInfoWidget.prototype.dataReceived = function ( data ) {
     this.panel.setLoading( false );
 };
 
-function VariantEffectPanelWidget ( args ) {
-    _.extend( this, Backbone.Events );
-    this.id = Utils.genId( "VariantEffectPanelWidget" );
+function VariantBrowserGrid(args) {
+    _.extend(this, Backbone.Events);
 
+    //set default args
+    this.id = Utils.genId("Widget");
+    this.target;
+    this.autoRender = true;
+
+    //set instantiation args, must be last
+    _.extend(this, args);
+
+    this.on(this.handlers);
+
+    this.rendered = false;
+    if (this.autoRender) {
+        this.render(this.targetId);
+    }
+}
+
+VariantBrowserGrid.prototype = {
+    render: function () {
+        var _this = this;
+        console.log("Initializing " + this.id);
+
+        //HTML skel
+        this.div = document.createElement('div');
+        this.div.setAttribute('id', this.id);
+
+
+        this.panel = this._createPanel();
+    },
+    draw: function () {
+        this.targetDiv = (this.target instanceof HTMLElement ) ? this.target : document.querySelector('#' + this.target);
+        if (!this.targetDiv) {
+            console.log('target not found');
+            return;
+        }
+        this.targetDiv.appendChild(this.div);
+        this.panel.render(this.div);
+    },
+    _createPanel: function () {
+
+        var _this = this;
+
+        var xtmplPoly = new Ext.XTemplate(
+            '{[this.parseEffect(values)]}',
+            {
+                parseEffect: function (value) {
+
+                    if (value.polyphen_score == 0 && value.polyphen_effect == 0) {
+                        return ".";
+                    }
+
+                    var score = value.polyphen_score;
+                    var effect = "";
+                    switch (value.polyphen_effect) {
+                        case 0:
+                            effect = "probably damaging";
+                            break;
+                        case 1:
+                            effect = "possibly damaging";
+                            break;
+                        case 2:
+                            effect = "benign";
+                            break;
+                        case 3:
+                            effect = "unknown";
+                            break;
+                        default:
+                            return ".";
+                    }
+                    return(score + " - (" + effect + ")");
+                }
+            }
+        );
+        var xtmplSift = new Ext.XTemplate(
+            '{[this.parseEffect(values)]}',
+            {
+                parseEffect: function (value) {
+                    if (value.sift_score == 0 && value.sift_effect == 0) {
+                        return ".";
+                    }
+
+                    var score = value.sift_score;
+                    var effect = "";
+                    switch (value.sift_effect) {
+                        case 0:
+                            effect = "tolerated";
+                            break;
+                        case 1:
+                            effect = "deleterious";
+                            break;
+                        default:
+                            return ".";
+                    }
+                    return(score + " - (" + effect + ")");
+                }
+            }
+        );
+
+        parseMafControl = function (control) {
+            var maf = control.maf;
+            var res = maf.toFixed(3);
+            if (control.allele != "") {
+                res = res + " (" + control.allele + ")";
+            }
+            return res;
+        };
+
+        _this.columnsGrid = [
+            {
+                text: "Variant",
+                dataIndex: 'chromosome',
+                flex: 1,
+                xtype: "templatecolumn",
+                tpl: "{chromosome}:{position}"
+            },
+            {
+                text: "Alleles",
+                flex: 0.5,
+                xtype: "templatecolumn",
+                tpl: "{ref}>{alt}",
+                sortable: false
+            },
+            {
+                text: "Gene",
+                dataIndex: 'genes',
+                flex: 1,
+                sortable: false
+            },
+            {
+                text: 'Samples',
+                flex: 1,
+                sortable: false,
+                columns: []
+            },
+            {
+                text: "SNP Id",
+                dataIndex: 'snpid',
+                flex: 1,
+                sortable: true
+            },
+            {
+                flex: 1,
+                text: "Controls (MAF)",
+                defaults: {
+                    width: 70
+                },
+                columns: [
+                    {
+                        text: "1000G",
+                        renderer: function (val, meta, record) {
+                            if (record.data.controls["1000G"]) {
+                                return parseMafControl(record.data.controls["1000G"]);
+                            } else {
+                                return ".";
+                            }
+                        }
+                    },
+                    {
+                        text: "1000G-AFR",
+                        renderer: function (val, meta, record) {
+                            if (record.data.controls["1000G-AFR"]) {
+                                return parseMafControl(record.data.controls["1000G-AFR"]);
+                            } else {
+                                return ".";
+                            }
+                        }
+                    },
+                    {
+                        text: "1000G-ASI",
+                        renderer: function (val, meta, record) {
+                            if (record.data.controls["1000G-ASI"]) {
+                                return parseMafControl(record.data.controls["1000G-ASI"]);
+
+                            } else {
+                                return ".";
+                            }
+                        }
+                    },
+                    {
+                        text: "1000G-AME",
+                        renderer: function (val, meta, record) {
+                            if (record.data.controls["1000G-AME"]) {
+                                return parseMafControl(record.data.controls["1000G-AME"]);
+                            } else {
+                                return ".";
+                            }
+                        }
+                    },
+                    {
+                        text: "1000G-EUR",
+                        renderer: function (val, meta, record) {
+                            if (record.data.controls["1000G-EUR"]) {
+                                return parseMafControl(record.data.controls["1000G-EUR"]);
+                            } else {
+                                return ".";
+                            }
+                        }
+                    },
+                    {
+                        text: "EVS",
+                        renderer: function (val, meta, record) {
+                            if (record.data.controls["EVS"]) {
+                                return parseMafControl(record.data.controls["EVS"]);
+                            } else {
+                                return ".";
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                text: "Consq. Type",
+                dataIndex: "consequence_types",
+                flex: 1,
+                sortable: false
+            },
+            {
+                text: 'Polyphen',
+                flex: 1,
+                dataIndex: 'polyphen_score',
+                xtype: 'templatecolumn',
+                tpl: xtmplPoly,
+                sortable: false
+            },
+            {
+                text: 'SIFT',
+                flex: 1,
+                dataIndex: 'sift_score',
+                xtype: "templatecolumn",
+                tpl: xtmplSift,
+                sortable: false
+            },
+            {
+                text: 'Phenotype',
+                dataIndex: 'phenotype',
+                sortable: false
+            },
+            {
+                text: "Is indel?",
+                flex: 1,
+                xtype: 'booleancolumn',
+                trueText: 'Yes',
+                falseText: 'No',
+                dataIndex: 'stats_is_indel',
+                sortable: true,
+                hidden: true
+            }
+        ];
+        _this.attributes = [
+            {name: "chromosome", type: "string"},
+            {name: "position", type: "int"},
+            {name: "alt", type: "string"},
+            {name: "ref", type: "string"},
+            {name: 'stats_id_snp', type: 'string'},
+            {name: 'stats_maf', type: 'number'},
+            {name: 'stats_mgf', type: 'number'},
+            {name: 'stats_miss_gt', type: 'int'},
+            {name: 'stats_is_indel', type: 'boolean'},
+            {name: 'gene_name', type: 'string'},
+            {name: 'consequence_types', type: 'string'},
+            {name: "controls", type: 'auto'},
+            {name: "phenotype", type: "string"},
+            {name: "polyphen_score", type: 'number'},
+            {name: "polyphen_effect", type: 'int'},
+            {name: "sift_score", type: 'number'},
+            {name: "sift_effect", type: 'int'}
+        ];
+        _this.model = Ext.define('Variant', {
+            extend: 'Ext.data.Model',
+            fields: _this.attributes
+        });
+
+        _this.st = Ext.create('Ext.data.Store', {
+            pageSize: 25,
+            model: _this.model,
+            data: [],
+            remoteSort: true,
+            storeId: 'gridStore',
+            sorters: [
+                {
+                    property: 'chromosome',
+                    direction: 'ASC'
+                }
+            ],
+            proxy: {
+                url: _this.url,
+                type: 'ajax',
+                reader: {
+                    root: "response.result",
+                    totalProperty: "response.numResults"
+                },
+                extraParams: {
+                    myParam: "hola"
+                },
+                actionMethods: {create: 'GET', read: 'GET', update: 'GET', destroy: 'GET'}
+            },
+            listeners: {
+                load: function (store, records, successful, operation, eOpts) {
+
+                    _this.st.suspendEvents();
+                    var aux;
+
+                    for (var i = 0; i < records.length; i++) {
+                        var v = records[i];
+                        for (var key in v.data.sampleGenotypes) {
+
+                            aux = v.data.sampleGenotypes[key];
+                            aux = aux.replace(/-1/g, ".");
+                            aux = aux.replace("|", "/");
+                            v.set(key, aux);
+                        }
+
+                        v.set("snpid", v.data.snpid);
+                        v.set("genes", v.data.genes.join(","));
+
+                        v.commit();
+                    }
+
+                    _this._getPhenotypes(records);
+                    _this.st.resumeEvents();
+                    _this.st.fireEvent('refresh');
+                },
+                beforeload: function (store, operation, eOpts) {
+                    _this.trigger("_grid:clear", {sender: _this});
+                }
+            }
+
+        });
+        _this.exportStore = Ext.create('Ext.data.Store', {
+            model: _this.model,
+            data: [],
+            autoLoad: false,
+            remoteSort: true,
+            storeId: 'exportStore',
+            sorters: [
+                {
+                    property: 'chromosome',
+                    direction: 'ASC'
+                }
+            ],
+            proxy: {
+                model: _this.model,
+                type: 'ajax',
+                url: _this.url,
+                reader: {
+                    root: "response.result",
+                    totalProperty: "response.numResults"
+                },
+                listeners: {
+                    exception: function (proxy, response, operation, eOpts) {
+                        Ext.MessageBox.show({
+                            title: 'REMOTE EXCEPTION',
+                            msg: operation.getError(),
+                            icon: Ext.MessageBox.ERROR,
+                            buttons: Ext.Msg.OK
+                        });
+                    },
+                    success: function (response) {
+                        console.log("Spiffing, everything worked");
+                        console.log(response.success);
+                        console.log(response.result);
+                    },
+                    failure: function (response) {
+                        console.log(response);
+                        Ext.Msg.alert('Error', 'Please try again.', Ext.emptyFn);
+                    }
+                }
+            },
+            listeners: {
+                load: function (store, records, successful, operation, eOpts) {
+
+                    _this.st.suspendEvents();
+                    var aux;
+
+                    for (var i = 0; i < records.length; i++) {
+                        var v = records[i];
+                        for (var key in v.data.sampleGenotypes) {
+
+                            aux = v.data.sampleGenotypes[key];
+                            aux = aux.replace(/-1/g, ".");
+                            aux = aux.replace("|", "/");
+                            v.set(key, aux);
+                        }
+
+                        v.set("snpid", v.data.snpid);
+                        v.set("genes", v.data.genes.join(","));
+
+                        v.commit();
+                    }
+                    _this.st.resumeEvents();
+                    _this.st.fireEvent('refresh');
+                }
+            }
+        });
+
+        var paging = Ext.create('Ext.PagingToolbar', {
+            store: _this.st,
+            id: _this.id + "_pagingToolbar",
+            pageSize: 25,
+            displayInfo: true,
+            displayMsg: 'Variants {0} - {1} of {2}',
+            emptyMsg: "No variants to display"
+        });
+
+        paging.add({
+                xtype: 'button',
+                text: 'Export data...',
+                handler: function () {
+
+                    if (_this.st.getCount() == 0) {
+                        Utils.msg('ERROR', 'You must apply some filters before or the result set is empty!!');
+                        return;
+                    }
+
+                    if (!Ext.getCmp(_this.id + "exportWindow")) {
+                        var cbgItems = [];
+                        var attrList = _this._getColumnNames();
+
+                        cbgItems.push({
+                            boxLabel: attrList[0],
+                            name: 'attr',
+                            inputValue: attrList[0],
+                            checked: true,
+                            disabled: true
+                        });
+
+                        for (var i = 1; i < attrList.length; i++) {
+                            cbgItems.push({
+                                boxLabel: attrList[i],
+                                name: 'attr',
+                                inputValue: attrList[i],
+                                checked: true
+                            });
+                        }
+                        var progress = Ext.create('Ext.ProgressBar', {
+                            text: 'Progress...',
+                            border: 1,
+                            flex: 1,
+                            margin: '0 10 0 0',
+                            id: _this.id + "_progressBarExport"
+                        });
+
+                        Ext.create('Ext.window.Window', {
+                            id: _this.id + "exportWindow",
+                            title: "Export attributes",
+                            height: 250,
+                            maxHeight: 250,
+                            width: 400,
+                            autoScroll: true,
+                            layout: "vbox",
+                            modal: true,
+                            items: [
+                                {
+                                    xtype: 'checkboxgroup',
+                                    id: _this.id + "cbgAttributes",
+                                    layout: 'vbox',
+                                    items: cbgItems
+                                }
+                            ],
+                            buttons: [
+                                progress,
+                                {
+                                    xtype: 'textfield',
+                                    id: _this.id + "fileName",
+                                    emptyText: "enter file name",
+                                    flex: 1
+                                },
+                                {
+                                    text: 'Download',
+                                    href: "none",
+                                    id: _this.id + "_downloadExport",
+                                    handler: function () {
+                                        Ext.getCmp(_this.id + "_progressBarExport").updateProgress(0.1, "Requesting data");
+
+                                        this.disable();
+                                        var fileName = Ext.getCmp(_this.id + "fileName").getValue();
+                                        if (fileName == "") {
+                                            fileName = "variants";
+                                        }
+                                        var columns = Ext.getCmp(_this.id + "cbgAttributes").getChecked();
+
+                                        var content = _this._exportToTab(columns);
+
+                                        this.getEl().set({
+                                            href: 'data:text/csv,' + encodeURIComponent(content),
+                                            download: fileName + ".csv"
+                                        });
+                                        Ext.getCmp(_this.id + "_progressBarExport").updateProgress(1, "Downloaded");
+                                        Ext.getCmp(_this.id + "fileName").reset();
+                                    }
+                                }
+                            ]
+                        }).show();
+                    } else {
+                        Ext.getCmp(_this.id + "exportWindow").show();
+                    }
+                    Ext.getCmp(_this.id + "_progressBarExport").updateProgress(0, "Progress");
+                    Ext.getCmp(_this.id + "_downloadExport").enable();
+                }
+            }
+        );
+        paging.add({
+            xtype: 'button',
+            text: 'View Summary',
+            handler: function () {
+                _this.summaryPanel.show();
+            }
+        });
+
+        var grid = Ext.create('Ext.grid.Panel', {
+                title: 'Variant Info',
+                store: _this.st,
+                loadMask: true,
+                columns: this.columnsGrid,
+                plugins: 'bufferedrenderer',
+                loadMask: true,
+                collapsible: true,
+                titleCollapse: true,
+                animCollapse: false,
+                features: [
+                    {ftype: 'summary'}
+                ],
+                viewConfig: {
+                    emptyText: 'No records to display',
+                    enableTextSelection: true
+                },
+                bbar: paging
+
+            }
+        );
+
+        grid.getSelectionModel().on('selectionchange', function (sm, selectedRecord) {
+            if (selectedRecord.length) {
+                var row = selectedRecord[0].data;
+                _this.trigger("_grid:change", {sender: _this, args: row});
+            }
+        });
+
+        return grid;
+    }
+}
+function VariantEffectGrid(args) {
+    _.extend(this, Backbone.Events);
+    this.id = Utils.genId("VariantEffectGrid");
+
+    this.target;
+    this.autoRender = true;
     this.storeConfig = {};
     this.gridConfig = {};
     this.filterEffect = true;
 
-    _.extend( this, args );
+    _.extend(this, args);
 
-    this.on( this.handlers );
+    this.on(this.handlers);
 
     this.rendered = false;
-
-    if ( this.autoRender ) {
-        this.render( this.targetId );
+    if (this.autoRender) {
+        this.render(this.targetId);
     }
 }
 
-VariantEffectPanelWidget.prototype = {
-    render: function ( targetId ) {
+VariantEffectGrid.prototype = {
+    render: function () {
         var _this = this;
 
-        _this.targetId = (targetId) ? targetId : this.targetId;
+        //HTML skel
+        this.div = document.createElement('div');
+        this.div.setAttribute('id', this.id);
+
+        this.panel = this._createPanel();
+
+    },
+    draw: function () {
+        this.targetDiv = (this.target instanceof HTMLElement ) ? this.target : document.querySelector('#' + this.target);
+        if (!this.targetDiv) {
+            console.log('target not found');
+            return;
+        }
+        this.targetDiv.appendChild(this.div);
+        this.panel.render(this.div);
+    },
+
+//    getPanel: function () {
+//        return this.grid;
+//    },
+    clear: function () {
+        this.store.removeAll();
+    },
+    load: function (chr, pos, ref, alt) {
+
+        var _this = this;
+        var req = chr + ":" + pos + ":" + ref + ":" + alt;
+
+        _this.panel.setLoading(true);
+        _this.clear();
+
+        CellBaseManager.get({
+            host: "http://ws.bioinfo.cipf.es/cellbase/rest",
+            version: 'latest',
+            species: 'hsa',
+            category: 'genomic',
+            subCategory: 'variant',
+            query: req,
+            resource: 'consequence_type',
+            success: function (response) {
+                var data = (_this.filterEffect) ? _this._filterEffectData(response) : response;
+
+                _this.store.loadData(data);
+
+                _this.trigger("load:finish", {sender: _this})
+                _this.panel.setLoading(false);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('Error loading Effect');
+                _this.trigger("load:finish", {sender: _this})
+                _this.panel.setLoading(false);
+            }
+        });
+    },
+    _filterEffectData: function (data) {
+        var _this = this;
+        var res = [];
+
+        var regulatory = {};
+
+        for (var i = 0; i < data.length; i++) {
+            var elem = data[i];
+            if (elem.consequenceTypeObo == "coding_sequence_variant" || elem.consequenceTypeObo == "exon_variant" || elem.consequenceTypeObo == "intron_variant") {
+                continue;
+            } else if (elem.consequenceTypeObo == "regulatory_region_variant") {
+                if (!(elem.featureId in regulatory)) {
+                    regulatory[elem.featureId] = elem;
+                }
+                continue;
+            }
+
+            res.push(elem);
+        }
+
+        for (var elem in regulatory) {
+            res.push(regulatory[elem]);
+        }
+
+        return res;
+    },
+    _createPanel: function () {
+        var _this = this;
 
         var storeArgs = {
             storeId: "EffectStore",
             groupField: 'featureId',
+            pageSize: 10,
             fields: [
-                {name: "featureId", type: "String" },
-                {name: "featureName", type: "String" },
-                {name: "featureType", type: "String" },
-                {name: "featureBiotype", type: "String" },
-                {name: "featureChromosome", type: "String" },
+                {name: "featureId", type: "string" },
+                {name: "featureName", type: "string" },
+                {name: "featureType", type: "string" },
+                {name: "featureBiotype", type: "string" },
+                {name: "featureChromosome", type: "string" },
                 {name: "featureStart", type: "int"    },
                 {name: "featureEnd", type: "int"    },
-                {name: "featureStrand", type: "String" },
-                {name: "snpId", type: "String" },
-                {name: "ancestral", type: "String" },
-                {name: "alternative", type: "String" },
-                {name: "geneId", type: "String" },
-                {name: "transcriptId", type: "String" },
-                {name: "geneName", type: "String" },
-                {name: "consequenceType", type: "String" },
-                {name: "consequenceTypeObo", type: "String" },
-                {name: "consequenceTypeDesc", type: "String" },
-                {name: "consequenceTypeType", type: "String" },
+                {name: "featureStrand", type: "string" },
+                {name: "snpId", type: "string" },
+                {name: "ancestral", type: "string" },
+                {name: "alternative", type: "string" },
+                {name: "geneId", type: "string" },
+                {name: "transcriptId", type: "string" },
+                {name: "geneName", type: "string" },
+                {name: "consequenceType", type: "string" },
+                {name: "consequenceTypeObo", type: "string" },
+                {name: "consequenceTypeDesc", type: "string" },
+                {name: "consequenceTypeType", type: "string" },
                 {name: "aaPosition", type: "int"    },
-                {name: "aminoacidChange", type: "String" },
-                {name: "codonChange", type: "String" },
-                {name: "polyphenScore", type: "float"  },
-                {name: "polyphenEfect", type: "float"  },
-                {name: "siftScore", type: "float"  },
-                {name: "siftEffect", type: "float"  },
+                {name: "aminoacidChange", type: "string" },
+                {name: "codonChange", type: "string" },
+                {name: "polyphenScore", type: "number"  },
+                {name: "polyphenEfect", type: "number"  },
+                {name: "siftScore", type: "number"  },
+                {name: "siftEffect", type: "number"  },
             ],
             data: [],
             autoLoad: false,
             proxy: {type: 'memory'}
         }
 
-        _.extend( storeArgs, _this.storeConfig );
+        _.extend(storeArgs, this.storeConfig);
 
-        _this.store = Ext.create( "Ext.data.Store", storeArgs );
+        this.store = Ext.create("Ext.data.Store", storeArgs);
+
 
         var gridArgs = {
-            targetId: _this.targetId,
-            title: "Variant Effect",
-            width: '100%',
-            flex: 2,
             store: this.store,
             loadMask: true,
-            border: 1,
-            margin: '0 5 5 5',
+            border:false,
+            viewConfig: {
+                emptyText: 'No records to display',
+                enableTextSelection: true
+            },
+            plugins: ["bufferedrenderer"],
             columns: [
                 {xtype: 'rownumberer'},
                 {
@@ -6206,93 +6838,2158 @@ VariantEffectPanelWidget.prototype = {
             ],
             viewConfig: {
                 emptyText: 'No records to display'
-            },
-            dockedItems: [
-                {
-                    xtype: 'toolbar',
-                    dock: 'bottom',
-                    items: [
-                        {
-                            xtype: 'tbtext',
-                            id: _this.id + "numRowsLabelEffect"
-                        }
-                    ]
-                }
-            ]
+            }
         }
 
-        _.extend( gridArgs, _this.gridConfig );
+        _.extend(gridArgs, this.gridConfig);
 
-        _this.grid = Ext.create( 'Ext.grid.Panel', gridArgs );
+        return Ext.create('Ext.grid.Panel', gridArgs);
+    }
+}
+
+function VariantGenotypeGrid(args) {
+    _.extend(this, Backbone.Events);
+    this.id = Utils.genId("VariantGenotypeGrid");
+
+    this.autoRender = true;
+    this.storeConfig = {};
+    this.gridConfig = {};
+    this.target;
+
+    _.extend(this, args);
+
+    this.on(this.handlers);
+
+    this.rendered = false;
+
+    if (this.autoRender) {
+        this.render(this.targetId);
+    }
+}
+
+VariantGenotypeGrid.prototype = {
+    render: function () {
+        var _this = this;
+
+        //HTML skel
+        this.div = document.createElement('div');
+        this.div.setAttribute('id', this.id);
+
+        this.panel = this._createPanel();
 
     },
     draw: function () {
-
-    },
-    getPanel: function () {
-        return this.grid;
+        this.targetDiv = (this.target instanceof HTMLElement ) ? this.target : document.querySelector('#' + this.target);
+        if (!this.targetDiv) {
+            console.log('target not found');
+            return;
+        }
+        this.targetDiv.appendChild(this.div);
+        this.panel.render(this.div);
     },
     clear: function () {
         this.store.removeAll();
     },
-    load: function ( chr, pos, ref, alt ) {
+    load: function (data) {
 
-        var _this = this;
-        var req = chr + ":" + pos + ":" + ref + ":" + alt;
+        this.panel.setLoading(true);
+        this.store.loadData(data);
 
-        _this.grid.setLoading( true );
-        _this.clear();
-
-        CellbaseManager.get( {
-            species: 'hsa',
-            category: 'genomic',
-            subCategory: 'variant',
-            query: req,
-            resource: 'consequence_type',
-            success: function ( response ) {
-                var data = (_this.filterEffect) ? _this._filterEffectData( response ) : response;
-
-                _this.store.loadData( data );
-                _this.grid.setTitle( _this.gridName + ' - <span class="info">' + chr + ':' + pos + ' ' + ref + '>' + alt + '</span>' );
-                Ext.getCmp( _this.id + "numRowsLabelEffect" ).setText( data.length + " effects" );
-
-                _this.grid.setLoading( true );
-            },
-            error: function ( jqXHR, textStatus, errorThrown ) {
-                console.log( 'Error loading Effect' );
-                _this.grid.setLoading( false );
-            }
-        } );
+        this.trigger("load:finish", {sender: this});
+        this.panel.setLoading(false);
     },
-    _filterEffectData: function ( data ) {
+    _createPanel: function () {
         var _this = this;
-        var res = [];
+        var storeArgs = {
+            storeId: "GenotypeStore",
+            pageSize: 10,
+            fields: [
+                {name: "sample", type: "string" },
+                {name: "genotype", type: "string"},
+                {name: "sex", type: "string"},
+                {name: "phenotype", type: "string"}
+            ],
+            data: [],
+            autoLoad: false,
+            proxy: {type: 'memory'}
+        };
 
-        var regulatory = {};
+        _.extend(storeArgs, _this.storeConfig);
 
-        for ( var i = 0; i < data.length; i++ ) {
-            var elem = data[i];
-            if ( elem.consequenceTypeObo == "coding_sequence_variant" || elem.consequenceTypeObo == "exon_variant" || elem.consequenceTypeObo
-                == "intron_variant" ) {
-                continue;
-            } else if ( elem.consequenceTypeObo == "regulatory_region_variant" ) {
-                if ( !(elem.featureId in regulatory) ) {
-                    regulatory[elem.featureId] = elem;
+        this.store = Ext.create("Ext.data.Store", storeArgs);
+
+
+        var gridArgs = {
+            store: this.store,
+            border: false,
+            loadMask: true,
+            viewConfig: {
+                emptyText: 'No records to display',
+                enableTextSelection: true
+            },
+            plugins: ["bufferedrenderer"],
+            columns: [
+                {xtype: 'rownumberer'},
+                {
+                    text: "Sample",
+                    dataIndex: "sample",
+                    flex: 1
+                },
+                {
+                    text: "Genotype",
+                    dataIndex: "genotype",
+                    flex: 1
+                },
+                {
+                    text: "Sex",
+                    dataIndex: "sex",
+                    flex: 1
+                },
+                {
+                    text: "Phenotype",
+                    dataIndex: "phenotype",
+                    flex: 1
                 }
-                continue;
-            }
+            ]
+        };
+        _.extend(gridArgs, this.gridConfig);
 
-            res.push( elem );
-        }
+        return Ext.create('Ext.grid.Panel', gridArgs);
+    }
+};
 
-        for ( var elem in regulatory ) {
-            res.push( regulatory[elem] );
-        }
+function VariantWidget(args) {
 
-        return res;
+    _.extend(this, Backbone.Events);
+
+    this.id = Utils.genId("VariantWidget");
+
+    //set default args
+    this.target;
+    this.autoRender = true;
+    this.width;
+    this.height = '100%';
+    this.url = "";
+    this.closable = true;
+    this.filters = {
+        segregation: true,
+        maf: true,
+        effect: true,
+        region: true,
+        gene: true
+    };
+    this.tools = {
+        summary: true,
+        variantEffect: true,
+        genomeViewer: true,
+        genotype: true
+    };
+
+    _.extend(this.filters, args.filters);
+    _.extend(this.tools, args.tools);
+
+    delete args.filters;
+    delete args.tools;
+
+    //set instantiation args, must be last
+    _.extend(this, args);
+
+//    this.panelId = "VariantWidget_" + this.job.id;
+
+    this.rendered = false;
+    if (this.autoRender) {
+        this.render();
     }
 }
 
+VariantWidget.prototype = {
+    render: function (target) {
+        var _this = this;
+
+        //HTML skel
+        this.div = document.createElement('div');
+        this.div.setAttribute('id', this.id);
+
+        this.variantBrowserGridDiv = document.createElement('div');
+        this.variantBrowserGridDiv.setAttribute('class', 'ocb-variant-widget-grid');
+        this.div.appendChild(this.variantBrowserGridDiv);
+
+        this.tabPanelDiv = document.createElement('div');
+        this.tabPanelDiv.setAttribute('class', 'ocb-variant-tab-panel');
+        this.div.appendChild(this.tabPanelDiv);
+
+        this.variantEffectGridDiv = document.createElement('div');
+        this.variantEffectGridDiv.setAttribute('class', 'ocb-variant-effect-grid');
+
+        this.variantGenotypeGridDiv = document.createElement('div');
+        this.variantGenotypeGridDiv.setAttribute('class', 'ocb-variant-genotype-grid');
+
+        this.toolTabPanel = Ext.create("Ext.tab.Panel", {
+            title: 'Tools',
+            border: 0,
+            layout: 'fit',
+            margin: '10 0 0 0',
+            collapsible: true,
+            animCollapse: false,
+            collapseDirection: Ext.Component.DIRECTION_BOTTOM,
+            titleCollapse: true,
+            overlapHeader: true,
+            items: [
+                {
+                    title: 'Effect',
+                    items: this.variantEffectGridDiv,
+                    height: 500,
+//                    height:'100%',
+                },
+                {
+                    title: 'Genotyoe',
+                    items: this.variantGenotypeGridDiv,
+                    height: 500,
+//                    height:'100%',
+                }
+            ]
+        });
+
+
+        this.variantBrowserGrid = this._createVariantBrowserGrid(this.variantBrowserGridDiv);
+
+        this.variantEffectGrid = this._createVariantEffectGrid(this.variantEffectGridDiv);
+
+        this.variantGenotypeGrid = this._createVariantGenotypeGrid(this.variantGenotypeGridDiv);
+
+//        /* main panel */
+//        this.panel = this._createPanel(this.target);
+
+//        if (this.tools.variantEffect) {
+//            this.variantEffectWidget = this._createVariantEffectGridWidget();
+//        }
+//
+//        if (this.tools.genomeViewer) {
+//            this.genomeViewerPanel = this._createGenomeViewer();
+//        }
+//        if (this.tools.genotype) {
+//            this.genotypeWidget = this._createGenotypeGridWidget();
+//        }
+
+//        this.toolsPanel = Ext.create("Ext.tab.Panel", {
+//            title: 'Tools',
+//            border: 0,
+//            layout: 'fit',
+//            margin: '10 0 0 0',
+//            collapsible: true,
+//            animCollapse: false,
+//            collapseDirection: Ext.Component.DIRECTION_BOTTOM,
+//            titleCollapse: true,
+//            overlapHeader: true
+//        });
+        this.rendered = true;
+
+
+    },
+    draw: function () {
+        var _this = this;
+        this.targetDiv = (this.target instanceof HTMLElement ) ? this.target : document.querySelector('#' + this.target);
+        if (!this.targetDiv) {
+            console.log('target not found');
+            return;
+        }
+        this.targetDiv.appendChild(this.div);
+
+        this.variantBrowserGrid.draw();
+
+        this.toolTabPanel.render(this.tabPanelDiv);
+
+        this.variantEffectGrid.draw();
+
+        this.toolTabPanel.setActiveTab(1);
+        this.variantGenotypeGrid.draw();
+
+//        OpencgaManager.variantInfoMongo({
+//            accountId: $.cookie("bioinfo_account"),
+//            sessionId: $.cookie("bioinfo_sid"),
+//            filename: this.dbName,
+//            jobId: this.job.id,
+//            success: function (data, textStatus, jqXHR) {
+//                _this.variantInfo = data.response.result[0];
+//                _this._draw();
+//            }
+//        });
+
+        this.variantEffectGrid.load("1", 1849744, "G", "A");
+        this.variantGenotypeGrid.load([
+            {sample: "sample1", genotype:"0/0", sex:"1", phenotype:"phenotype"},
+            {sample: "sample2", genotype:"0/0", sex:"1", phenotype:"phenotype"},
+            {sample: "sample3", genotype:"0/0", sex:"1", phenotype:"phenotype"}
+        ]);
+        this.toolTabPanel.setActiveTab(0);
+    },
+
+    _createVariantBrowserGrid: function (target) {
+
+        var variantBrowserGrid = new VariantBrowserGrid({
+            target: target
+        });
+
+
+        return variantBrowserGrid;
+    },
+
+    _createVariantEffectGrid: function (target) {
+        var _this = this;
+        var variantEffectGrid = new VariantEffectGrid({
+            target: target,
+            gridConfig: {
+                flex: 1,
+                layout: {
+                    align: 'stretch'
+                }
+            },
+            handlers: {
+                "load:finish": function (e) {
+//                    _this.grid.setLoading(false);
+                }
+            }
+        });
+
+        this.on("_grid:clear", function (e) {
+            variantEffectGrid.clear(true);
+        });
+
+        this.on("_grid:change", function (e) {
+            var row = e.args;
+            variantEffectGrid.load(row.chromosome, row.position, row.ref, row.alt);
+
+        });
+        return variantEffectGrid;
+    },
+    _createVariantGenotypeGrid: function (target) {
+        var _this = this;
+        var variantGenotypeGrid = new VariantGenotypeGrid({
+            target: target,
+            gridConfig: {
+                flex: 1,
+                layout: {
+                    align: 'stretch'
+                }
+            },
+            handlers: {
+                "load:finish": function (e) {
+//                    _this.grid.setLoading(false);
+                }
+            }
+        });
+
+        _this.on("_grid:clear", function (e) {
+            variantGenotypeGrid.clear(true);
+        });
+
+        _this.on("_grid:change", function (e) {
+            var row = e.args;
+            var gts = [];
+
+            for (var key in row.sampleGenotypes) {
+                gts.push({
+                    sample: key,
+                    genotype: row.sampleGenotypes[key]
+                });
+            }
+            _this.genotypeWidget.load(gts);
+        });
+        return variantGenotypeGrid;
+    },
+
+    _draw: function () {
+        var activeTab = null;
+        this.optValues = Ext.create('Ext.data.Store', {
+            fields: ['value', 'name'],
+            data: [
+                {"value": "<", "name": "<"},
+                {"value": "<=", "name": "<="},
+                {"value": ">", "name": ">"},
+                {"value": ">=", "name": ">="},
+                {"value": "=", "name": "="},
+                {"value": "!=", "name": "!="}
+            ]
+        });
+
+        this.summaryPanel = this._createSummaryPanel(this.variantInfo);
+
+        this.target.add(this.panel);
+        this.target.setActiveTab(this.panel);
+
+        this.variantPanel = this._createVariantPanel();
+        this.panel.add(this.variantPanel);
+
+        if (this.tools.variantEffect) {
+            this.toolsPanel.add(this.variantEffectWidget.getPanel());
+            if (activeTab == null)
+                activeTab = this.variantEffectWidget.getPanel();
+        }
+
+        if (this.tools.genotype) {
+            this.toolsPanel.add(this.genotypeWidget.getPanel());
+            if (activeTab == null)
+                activeTab = this.genotypeWidget.getPanel();
+        }
+
+        if (this.tools.genomeViewer) {
+            this.toolsPanel.add(this.genomeViewerPanel);
+            if (activeTab == null)
+                activeTab = this.genomeViewerPanel;
+        }
+
+        console.log("ActiveTAb");
+        console.log(activeTab);
+        this.toolsPanel.setActiveTab(activeTab);
+
+        this._updateInfo();
+    },
+    _createPanel: function () {
+        var panel = Ext.create('Ext.panel.Panel', {
+            title: this.title,
+            id: this.panelId,
+            width: '100%',
+            height: this.height,
+            border: this.border,
+            layout: 'hbox',
+            closable: this.closable,
+            items: []
+        });
+        return panel;
+    },
+    _createVariantPanel: function () {
+
+        this.form = this._createForm();
+        this.grid = this._createGrid();
+
+        var panel = Ext.create('Ext.panel.Panel', {
+            width: '100%',
+            height: '100%',
+            bodyPadding: 20,
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
+            },
+            items: [
+                this.form,
+                {
+                    xtype: 'container',
+                    flex: 1,
+                    layout: {
+                        type: 'vbox',
+                        align: 'stretch'
+                    },
+                    defaults: {
+                        flex: 1,
+                        border: false
+                    },
+                    items: [
+                        this.grid,
+                        this.toolsPanel
+                    ]
+                }
+            ]
+        });
+
+        return panel;
+    },
+    _createVariantEffectGridWidget: function () {
+        var _this = this;
+        var vew = new VariantEffectGrid({
+            gridConfig: {
+                flex: 1,
+                layout: {
+                    align: 'stretch'
+                }
+            },
+            handlers: {
+                "load:finish": function (e) {
+                    _this.grid.setLoading(false);
+                }
+            }
+        });
+
+        _this.on("_grid:clear", function (e) {
+            vew.clear(true);
+        });
+
+        _this.on("_grid:change", function (e) {
+            var row = e.args;
+
+            vew.load(row.chromosome, row.position, row.ref, row.alt);
+
+        });
+        return vew;
+    },
+    _updateInfo: function () {
+        var _this = this;
+        _this.panel.setLoading(true);
+
+        if (_this.sampleNames != null) {
+
+            _this.grid.getStore().removeAll();
+
+            for (var i = 0; i < _this.sampleNames.length; i++) {
+                _this._removeSampleColumn(_this.sampleNames[i]);
+            }
+
+            _this.grid.reconfigure(null, _this.columnsGrid);
+        }
+
+        _this.sampleNames = [];
+
+        var sampleTableElems = [];
+        sampleTableElems.push({html: ''});
+        sampleTableElems.push({html: '0/0'});
+        sampleTableElems.push({html: '0/1'});
+        sampleTableElems.push({html: '1/1'});
+
+        for (var i in this.variantInfo.samples) {
+            var sName = this.variantInfo.samples[i];
+            _this.sampleNames.push(sName);
+            _this._addSampleColumn(sName);
+
+            sampleTableElems.push({
+                html: sName + ":",
+                margin: '0 15 0 0'
+            });
+
+            sampleTableElems.push({
+                xtype: 'checkbox',
+                name: "sampleGT_" + sName,
+                inputValue: '0/0,0|0'
+            });
+            sampleTableElems.push({
+                xtype: 'checkbox',
+                name: "sampleGT_" + sName,
+                inputValue: '0/1,1/0, 0|1,1|0'
+            });
+            sampleTableElems.push({
+                xtype: 'checkbox',
+                name: "sampleGT_" + sName,
+                inputValue: '1/1,1|1'
+            });
+        }
+
+        _this.grid.reconfigure(null, _this.columnsGrid);
+
+        if (_this.filters.effect) {
+            var ctForm = Ext.getCmp(this.id + "conseq_type_panel");
+            ctForm.removeAll();
+            ctForm.add([
+                {
+                    xtype: 'tbtext', text: '<span class="info">Select one or multiple conseq. type</span>'
+                },
+                _this._createDynCombobox("conseq_type", "Consequence Type", this.variantInfo.consequenceTypes, "non_synonymous_codon")
+            ]);
+        }
+
+        if (_this.filters.segregation) {
+            var samples = Ext.getCmp(this.id + "samples_form_panel");
+            samples.removeAll();
+            samples.add(sampleTableElems);
+        }
+        _this.panel.setLoading(false);
+    },
+    _addSampleColumn: function (sampleName) {
+
+        var _this = this;
+
+        for (var i = 0; i < _this.attributes.length; i++) {
+            if (_this.attributes[i].name == sampleName) {
+                return false;
+            }
+        }
+
+        _this.attributes.push({
+            "name": sampleName,
+            "type": "string"
+        });
+
+        for (var i = 0; i < _this.columnsGrid.length; i++) {
+            var col = _this.columnsGrid[i];
+
+            if (col['text'] == "Samples") {
+                col["columns"].push({
+                    "text": sampleName,
+                    "dataIndex": sampleName,
+                    "flex": 1,
+                    "sortable": false
+                });
+            }
+        }
+        _this.st.setFields(_this.attributes);
+    },
+    _removeSampleColumn: function (sampleName) {
+
+        var _this = this;
+        for (var i = 0; i < _this.attributes.length; i++) {
+            if (_this.attributes[i].name == sampleName) {
+                _this.attributes.splice(i, 1);
+                _this.model.setFields(_this.attributes);
+            }
+        }
+
+        for (var i = 0; i < _this.columnsGrid.length; i++) {
+            var col = _this.columnsGrid[i];
+            if (col['text'] == "Samples") {
+                var colSamples = col["columns"];
+                for (var j = 0; j < colSamples.length; j++) {
+                    if (colSamples[j].text == sampleName) {
+                        colSamples.splice(j, 1);
+                    }
+                }
+            }
+        }
+    },
+    _createSummaryPanel: function (data) {
+        var _this = this;
+
+        var cts = [];
+        var ss = [];
+
+        for (var key in data.consequenceTypes) {
+            cts.push({
+                name: Utils.formatText(key, "_"),
+                count: data.consequenceTypes[key]
+            });
+        }
+
+        for (var key in data.sampleStats) {
+            ss.push({
+                sampleName: key,
+                homozygotesNumber: data.sampleStats[key].homozygotesNumber,
+                mendelianErrors: data.sampleStats[key].mendelianErrors,
+                missingGenotypes: data.sampleStats[key].missingGenotypes
+            });
+        }
+
+        _this.ctStore = Ext.create('Ext.data.Store', {
+            fields: ['name', 'count'],
+            data: cts
+
+        });
+
+        _this.ssStore = Ext.create('Ext.data.Store', {
+            fields: ['sampleName', 'homozygotesNumber', 'mendelianErrors', 'missingGenotypes'],
+            data: ss
+        });
+
+        var chartCT = Ext.create('Ext.chart.Chart', {
+            xtype: 'chart',
+            width: 700,
+            height: 700,
+            store: _this.ctStore,
+            animate: true,
+            shadow: true,
+            legend: {
+                position: 'right'
+            },
+            theme: 'Base:gradients',
+            insetPadding: 60,
+            series: [
+                {
+                    type: 'pie',
+                    field: 'count',
+                    showInLegend: true,
+                    tips: {
+                        trackMouse: true,
+                        width: 200,
+                        height: 28,
+                        renderer: function (storeItem, item) {
+                            //calculate percentage.
+                            var total = 0;
+                            _this.ctStore.each(function (rec) {
+                                total += rec.get('count');
+                            });
+                            var name = Utils.formatText(storeItem.get('name'), "_");
+                            this.setTitle(name + ': ' + Math.round(storeItem.get('count') / total * 100) + '%');
+                        }
+                    },
+                    highlight: {
+                        segment: {
+                            margin: 20
+                        }
+                    },
+
+                    label: {
+                        field: 'name',
+                        display: 'rotate',
+                        contrast: true,
+                        font: '10px Arial'
+                    }
+
+                }
+            ]
+        });
+
+        var itemTplSamples = new Ext.XTemplate(
+            '<table cellspacing="0" style="max-width:400px;border-collapse: collapse;border:1px solid #ccc;"><thead>',
+            '<th style="min-width:50px;border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">Samples</th>',
+            '</thead><tbody>',
+            '<tpl for="samples">',
+            '<tr style="border-collapse: collapse;border:1px solid #ccc;">',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;color:steelblue;font-weight:bold;white-space: nowrap;">{.}</td>',
+            '</tr>',
+            '</tpl>',
+            '</tbody></table>'
+        );
+
+        var globalStats = new Ext.XTemplate(
+            '<table cellspacing="0" style="max-width:400px;border-collapse: collapse;border:1px solid #ccc;"><thead>',
+            '<th colspan="2" style="min-width:50px;border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">Global Stats</th>',
+            '</thead><tbody>',
+
+            '<tr style="border-collapse: collapse;border:1px solid #ccc;">',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;color:steelblue;font-weight:bold;white-space: nowrap;">Num variants</td>',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">{variantsCount}</td>',
+            '</tr>',
+
+            '<tr style="border-collapse: collapse;border:1px solid #ccc;">',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;color:steelblue;font-weight:bold;white-space: nowrap;">Num samples</td>',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">{samplesCount}</td>',
+            '</tr>',
+
+            '<tr style="border-collapse: collapse;border:1px solid #ccc;">',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;color:steelblue;font-weight:bold;white-space: nowrap;">Num indels</td>',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">{indelCount}</td>',
+            '</tr>',
+
+            //'<tr style="border-collapse: collapse;border:1px solid #ccc;">',
+            //'<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;color:steelblue;font-weight:bold;white-space: nowrap;">Num snps</td>',
+            //'<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">{snpCount}</td>',
+            //'</tr>',
+
+            '<tr style="border-collapse: collapse;border:1px solid #ccc;">',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;color:steelblue;font-weight:bold;white-space: nowrap;">Num biallelic</td>',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">{biallelicsCount}</td>',
+            '</tr>',
+
+            '<tr style="border-collapse: collapse;border:1px solid #ccc;">',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;color:steelblue;font-weight:bold;white-space: nowrap;">Num multiallelic</td>',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">{multiallelicsCount}</td>',
+            '</tr>',
+
+            '<tr style="border-collapse: collapse;border:1px solid #ccc;">',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;color:steelblue;font-weight:bold;white-space: nowrap;">Num transitions</td>',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">{transitionsCount}</td>',
+            '</tr>',
+
+            '<tr style="border-collapse: collapse;border:1px solid #ccc;">',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;color:steelblue;font-weight:bold;white-space: nowrap;">Num transversions</td>',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">{transversionsCount}</td>',
+            '</tr>',
+
+            '<tr style="border-collapse: collapse;border:1px solid #ccc;">',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;color:steelblue;font-weight:bold;white-space: nowrap;">% PASS</td>',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">{[this.pass(values)]}%</td>',
+            '</tr>',
+
+            '<tr style="border-collapse: collapse;border:1px solid #ccc;">',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;color:steelblue;font-weight:bold;white-space: nowrap;">Ti/Tv Ratio</td>',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">{[this.titv(values)]}</td>',
+            '</tr>',
+
+            '<tr style="border-collapse: collapse;border:1px solid #ccc;">',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;color:steelblue;font-weight:bold;white-space: nowrap;">Avg. Quality</td>',
+            '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">{[this.avgq(values)]}</td>',
+            '</tr>',
+            {
+                pass: function (values) {
+                    var res = values.passCount / values.variantsCount;
+                    return res.toFixed(2);
+                },
+                titv: function (values) {
+                    var res = values.transitionsCount / values.transversionsCount;
+                    return res.toFixed(2);
+                },
+                avgq: function (values) {
+                    var res = values.accumulatedQuality / values.variantsCount;
+                    return res.toFixed(2);
+                }
+            }
+        );
+
+        var items = [
+            {
+                xtype: 'container',
+                layout: 'vbox',
+                flex: 1,
+                items: [
+                    {
+                        xtype: 'box',
+                        flex: 1,
+                        margin: 10,
+                        data: data,
+                        tpl: itemTplSamples
+                    },
+                    {
+                        xtype: 'box',
+                        flex: 1,
+                        margin: 10,
+                        data: data.globalStats,
+                        tpl: globalStats
+                    }
+                ]
+            },
+            {
+                xtype: 'container',
+                layout: 'vbox',
+                flex: 3,
+                items: [
+                    {
+                        xtype: 'box',
+                        width: 700,
+                        html: '<div style="border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;font-weight: bold;">Consequence type</div>'
+                    },
+                    chartCT
+                ]
+            }
+        ];
+
+        var panel = Ext.create('Ext.window.Window', {
+            title: 'Summary',
+            height: 1000,
+            border: 0,
+            layout: 'hbox',
+            bodyPadding: 60,
+            width: 1000,
+            autoScroll: true,
+            modal: true,
+            minimizable: true,
+            closable: false,
+            items: items,
+            listeners: {
+                minimize: function (win, obj) {
+                    win.hide();
+                }
+            }
+        });
+
+        return panel;
+    },
+    _createGenomeViewer: function () {
+        var _this = this;
+
+        var rendered = true;
+
+        var gvpanel = Ext.create('Ext.panel.Panel', {
+            title: 'Genome Viewer',
+            flex: 8,
+            height: '100%',
+            border: 1,
+            html: '<div id="' + this.id + 'genomeViewer" style="width:1200px;height:300px;position:relative;"></div>',
+            listeners: {
+                afterlayout: {
+                    fn: function () {
+                        //prevent fires multiple times
+                        if (!rendered) {
+                            return;
+                        }
+                        rendered = false;
+                        var w = this.getWidth();
+                        console.log(w);
+                        $('#' + _this.id + 'genomeViewer').width(w);
+
+                        var region = new Region({
+                            chromosome: "13",
+                            start: 32889611,
+                            end: 32889611
+                        });
+
+                        var selection = _this.grid.getView().getSelectionModel().getSelection();
+                        if (selection.length > 0) {
+                            row = selection[0];
+                            region = new Region({
+                                chromosome: row.get("chromosome"),
+                                start: row.get("position"),
+                                end: row.get("position")
+                            });
+
+                        }
+
+                        var genomeViewer = new GenomeViewer({
+                            sidePanel: false,
+                            targetId: _this.id + 'genomeViewer',
+                            autoRender: true,
+                            border: false,
+                            resizable: true,
+                            region: region,
+                            trackListTitle: '',
+                            drawNavigationBar: true,
+                            drawKaryotypePanel: false,
+                            drawChromosomePanel: false,
+                            drawRegionOverviewPanel: true,
+                            overviewZoomMultiplier: 50
+                        }); //the div must exist
+
+                        genomeViewer.draw();
+
+                        this.sequence = new SequenceTrack({
+                            targetId: null,
+                            id: 1,
+                            title: 'Sequence',
+                            height: 30,
+                            visibleRegionSize: 200,
+                            histogramZoom: 20,
+                            transcriptZoom: 50,
+                            renderer: new SequenceRenderer(),
+                            dataAdapter: new SequenceAdapter({
+                                category: "genomic",
+                                subCategory: "region",
+                                resource: "sequence",
+                                species: genomeViewer.species
+                            })
+                        });
+
+                        this.gene = new GeneTrack({
+                            targetId: null,
+                            id: 2,
+                            title: 'Gene',
+                            height: 140,
+                            minHistogramRegionSize: 20000000,
+                            maxLabelRegionSize: 10000000,
+                            minTranscriptRegionSize: 200000,
+                            renderer: new GeneRenderer(),
+                            dataAdapter: new CellBaseAdapter({
+                                category: "genomic",
+                                subCategory: "region",
+                                resource: "gene",
+                                species: genomeViewer.species,
+                                params: {
+                                    exclude: 'transcripts.tfbs,transcripts.xrefs,transcripts.exons.sequence'
+                                },
+                                cacheConfig: {
+                                    chunkSize: 50000
+                                },
+                                filters: {},
+                                options: {},
+                                featureConfig: FEATURE_CONFIG.gene
+                            })
+                        });
+
+                        this.snp = new FeatureTrack({
+                            targetId: null,
+                            id: 4,
+                            title: 'SNP',
+                            minHistogramRegionSize: 12000,
+                            maxLabelRegionSize: 3000,
+                            height: 100,
+                            renderer: new FeatureRenderer(FEATURE_TYPES.snp),
+
+                            dataAdapter: new CellBaseAdapter({
+                                category: "genomic",
+                                subCategory: "region",
+                                resource: "snp",
+                                params: {
+                                    exclude: 'transcriptVariations,xrefs,samples'
+                                },
+                                species: genomeViewer.species,
+                                cacheConfig: {
+                                    chunkSize: 10000
+                                },
+                                filters: {},
+                                options: {},
+                                featureConfig: FEATURE_CONFIG.snp
+                            })
+                        });
+
+                        var renderer = new FeatureRenderer(FEATURE_TYPES.gene);
+                        renderer.on({
+                            'feature:click': function (event) {
+                            }
+                        });
+
+                        var gene = new FeatureTrack({
+                            targetId: null,
+                            id: 2,
+                            minHistogramRegionSize: 20000000,
+                            maxLabelRegionSize: 10000000,
+                            height: 100,
+                            renderer: renderer,
+                            dataAdapter: new CellBaseAdapter({
+                                category: "genomic",
+                                subCategory: "region",
+                                resource: "gene",
+                                params: {
+                                    exclude: 'transcripts'
+                                },
+                                species: genomeViewer.species,
+                                cacheConfig: {
+                                    chunkSize: 100000
+                                }
+                            })
+                        });
+                        genomeViewer.addOverviewTrack(gene);
+                        genomeViewer.addTrack(this.sequence);
+                        genomeViewer.addTrack(this.gene);
+                        genomeViewer.addTrack(this.snp);
+
+                        _this.gv = genomeViewer;
+                    }
+                }
+            }
+        });
+
+        _this.on("_grid:change", function (e) {
+            var row = e.args;
+
+            var region = new Region({
+                chromosome: row.chromosome,
+                start: row.position,
+                end: row.position
+            });
+
+            if (!_.isUndefined(_this.gv)) {
+                _this.gv.setRegion(region);
+            }
+        });
+        return gvpanel;
+    },
+    _createForm: function () {
+
+        var _this = this;
+
+        var accordion = Ext.create('Ext.form.Panel', {
+            border: 1,
+            height: "100%",
+            title: "Filters",
+            width: 220,
+            margin: '0 20 0 0',
+            layout: {
+                type: 'accordion',
+                titleCollapse: true,
+                fill: false,
+                multi: true
+            },
+            autoScroll: true,
+            tbar: {
+                width: '100%',
+                items: [
+                    {
+                        xtype: 'button',
+                        width: 55,
+                        text: '<span style="font-weight:bold">Reload</span>',
+                        tooltip: 'Reload',
+                        handler: function () {
+                            Utils.msg('Reload', 'Sucessfully')
+                            _this._reloadForm();
+                        }
+                    } ,
+                    {
+                        xtype: 'button',
+                        flex: 46,
+                        text: '<span style="font-weight:bold">Clear</span>',
+                        tooltip: 'Clear',
+                        handler: function () {
+                            _this._clearForm();
+                            Utils.msg('Clear', 'Sucessfully');
+                            Ext.getCmp(_this.id + "region_list").setValue("");
+                            Ext.getCmp(_this.id + "genes").setValue("");
+                        }
+                    },
+                    '->',
+                    {
+                        xtype: 'button',
+                        flex: 54,
+                        text: '<span style="font-weight:bold">Search</span>',
+                        tooltip: 'Search',
+                        handler: function () {
+
+                            if (_this._checkForm()) {
+                                _this._getResult();
+                            }
+                        }
+                    }
+                ]
+            }
+        });
+
+        if (_this.filters.segregation) {
+            var segregation = this._getSegregation();
+            var sampleContainer = Ext.create('Ext.form.FieldContainer', {
+                width: '100%',
+                border: false,
+                layout: {
+                    type: 'table',
+                    columns: 4
+                },
+                defaults: {
+                    border: false,
+                    padding: 4
+                },
+                id: this.id + "samples_form_panel"
+            });
+            segregation.insert(0, sampleContainer);
+            accordion.add(segregation);
+        }
+
+        if (_this.filters.maf) {
+            var controls = this._getControls();
+            accordion.add(controls);
+        }
+
+        if (_this.filters.effect) {
+            var effect = this._getConsequenceType();
+            accordion.add(effect);
+        }
+
+        if (_this.filters.region) {
+            var region = this._getRegionList();
+            accordion.add(region);
+        }
+
+        if (_this.filters.gene) {
+            var genes = this._getGenes();
+            accordion.add(genes);
+        }
+        return accordion;
+    },
+    _createGrid: function () {
+
+        var _this = this;
+
+        var xtmplPoly = new Ext.XTemplate(
+            '{[this.parseEffect(values)]}',
+            {
+                parseEffect: function (value) {
+
+                    if (value.polyphen_score == 0 && value.polyphen_effect == 0) {
+                        return ".";
+                    }
+
+                    var score = value.polyphen_score;
+                    var effect = "";
+                    switch (value.polyphen_effect) {
+                        case 0:
+                            effect = "probably damaging";
+                            break;
+                        case 1:
+                            effect = "possibly damaging";
+                            break;
+                        case 2:
+                            effect = "benign";
+                            break;
+                        case 3:
+                            effect = "unknown";
+                            break;
+                        default:
+                            return ".";
+                    }
+                    return(score + " - (" + effect + ")");
+                }
+            }
+        );
+        var xtmplSift = new Ext.XTemplate(
+            '{[this.parseEffect(values)]}',
+            {
+                parseEffect: function (value) {
+                    if (value.sift_score == 0 && value.sift_effect == 0) {
+                        return ".";
+                    }
+
+                    var score = value.sift_score;
+                    var effect = "";
+                    switch (value.sift_effect) {
+                        case 0:
+                            effect = "tolerated";
+                            break;
+                        case 1:
+                            effect = "deleterious";
+                            break;
+                        default:
+                            return ".";
+                    }
+                    return(score + " - (" + effect + ")");
+                }
+            }
+        );
+
+        parseMafControl = function (control) {
+            var maf = control.maf;
+            var res = maf.toFixed(3);
+            if (control.allele != "") {
+                res = res + " (" + control.allele + ")";
+            }
+            return res;
+        };
+
+        _this.columnsGrid = [
+            {
+                text: "Variant",
+                dataIndex: 'chromosome',
+                flex: 1,
+                xtype: "templatecolumn",
+                tpl: "{chromosome}:{position}"
+            },
+            {
+                text: "Alleles",
+                flex: 0.5,
+                xtype: "templatecolumn",
+                tpl: "{ref}>{alt}",
+                sortable: false
+            },
+            {
+                text: "Gene",
+                dataIndex: 'genes',
+                flex: 1,
+                sortable: false
+            },
+            {
+                text: 'Samples',
+                flex: 1,
+                sortable: false,
+                columns: []
+            },
+            {
+                text: "SNP Id",
+                dataIndex: 'snpid',
+                flex: 1,
+                sortable: true
+            },
+            {
+                flex: 1,
+                text: "Controls (MAF)",
+                defaults: {
+                    width: 70
+                },
+                columns: [
+                    {
+                        text: "1000G",
+                        renderer: function (val, meta, record) {
+                            if (record.data.controls["1000G"]) {
+                                return parseMafControl(record.data.controls["1000G"]);
+                            } else {
+                                return ".";
+                            }
+                        }
+                    },
+                    {
+                        text: "1000G-AFR",
+                        renderer: function (val, meta, record) {
+                            if (record.data.controls["1000G-AFR"]) {
+                                return parseMafControl(record.data.controls["1000G-AFR"]);
+                            } else {
+                                return ".";
+                            }
+                        }
+                    },
+                    {
+                        text: "1000G-ASI",
+                        renderer: function (val, meta, record) {
+                            if (record.data.controls["1000G-ASI"]) {
+                                return parseMafControl(record.data.controls["1000G-ASI"]);
+
+                            } else {
+                                return ".";
+                            }
+                        }
+                    },
+                    {
+                        text: "1000G-AME",
+                        renderer: function (val, meta, record) {
+                            if (record.data.controls["1000G-AME"]) {
+                                return parseMafControl(record.data.controls["1000G-AME"]);
+                            } else {
+                                return ".";
+                            }
+                        }
+                    },
+                    {
+                        text: "1000G-EUR",
+                        renderer: function (val, meta, record) {
+                            if (record.data.controls["1000G-EUR"]) {
+                                return parseMafControl(record.data.controls["1000G-EUR"]);
+                            } else {
+                                return ".";
+                            }
+                        }
+                    },
+                    {
+                        text: "EVS",
+                        renderer: function (val, meta, record) {
+                            if (record.data.controls["EVS"]) {
+                                return parseMafControl(record.data.controls["EVS"]);
+                            } else {
+                                return ".";
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                text: "Consq. Type",
+                dataIndex: "consequence_types",
+                flex: 1,
+                sortable: false
+            },
+            {
+                text: 'Polyphen',
+                flex: 1,
+                dataIndex: 'polyphen_score',
+                xtype: 'templatecolumn',
+                tpl: xtmplPoly,
+                sortable: false
+            },
+            {
+                text: 'SIFT',
+                flex: 1,
+                dataIndex: 'sift_score',
+                xtype: "templatecolumn",
+                tpl: xtmplSift,
+                sortable: false
+            },
+            {
+                text: 'Phenotype',
+                dataIndex: 'phenotype',
+                sortable: false
+            },
+            {
+                text: "Is indel?",
+                flex: 1,
+                xtype: 'booleancolumn',
+                trueText: 'Yes',
+                falseText: 'No',
+                dataIndex: 'stats_is_indel',
+                sortable: true,
+                hidden: true
+            }
+        ];
+        _this.attributes = [
+            {name: "chromosome", type: "string"},
+            {name: "position", type: "int"},
+            {name: "alt", type: "string"},
+            {name: "ref", type: "string"},
+            {name: 'stats_id_snp', type: 'string'},
+            {name: 'stats_maf', type: 'number'},
+            {name: 'stats_mgf', type: 'number'},
+            {name: 'stats_miss_gt', type: 'int'},
+            {name: 'stats_is_indel', type: 'boolean'},
+            {name: 'gene_name', type: 'string'},
+            {name: 'consequence_types', type: 'string'},
+            {name: "controls", type: 'auto'},
+            {name: "phenotype", type: "string"},
+            {name: "polyphen_score", type: 'number'},
+            {name: "polyphen_effect", type: 'int'},
+            {name: "sift_score", type: 'number'},
+            {name: "sift_effect", type: 'int'}
+        ];
+        _this.model = Ext.define('Variant', {
+            extend: 'Ext.data.Model',
+            fields: _this.attributes
+        });
+
+        _this.st = Ext.create('Ext.data.Store', {
+            pageSize: 25,
+            model: _this.model,
+            data: [],
+            remoteSort: true,
+            storeId: 'gridStore',
+            sorters: [
+                {
+                    property: 'chromosome',
+                    direction: 'ASC'
+                }
+            ],
+            proxy: {
+                url: _this.url,
+                type: 'ajax',
+                reader: {
+                    root: "response.result",
+                    totalProperty: "response.numResults"
+                },
+                extraParams: {
+                    myParam: "hola"
+                },
+                actionMethods: {create: 'GET', read: 'GET', update: 'GET', destroy: 'GET'}
+            },
+            listeners: {
+                load: function (store, records, successful, operation, eOpts) {
+
+                    _this.st.suspendEvents();
+                    var aux;
+
+                    for (var i = 0; i < records.length; i++) {
+                        var v = records[i];
+                        for (var key in v.data.sampleGenotypes) {
+
+                            aux = v.data.sampleGenotypes[key];
+                            aux = aux.replace(/-1/g, ".");
+                            aux = aux.replace("|", "/");
+                            v.set(key, aux);
+                        }
+
+                        v.set("snpid", v.data.snpid);
+                        v.set("genes", v.data.genes.join(","));
+
+                        v.commit();
+                    }
+
+                    _this._getPhenotypes(records);
+                    _this.st.resumeEvents();
+                    _this.st.fireEvent('refresh');
+                },
+                beforeload: function (store, operation, eOpts) {
+                    _this.trigger("_grid:clear", {sender: _this});
+                }
+            }
+
+        });
+        _this.exportStore = Ext.create('Ext.data.Store', {
+            model: _this.model,
+            data: [],
+            autoLoad: false,
+            remoteSort: true,
+            storeId: 'exportStore',
+            sorters: [
+                {
+                    property: 'chromosome',
+                    direction: 'ASC'
+                }
+            ],
+            proxy: {
+                model: _this.model,
+                type: 'ajax',
+                url: _this.url,
+                reader: {
+                    root: "response.result",
+                    totalProperty: "response.numResults"
+                },
+                listeners: {
+                    exception: function (proxy, response, operation, eOpts) {
+                        Ext.MessageBox.show({
+                            title: 'REMOTE EXCEPTION',
+                            msg: operation.getError(),
+                            icon: Ext.MessageBox.ERROR,
+                            buttons: Ext.Msg.OK
+                        });
+                    },
+                    success: function (response) {
+                        console.log("Spiffing, everything worked");
+                        console.log(response.success);
+                        console.log(response.result);
+                    },
+                    failure: function (response) {
+                        console.log(response);
+                        Ext.Msg.alert('Error', 'Please try again.', Ext.emptyFn);
+                    }
+                }
+            },
+            listeners: {
+                load: function (store, records, successful, operation, eOpts) {
+
+                    _this.st.suspendEvents();
+                    var aux;
+
+                    for (var i = 0; i < records.length; i++) {
+                        var v = records[i];
+                        for (var key in v.data.sampleGenotypes) {
+
+                            aux = v.data.sampleGenotypes[key];
+                            aux = aux.replace(/-1/g, ".");
+                            aux = aux.replace("|", "/");
+                            v.set(key, aux);
+                        }
+
+                        v.set("snpid", v.data.snpid);
+                        v.set("genes", v.data.genes.join(","));
+
+                        v.commit();
+                    }
+                    _this.st.resumeEvents();
+                    _this.st.fireEvent('refresh');
+                }
+            }
+        });
+
+        var paging = Ext.create('Ext.PagingToolbar', {
+            store: _this.st,
+            id: _this.id + "_pagingToolbar",
+            pageSize: 25,
+            displayInfo: true,
+            displayMsg: 'Variants {0} - {1} of {2}',
+            emptyMsg: "No variants to display"
+        });
+
+        paging.add({
+                xtype: 'button',
+                text: 'Export data...',
+                handler: function () {
+
+                    if (_this.st.getCount() == 0) {
+                        Utils.msg('ERROR', 'You must apply some filters before or the result set is empty!!');
+                        return;
+                    }
+
+                    if (!Ext.getCmp(_this.id + "exportWindow")) {
+                        var cbgItems = [];
+                        var attrList = _this._getColumnNames();
+
+                        cbgItems.push({
+                            boxLabel: attrList[0],
+                            name: 'attr',
+                            inputValue: attrList[0],
+                            checked: true,
+                            disabled: true
+                        });
+
+                        for (var i = 1; i < attrList.length; i++) {
+                            cbgItems.push({
+                                boxLabel: attrList[i],
+                                name: 'attr',
+                                inputValue: attrList[i],
+                                checked: true
+                            });
+                        }
+                        var progress = Ext.create('Ext.ProgressBar', {
+                            text: 'Progress...',
+                            border: 1,
+                            flex: 1,
+                            margin: '0 10 0 0',
+                            id: _this.id + "_progressBarExport"
+                        });
+
+                        Ext.create('Ext.window.Window', {
+                            id: _this.id + "exportWindow",
+                            title: "Export attributes",
+                            height: 250,
+                            maxHeight: 250,
+                            width: 400,
+                            autoScroll: true,
+                            layout: "vbox",
+                            modal: true,
+                            items: [
+                                {
+                                    xtype: 'checkboxgroup',
+                                    id: _this.id + "cbgAttributes",
+                                    layout: 'vbox',
+                                    items: cbgItems
+                                }
+                            ],
+                            buttons: [
+                                progress,
+                                {
+                                    xtype: 'textfield',
+                                    id: _this.id + "fileName",
+                                    emptyText: "enter file name",
+                                    flex: 1
+                                },
+                                {
+                                    text: 'Download',
+                                    href: "none",
+                                    id: _this.id + "_downloadExport",
+                                    handler: function () {
+                                        Ext.getCmp(_this.id + "_progressBarExport").updateProgress(0.1, "Requesting data");
+
+                                        this.disable();
+                                        var fileName = Ext.getCmp(_this.id + "fileName").getValue();
+                                        if (fileName == "") {
+                                            fileName = "variants";
+                                        }
+                                        var columns = Ext.getCmp(_this.id + "cbgAttributes").getChecked();
+
+                                        var content = _this._exportToTab(columns);
+
+                                        this.getEl().set({
+                                            href: 'data:text/csv,' + encodeURIComponent(content),
+                                            download: fileName + ".csv"
+                                        });
+                                        Ext.getCmp(_this.id + "_progressBarExport").updateProgress(1, "Downloaded");
+                                        Ext.getCmp(_this.id + "fileName").reset();
+                                    }
+                                }
+                            ]
+                        }).show();
+                    } else {
+                        Ext.getCmp(_this.id + "exportWindow").show();
+                    }
+                    Ext.getCmp(_this.id + "_progressBarExport").updateProgress(0, "Progress");
+                    Ext.getCmp(_this.id + "_downloadExport").enable();
+                }
+            }
+        );
+        paging.add({
+            xtype: 'button',
+            text: 'View Summary',
+            handler: function () {
+                _this.summaryPanel.show();
+            }
+        });
+
+        var grid = Ext.create('Ext.grid.Panel', {
+                title: 'Variant Info',
+                store: _this.st,
+                loadMask: true,
+                columns: this.columnsGrid,
+                plugins: 'bufferedrenderer',
+                loadMask: true,
+                collapsible: true,
+                titleCollapse: true,
+                animCollapse: false,
+                features: [
+                    {ftype: 'summary'}
+                ],
+                viewConfig: {
+                    emptyText: 'No records to display',
+                    enableTextSelection: true
+                },
+                bbar: paging
+
+            }
+        );
+
+        grid.getSelectionModel().on('selectionchange', function (sm, selectedRecord) {
+            if (selectedRecord.length) {
+                var row = selectedRecord[0].data;
+                _this.trigger("_grid:change", {sender: _this, args: row});
+            }
+        });
+
+        return grid;
+    },
+    _getSubColumn: function (colName) {
+        var _this = this;
+        var subCols = [];
+
+        for (var i = 0; i < _this.columnsGrid.length; i++) {
+            var col = _this.columnsGrid[i];
+
+            if (col["text"] == colName && col["columns"] != null && col["columns"].length > 0) {
+                var sub = col["columns"];
+                for (var j = 0; j < sub.length; j++) {
+                    var elem = sub[j];
+                    subCols.push(elem["text"]);
+                }
+            }
+        }
+        return subCols;
+    },
+    _exportToTab: function (columns) {
+
+        var _this = this;
+        var colNames = [];
+
+        var headerLine = "";
+        for (var i = 0; i < columns.length; i++) {
+            var col = columns[i];
+
+            var subCols = _this._getSubColumn(col["boxLabel"]);
+            if (subCols.length > 0) {
+                for (var j = 0; j < subCols.length; j++) {
+                    headerLine += subCols[j] + "\t";
+                    colNames.push(subCols[j]);
+                }
+            } else {
+                headerLine += col["boxLabel"] + "\t";
+                colNames.push(col["boxLabel"]);
+            }
+            subCols.splice(0, subCols.length);
+        }
+
+        var output = "";
+        output += "#" + headerLine + "\n";
+
+        var lines = _this._getDataToExport();
+
+        Ext.getCmp(_this.id + "_progressBarExport").updateProgress(0.6, "Preparing data");
+
+        for (var i = 0; i < lines.length; i++) {
+            var v = lines[i];
+            for (var key in v.sampleGenotypes) {
+                aux = v.sampleGenotypes[key];
+                aux = aux.replace(/-1/g, ".");
+                aux = aux.replace("|", "/");
+                v[key] = aux;
+                _this._getEffect(v);
+                _this._getPolyphenSift(v);
+            }
+            v.genes = v.genes.join(",");
+        }
+        Ext.getCmp(_this.id + "_progressBarExport").updateProgress(0.9, "Creating File");
+
+        for (var j = 0; j < lines.length; j++) {
+            output += _this._processFileLine(lines[j], colNames);
+            output += "\n";
+        }
+
+        return output;
+    },
+    _getDataToExport: function () {
+
+        var _this = this;
+        var totalData = _this.st.totalCount;
+
+        var values = this.form.getForm().getValues();
+
+        var formParams = {};
+        for (var param in values) {
+            if (formParams[param]) {
+                var aux = [];
+                aux.push(formParams[param]);
+                aux.push(values[param]);
+                formParams[param] = aux;
+            } else {
+                formParams[param] = values[param];
+            }
+        }
+        formParams.limit = totalData;
+
+        var data = [];
+        $.ajax({
+            url: _this.url,
+            dataType: 'json',
+            data: formParams,
+            async: false,
+            success: function (response, textStatus, jqXHR) {
+                if (response.response && response.response.numResults > 0) {
+
+                    data = response.response.result;
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('Error loading Effect');
+                Ext.getCmp(_this.id + "_progressBarExport").updateProgress(0, "Error");
+            }
+        });
+        return data;
+
+    },
+    _processFileLine: function (data, columns) {
+        var line = "";
+        for (var i = 0; i < columns.length; i++) {
+            var col = columns[i];
+            switch (col) {
+                case "Variant":
+                    line += data.chromosome + ":" + data.position;
+                    break;
+                case "Alleles":
+                    line += data.ref + ">" + data.alt;
+                    break;
+                case "SNP Id":
+
+                    line += this._getValueLine(data.stats_id_snp);
+                    break;
+                case "1000G":
+                    if (data.controls["1000G"]) {
+                        line += data.controls["1000G"].maf + "(" + data.controls["1000G"].allele + ")";
+
+                    } else {
+                        line += ".";
+                    }
+                    break;
+                case "BIER":
+                    if (data.controls["BIER"]) {
+
+                        line += data.controls["BIER"].maf + "(" + data.controls["BIER"].allele + ")";
+                    } else {
+                        line += ".";
+                    }
+                    break;
+                case "EVS":
+                    if (data.controls["EVS"]) {
+                        line += data.controls["EVS"].maf + "(" + data.controls["EVS"].allele + ")";
+                    } else {
+                        line += ".";
+                    }
+                    break;
+                case "Gene":
+                    line += this._getValueLine(data.genes)
+                    break;
+                case "Consq. Type":
+                    line += this._getValueLine(data.consequence_types);
+                    break;
+                case "Polyphen":
+                    line += this._getValueLine(data.polyphen_score);
+                    break;
+                case "Phenotype":
+                    line += this._getValueLine(data.phenotype);
+                    break;
+                case "SIFT":
+                    line += this._getValueLine(data.sift_score);
+                    break;
+
+                case "Is indel?":
+                    line += this._getValueLine(data.stats_is_indel);
+                    break;
+                default:
+                    line += this._getValueLine(data[col]);
+            }
+            line += "\t";
+        }
+        return line;
+    },
+    _getValueLine: function (value) {
+        if (value == undefined || value == null) {
+            return ".";
+        } else if (value == "") {
+            return ".";
+        } else {
+            return value;
+        }
+    },
+    _getColumnNames: function () {
+        var _this = this;
+
+        var colNames = [];
+        for (var i = 0; i < _this.columnsGrid.length; i++) {
+            var col = _this.columnsGrid[i];
+            colNames.push(col.text);
+        }
+        return colNames;
+    },
+    _getResult: function () {
+        var _this = this;
+
+        // Clear store's extraParams
+        _this.st.getProxy().extraParams = {};
+
+        var values = this.form.getForm().getValues();
+
+        console.log(values);
+
+        var formParams = {};
+        for (var param in values) {
+            if (formParams[param]) {
+                var aux = [];
+                aux.push(formParams[param]);
+                aux.push(values[param]);
+                formParams[param] = aux;
+            } else {
+                formParams[param] = values[param];
+            }
+        }
+
+        for (var param in formParams) {
+            _this.st.getProxy().setExtraParam(param, formParams[param]);
+        }
+        _this.st.load();
+    },
+    _getRegionList: function () {
+        var regionList = Ext.create('Ext.form.field.TextArea', {
+            id: this.id + "region_list",
+            name: "region_list",
+            emptyText: '1:1-1000000,2:1-1000000',
+            margin: '0 0 0 5',
+            allowBlank: false,
+            width: '100%'
+        });
+
+        return Ext.create('Ext.form.Panel', {
+            bodyPadding: "5",
+            margin: "0 0 5 0",
+            buttonAlign: 'center',
+            layout: 'vbox',
+            title: "Region",
+            border: false,
+            collapsed: true,
+            items: [
+                {xtype: 'tbtext', text: '<span class="info">Enter regions (comma separated)</span>'},
+                regionList
+            ]
+        });
+    },
+    _getGenes: function () {
+        var geneList = Ext.create('Ext.form.field.TextArea', {
+            id: this.id + "genes",
+            name: "genes",
+            emptyText: 'BRCA2,PPL',
+            margin: '0 0 0 5',
+            allowBlank: false,
+            width: '100%'
+        });
+
+        return Ext.create('Ext.form.Panel', {
+            title: "Gene",
+            bodyPadding: "5",
+            border: false,
+            buttonAlign: 'center',
+            collapsed: true,
+            layout: 'vbox',
+            margin: "0 0 5 0",
+            width: "100%",
+            items: [
+                {xtype: 'tbtext', text: '<span class="info">Enter genes (comma separated)</span>'},
+                geneList
+            ]
+        });
+    },
+    _getConsequenceType: function () {
+
+        return Ext.create('Ext.form.Panel', {
+            title: "Effect",
+            collapsed: true,
+            bodyPadding: "5",
+            margin: "0 0 5 0",
+            width: "100%",
+            buttonAlign: 'center',
+            layout: 'vbox',
+            border: false,
+            id: this.id + "conseq_type_panel",
+            items: []
+        });
+    },
+    _getSegregation: function () {
+
+        var gt_text = Ext.create('Ext.form.field.Text', {
+            id: this.id + "miss_gt",
+            name: "miss_gt",
+            margin: '0 0 0 5',
+            allowBlank: false,
+            flex: 1,
+            value: 0
+        });
+
+        var gt_opt = this._createCombobox("option_miss_gt", "", this.optValues, 4, 10, '0 0 0 5');
+        gt_opt.width = 60;
+
+        return Ext.create('Ext.form.Panel', {
+            bodyPadding: "5",
+            margin: "0 0 5 0",
+            width: "100%",
+            type: 'vbox',
+            height: 300,
+            border: false,
+            title: 'Segregation',
+            autoScroll: true,
+            items: [
+                {
+                    xtype: 'fieldcontainer',
+                    fieldLabel: '<span class="emph">Missings</span>',
+                    labelWidth: 100,
+                    labelAlign: 'top',
+                    margin: "0 0 5 0",
+                    layout: 'hbox',
+                    border: false,
+                    items: [gt_opt, gt_text]}
+            ]
+        });
+    },
+    _getControls: function () {
+        return Ext.create('Ext.form.Panel', {
+            bodyPadding: "5",
+            margin: "0 0 5 0",
+            width: "100%",
+            buttonAlign: 'center',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
+            title: "MAF",
+            collapsed: true,
+            border: false,
+            defaults: {
+                labelWidth: 110,
+                flex: 1
+            },
+            items: [
+                {
+                    xtype: 'textfield',
+                    fieldLabel: '<span class="emph">1000G MAF <</span>',
+                    name: 'maf_1000g_controls',
+                    labelAlign: 'right'
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: '<span class="emph">EVS MAF   <</span>',
+                    name: 'maf_evs_controls',
+                    labelAlign: 'right'
+                },
+                {
+                    xtype: 'tbtext',
+                    margin: '20 0 5 0 ',
+                    border: '0 0 1 0',
+                    style: {
+                        borderColor: 'black',
+                        borderStyle: 'solid'
+                    },
+                    text: '<span>1000G Populations</span>'
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: '<span class="emph">African MAF <</span>',
+                    name: 'maf_1000g_afr_controls',
+                    labelAlign: 'right'
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: '<span class="emph">American MAF <</span>',
+                    name: 'maf_1000g_ame_controls',
+                    labelAlign: 'right'
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: '<span class="emph">Asian MAF <</span>',
+                    name: 'maf_1000g_asi_controls',
+                    labelAlign: 'right'
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: '<span class="emph">European MAF <</span>',
+                    name: 'maf_1000g_eur_controls',
+                    labelAlign: 'right'
+                }
+            ]
+        });
+    },
+    _createCombobox: function (name, label, data, defaultValue, labelWidth, margin, width) {
+        return Ext.create('Ext.form.field.ComboBox', {
+            id: this.id + name,
+            name: name,
+            fieldLabel: label,
+            store: data,
+            queryMode: 'local',
+            displayField: 'name',
+            valueField: 'value',
+            value: data.getAt(defaultValue).get('value'),
+            labelWidth: labelWidth,
+            margin: margin,
+            editable: false,
+            allowBlank: false,
+            width: width
+        });
+    },
+    _createDynCombobox: function (name, label, data, defaultValue) {
+        var dataAux = [];
+        for (var key in data) {
+            if (key != '.') {
+                dataAux.push({name: Utils.formatText(key, "_"), value: key});
+            }
+        }
+        var storeAux = Ext.create('Ext.data.Store', {
+            fields: ['value', 'name'],
+            data: dataAux
+        });
+
+        return Ext.create('Ext.form.field.ComboBox', {
+            name: name,
+            emptyText: label,
+            store: storeAux,
+            queryMode: 'local',
+            displayField: 'name',
+            valueField: 'value',
+            multiSelect: true,
+            delimiter: ",",
+            editable: false,
+            allowBlank: false,
+            value: defaultValue,
+            width: '100%'
+        });
+    },
+    _clearForm: function () {
+        this.form.getForm().reset();
+    },
+    _reloadForm: function () {
+        this.form.getForm().reset();
+    },
+    _checkForm: function () {
+        var reg = Ext.getCmp(this.id + "region_list");
+        var genes = Ext.getCmp(this.id + "genes");
+
+        return true;
+    },
+    _getEffect: function (record) {
+        var req = record.chromosome + ":" + record.position + ":" + record.ref + ":" + record.alt[0];
+
+        $.ajax({
+            url: "http://ws.bioinfo.cipf.es/cellbase/rest/latest/hsa/genomic/variant/" + req + "/consequence_type?of=json",
+            dataType: 'json',
+            async: false,
+            success: function (response, textStatus, jqXHR) {
+                if (response) {
+                    for (var j = 0; j < response.length; j++) {
+                        var elem = response[j];
+                        if (elem.aaPosition != -1 &&
+                            elem.transcriptId != "" &&
+                            elem.aminoacidChange.length >= 3
+                            && record.transcriptId === undefined
+                            && record.aaPos === undefined
+                            && record.aaChange === undefined) {
+                            record.transcript = elem.transcriptId;
+                            record.aaPos = elem.aaPosition;
+                            record.aaChange = elem.aminoacidChange;
+                        }
+                    }
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('Error loading Effect');
+            }
+        });
+    },
+    _getPolyphenSift: function (variant) {
+        if (variant.aaPos != undefined && variant.aaPos >= 0) {
+            var change = variant.aaChange.split("/")[1];
+            var url = CELLBASE_HOST + "/v3/hsapiens/feature/transcript/" + variant.transcript + "/function_prediction?aaPosition=" + variant.aaPos + "&aaChange=" + change;
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                async: false,
+                success: function (response, textStatus, jqXHR) {
+                    var res = response.response[0];
+                    if (res.numResults > 0) {
+                        if (res.result[0].aaPositions[variant.aaPos]) {
+                            res = res.result[0].aaPositions[variant.aaPos][change];
+                            if (res !== undefined) {
+                                if (res.ps != null) {
+                                    variant.polyphen_score = res.ps;
+                                }
+                                if (res.pe != null) {
+                                    variant.polyphen_effect = res.pe;
+                                }
+                                if (res.ss != null) {
+                                    variant.sift_score = res.ss;
+                                }
+                                if (res.se != null) {
+                                    variant.sift_effect = res.se;
+                                }
+                            }
+                        }
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log('Error loading PolyPhen/SIFT');
+                }
+            });
+        }
+    },
+    _getPhenotypes: function (records) {
+        var regs = [];
+        for (var i = 0; i < records.length; i++) {
+            var variant = records[i];
+            var chr = variant.data.chromosome;
+            var pos = variant.data.position;
+            regs.push(chr + ":" + pos + "-" + pos);
+        }
+        if (regs.length > 0) {
+            var url = CELLBASE_HOST + "/v3/hsapiens/genomic/region/" + regs.join(",") + "/phenotype?include=phenotype";
+
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                async: false,
+                success: function (response, textStatus, jqXHR) {
+                    if (response != undefined && response.response.length > 0 && response.response.length == records.length) {
+                        for (var i = 0; i < response.response.length; i++) {
+                            var v = records[i];
+                            var elem = response.response[i];
+                            var phenotypes = [];
+
+                            for (var k = 0; k < elem.numResults; k++) {
+                                phenotypes.push(elem.result[k].phenotype);
+                            }
+
+                            v.set("phenotype", phenotypes.join(","));
+                            v.commit();
+                        }
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log('Error loading Phenotypes');
+                }
+            });
+        }
+    }
+};
 /*
  * Copyright (c) 2012 Francisco Salavert (ICM-CIPF)
  * Copyright (c) 2012 Ruben Sanchez (ICM-CIPF)
@@ -7041,10 +9738,10 @@ AttributeNetworkFileWidget.prototype.draw = function () {
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function AttributeEditWidget ( args ) {
+function AttributeEditWidget(args) {
     var _this = this;
-    _.extend( this, Backbone.Events );
-    this.id = Utils.genId( 'AttributeEditWidget' );
+    _.extend(this, Backbone.Events);
+    this.id = Utils.genId('AttributeEditWidget');
 
     this.window;
     this.grid;
@@ -7053,18 +9750,18 @@ function AttributeEditWidget ( args ) {
     this.attrMan;
     this.type;
 
-    this.selectedFilter = new Ext.util.Filter( {
-        filterFn: function ( item ) {
+    this.selectedFilter = new Ext.util.Filter({
+        filterFn: function (item) {
             return item.data['Selected'] === true;
         }
-    } );
+    });
 
     //set instantiation args, must be last
-    _.extend( this, args );
+    _.extend(this, args);
 
-    this.on( this.handlers );
+    this.on(this.handlers);
 
-    if ( this.autoRender ) {
+    if (this.autoRender) {
         this.render();
     }
 };
@@ -7073,23 +9770,27 @@ AttributeEditWidget.prototype = {
     render: function () {
         var _this = this;
 
-        this.attrMan.on( 'change:attributes', function () {
+        this.attrMan.on('change:attributes', function () {
             _this.reconfigureComponents();
-        } );
+        });
 
-        this.comboStore = Ext.create( 'Ext.data.Store', {
+        this.comboStore = Ext.create('Ext.data.Store', {
             fields: ['name'],
             data: this.attrMan.attributes
-        } );
+        });
 
         /****** UI ******/
 
-        var modifyRowsFormPanel = Ext.create( 'Ext.form.Panel', {
+        var modifyRowsFormPanel = Ext.create('Ext.form.Panel', {
             title: 'Edit multiple values',
-            bodyPadding: "10 0 10 10",
+            bodyPadding: 10,
             layout: 'vbox',
             border: 0,
-            flex: 1,
+//            flex: 1,
+            defaults: {
+                width: '100%',
+                labelWidth: 55
+            },
             dockedItems: [
                 {
                     xtype: 'toolbar',
@@ -7115,36 +9816,37 @@ AttributeEditWidget.prototype = {
                 this.createValueField(),
                 {
                     xtype: 'button',
-                    width: 170,
                     text: 'Apply on selected rows',
                     formBind: true, // only enabled if the form is valid
                     disabled: true,
-                    handler: function ( bt ) {
+                    handler: function (bt) {
                         var newValue = bt.prev().getValue();
                         var selectedAttr = bt.prev().prev().getValue();
                         var selectedRecords = _this.grid.getSelectionModel().getSelection();
-                        _this.attrMan.setRecordsAttribute( selectedRecords, selectedAttr, newValue );
+                        _this.attrMan.setRecordsAttribute(selectedRecords, selectedAttr, newValue);
                     }
                 }
             ]
-        } );
-        var addAttributeFormPanel = Ext.create( 'Ext.form.Panel', {
+        });
+        var addAttributeFormPanel = Ext.create('Ext.form.Panel', {
             title: 'Add attribute',
-            bodyPadding: "10 0 10 10",
+            bodyPadding: 10,
             layout: 'vbox',
             border: 0,
-            flex: 1,
+//            flex: 1,
             style: {
                 borderTopColor: 'lightgray',
                 borderTopStyle: 'solid',
                 borderTopWidth: '1px'
             },
+            defaults: {
+                width: '100%',
+                labelWidth: 55
+            },
             items: [
                 {
                     xtype: 'textfield',
-                    width: 170,
                     fieldLabel: 'Name',
-                    labelWidth: 50,
                     allowBlank: false
                 },
                 {
@@ -7152,9 +9854,7 @@ AttributeEditWidget.prototype = {
                     hidden: true,
                     store: ['string', 'int', 'float'],
                     value: 'string',
-                    width: 170,
                     fieldLabel: 'Type',
-                    labelWidth: 50,
                     editable: false,
                     queryMode: 'local',
                     allowBlank: false
@@ -7168,50 +9868,53 @@ AttributeEditWidget.prototype = {
 //                },
                 {
                     xtype: 'button',
-                    width: 170,
                     text: 'Apply',
                     formBind: true, // only enabled if the form is valid
                     disabled: true,
-                    handler: function ( bt ) {
-                        var name = bt.previousSibling( 'textfield[fieldLabel=Name]' ).getValue();
-                        var type = bt.previousSibling( 'combo[fieldLabel=Type]' ).getValue();
+                    handler: function (bt) {
+                        var name = bt.previousSibling('textfield[fieldLabel=Name]').getValue();
+                        var type = bt.previousSibling('combo[fieldLabel=Type]').getValue();
 //                        var defaultValue = bt.prev().getValue();
-                        var created = _this.attrMan.addAttribute( {name: name, type: type, defaultValue: ''} );
+                        var created = _this.attrMan.addAttribute({name: name, type: type, defaultValue: ''});
                         var msg = (created === false) ? '<span class="err">Name already exists.</span>' : '';
-                        bt.next().update( msg );
+                        bt.next().update(msg);
                     }
                 },
                 {
                     xtype: 'box',
-                    margin: "10 0 0 0"
+                    margin: '10 0 0 0',
+                    html: ''
                 }
             ]
-        } );
+        });
 
-        var removeAttributeFormPanel = Ext.create( 'Ext.form.Panel', {
+        var removeAttributeFormPanel = Ext.create('Ext.form.Panel', {
             title: 'Remove attribute',
-            bodyPadding: "10 0 10 10",
+            bodyPadding: 10,
             layout: 'vbox',
             border: 0,
-            flex: 1,
+//            flex: 1,
             style: {
                 borderTopColor: 'lightgray',
                 borderTopStyle: 'solid',
                 borderTopWidth: '1px'
             },
+            defaults: {
+                width: '100%',
+                labelWidth: 55
+            },
             items: [
                 this.createAttributesCombo(),
                 {
                     xtype: 'button',
-                    width: 170,
                     text: 'Apply',
                     formBind: true, // only enabled if the form is valid
                     disabled: true,
-                    handler: function ( bt ) {
+                    handler: function (bt) {
                         var attributeName = bt.prev().getValue();
-                        var removed = _this.attrMan.removeAttribute( attributeName );
+                        var removed = _this.attrMan.removeAttribute(attributeName);
                         var msg = (removed === false) ? '<span class="err">Impossible to remove.</span>' : '';
-                        bt.next().update( msg );
+                        bt.next().update(msg);
                     }
                 },
                 {
@@ -7219,18 +9922,18 @@ AttributeEditWidget.prototype = {
                     margin: "10 0 0 0"
                 }
             ]
-        } );
+        });
 
-        var toolbar = Ext.create( 'Ext.toolbar.Toolbar', {
+        var toolbar = Ext.create('Ext.toolbar.Toolbar', {
             dock: 'top',
             items: [
                 {
                     xtype: 'button',
                     text: '<span style="font-size: 12px">Columns <span class="caret"></span></span>',
                     cls: 'bootstrap',
-                    handler: function ( bt, e ) {
-                        var menu = _this.grid.headerCt.getMenu().down( 'menuitem[text=Columns]' ).menu;
-                        menu.showBy( bt );
+                    handler: function (bt, e) {
+                        var menu = _this.grid.headerCt.getMenu().down('menuitem[text=Columns]').menu;
+                        menu.showBy(bt);
                     }
                 },
                 '-',
@@ -7259,7 +9962,7 @@ AttributeEditWidget.prototype = {
                         }
                     ],
                     listeners: {
-                        change: function ( radiogroup, newValue, oldValue, eOpts ) {
+                        change: function (radiogroup, newValue, oldValue, eOpts) {
                             _this.checkSelectedFilter();
                         }
                     }
@@ -7272,20 +9975,26 @@ AttributeEditWidget.prototype = {
                 {
                     xtype: 'button',
                     text: 'Download as file',
-                    href: 'none',
-                    handler: function ( bt, e ) {
+                    handler: function (bt, e) {
                         var a = bt.getEl();
                         var string = _this.attrMan.getAsFile();
-                        a.set( {
-                            href: 'data:text/tsv,' + encodeURIComponent( string ),
-                            download: _this.type + ".attr"
-                        } );
+                        var blob = new Blob([string], {type: "data:text/tsv"});
+                        var url = URL.createObjectURL(blob);
+                        var link = document.createElement('a');
+                        link.href = url;
+                        link.download = _this.type + ".attr"
+                        var event = new MouseEvent('click', {
+                            'view': window,
+                            'bubbles': true,
+                            'cancelable': true
+                        });
+                        link.dispatchEvent(event);
                     }
                 }
             ]
-        } );
+        });
 
-        this.grid = Ext.create( 'Ext.grid.Panel', {
+        this.grid = Ext.create('Ext.grid.Panel', {
             store: this.attrMan.store,
             columns: this.attrMan.columnsGrid,
             flex: 1,
@@ -7296,10 +10005,10 @@ AttributeEditWidget.prototype = {
             },
             loadMask: true,
             plugins: ['bufferedrenderer',
-                Ext.create( 'Ext.grid.plugin.CellEditing', {
+                Ext.create('Ext.grid.plugin.CellEditing', {
                     // double click to edit cell
                     clicksToEdit: 2
-                } )
+                })
             ],
             listeners: {
 //                selectionchange: function (model, selected) {
@@ -7312,14 +10021,14 @@ AttributeEditWidget.prototype = {
             },
             dockedItems: [toolbar]
 
-        } );
+        });
 
-        this.accordionPanel = Ext.create( 'Ext.container.Container', {
+        this.accordionPanel = Ext.create('Ext.container.Container', {
             layout: {
                 type: 'vbox',
                 align: 'stretch'
             },
-            width: 200,
+            width: 230,
             border: '0 1 0 0',
             style: {
                 borderColor: 'lightgray',
@@ -7332,15 +10041,16 @@ AttributeEditWidget.prototype = {
                 removeAttributeFormPanel,
 //                editAttrFormPanel
             ]
-        } );
+        });
 
-        this.window = Ext.create( 'Ext.window.Window', {
+        this.window = Ext.create('Ext.window.Window', {
             id: "edit" + this.type + "AttrWindow",
             title: "Edit " + this.type.toLowerCase() + " attributes",
-            width: 800,
+            width: 850,
             height: 600,
             closable: false,
             minimizable: true,
+            maximizable: true,
             constrain: true,
             collapsible: true,
             layout: {
@@ -7354,7 +10064,7 @@ AttributeEditWidget.prototype = {
                     this.hide();
                 }
             }
-        } );
+        });
     },
     draw: function () {
         this.window.show();
@@ -7375,21 +10085,22 @@ AttributeEditWidget.prototype = {
 //        this.reconfigureComponents();
 //    },
     reconfigureComponents: function () {
-        console.log( 'refresh ' + this.id );
-        this.grid.reconfigure( this.attrMan.store, this.attrMan.columnsGrid );
+        console.log('refresh ' + this.id);
+        this.grid.reconfigure(this.attrMan.store, this.attrMan.columnsGrid);
 
         this.reloadComboStore();
     },
     reloadComboStore: function () {
-        this.comboStore.loadData( this.attrMan.attributes );
+        this.comboStore.loadData(this.attrMan.attributes);
     },
     checkSelectedFilter: function () {
-        this.attrMan.store.removeFilter( this.selectedFilter );
-        var value = Ext.getCmp( this.id + 'selectMode' ).getValue();
-        if ( value[this.id + 'selection'] === 'selected' ) {
-            this.attrMan.store.addFilter( this.selectedFilter );
+        this.attrMan.store.clearFilter();
+        var value = Ext.getCmp(this.id + 'selectMode').getValue();
+        if (value[this.id + 'selection'] === 'selected') {
+            this.attrMan.store.setFilters(this.selectedFilter);
         }
     },
+
 
     /** Create components **/
     createAttributesCombo: function () {
@@ -7398,10 +10109,8 @@ AttributeEditWidget.prototype = {
             store: this.comboStore,
             displayField: 'name',
             valueField: 'name',
-            width: 170,
             allowBlank: false,
             fieldLabel: 'Attribute',
-            labelWidth: 50,
             editable: false,
             queryMode: 'local'
         }
@@ -7409,9 +10118,7 @@ AttributeEditWidget.prototype = {
     createValueField: function () {
         return {
             xtype: 'textfield',
-            width: 170,
             fieldLabel: 'Value',
-            labelWidth: 50,
             allowBlank: false
         }
     }
@@ -8479,10 +11186,10 @@ LayoutConfigureWidget.prototype = {
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function NetworkEditWidget ( args ) {
+function NetworkEditWidget(args) {
     var _this = this;
-    _.extend( this, Backbone.Events );
-    this.id = Utils.genId( 'NetworkEditWidget' );
+    _.extend(this, Backbone.Events);
+    this.id = Utils.genId('NetworkEditWidget');
 
     this.window;
     this.grid;
@@ -8490,11 +11197,11 @@ function NetworkEditWidget ( args ) {
     this.networkViewer;
 
     //set instantiation args, must be last
-    _.extend( this, args );
+    _.extend(this, args);
 
-    this.on( this.handlers );
+    this.on(this.handlers);
 
-    if ( this.autoRender ) {
+    if (this.autoRender) {
         this.render();
     }
 };
@@ -8502,7 +11209,7 @@ function NetworkEditWidget ( args ) {
 NetworkEditWidget.prototype = {
     render: function () {
         var _this = this;
-        this.store = Ext.create( 'Ext.data.Store', {
+        this.store = Ext.create('Ext.data.Store', {
             id: this.id + 'store',
             pageSize: 50,
             proxy: {
@@ -8514,44 +11221,44 @@ NetworkEditWidget.prototype = {
                 {name: 'target.id', type: 'string'}
             ],
             data: this.getElements()
-        } );
-//
+        });
 
-        this.network.on( 'add:vertex add:edge remove:vertex remove:edge remove:vertices load:json clean draw batch:end', function () {
-            _this.store.loadRawData( _this.getElements() );
-        } );
+        this.network.on('add:vertex add:edge remove:vertex remove:edge remove:vertices load:json clean draw batch:end', function () {
+            _this.store.loadRawData(_this.getElements());
+        });
     },
     draw: function () {
         var _this = this;
 
-        this.sourceTextfield = Ext.create( 'Ext.form.field.Text', {
+
+        this.sourceTextfield = Ext.create('Ext.form.field.Text', {
             xtype: 'textfield',
             vtype: 'alphanum',
             emptyText: 'Source id',
             flex: 1
-        } );
+        });
 
-        this.relationTextfield = Ext.create( 'Ext.form.field.Text', {
+        this.relationTextfield = Ext.create('Ext.form.field.Text', {
             xtype: 'textfield',
             vtype: 'alphanum',
             emptyText: 'Relation',
             flex: 1
-        } );
+        });
 
-        this.targetTextfield = Ext.create( 'Ext.form.field.Text', {
+        this.targetTextfield = Ext.create('Ext.form.field.Text', {
             xtype: 'textfield',
             vtype: 'alphanum',
             emptyText: 'Target id',
             flex: 1
-        } );
+        });
 
-        this.grid = Ext.create( 'Ext.grid.Panel', {
+        this.grid = Ext.create('Ext.grid.Panel', {
             id: this.id + 'grid',
             store: this.store,
             columns: [
-                {"header": "Source node", "dataIndex": "source.id", flex: 1, editor: {allowBlank: false}},
+                {"header": "Source node", xtype: 'templatecolumn', tpl: '{source.id}', flex: 1, editor: {allowBlank: false}},
                 {"header": "Relation", "dataIndex": "relation", flex: 1, editor: {allowBlank: false}},
-                {"header": "Target node", "dataIndex": "target.id", flex: 1, editor: {allowBlank: false}}
+                {"header": "Target node", xtype: 'templatecolumn', tpl: '{target.id}', flex: 1, editor: {allowBlank: false}}
             ],
             flex: 1,
             border: 0,
@@ -8588,27 +11295,27 @@ NetworkEditWidget.prototype = {
                         {
                             xtype: 'button',
                             text: 'Remove selected interactions',
-                            handler: function ( bt, e ) {
+                            handler: function (bt, e) {
                                 var grid = _this.grid;
                                 var selectedRecords = _this.grid.getSelectionModel().getSelection();
                                 _this.network.batchStart();
-                                for ( var i = 0; i < selectedRecords.length; i++ ) {
+                                for (var i = 0; i < selectedRecords.length; i++) {
                                     var record = selectedRecords[i];
-                                    var edgeId = record.raw.id;
-                                    if ( typeof edgeId !== 'undefined' ) {
-                                        var edge = _this.network.getEdgeById( record.raw.id );
-                                        _this.network.removeEdge( edge );
+                                    var edgeId = record.data.id;
+                                    if (typeof edgeId !== 'undefined') {
+                                        var edge = _this.network.getEdgeById(record.data.id);
+                                        _this.network.removeEdge(edge);
                                     } else {
-                                        var vertex = _this.network.getVertexById( record.raw.source.id );
-                                        _this.network.removeVertex( vertex );
+                                        var vertex = _this.network.getVertexById(record.data.source.id);
+                                        _this.network.removeVertex(vertex);
                                     }
                                 }
                                 var vertices = _this.network.graph.vertices;
-                                for ( var i = 0; i < vertices.length; i++ ) {
+                                for (var i = 0; i < vertices.length; i++) {
                                     var vertex = vertices[i];
-                                    if ( typeof vertex !== 'undefined' ) {
-                                        if ( vertex.edges.length == 0 ) {
-                                            _this.network.removeVertex( vertex );
+                                    if (typeof vertex !== 'undefined') {
+                                        if (vertex.edges.length == 0) {
+                                            _this.network.removeVertex(vertex);
                                         }
                                     }
                                 }
@@ -8619,22 +11326,28 @@ NetworkEditWidget.prototype = {
                         {
                             xtype: 'button',
                             text: 'Download as SIF file',
-                            href: 'none',
-                            handler: function ( bt, e ) {
+                            handler: function (bt, e) {
                                 var a = bt.getEl();
                                 var string = _this.network.graph.getAsSIF();
-                                a.set( {
-                                    href: 'data:text/tsv,' + encodeURIComponent( string ),
-                                    download: "network.sif"
-                                } );
+                                var blob = new Blob([string], {type: "data:text/tsv"});
+                                var url = URL.createObjectURL(blob);
+                                var link = document.createElement('a');
+                                link.href = url;
+                                link.download = "network.sif";
+                                var event = new MouseEvent('click', {
+                                    'view': window,
+                                    'bubbles': true,
+                                    'cancelable': true
+                                });
+                                link.dispatchEvent(event);
                             }
                         }
                     ]
                 }
             ]
-        } );
+        });
 
-        this.window = Ext.create( 'Ext.window.Window', {
+        this.window = Ext.create('Ext.window.Window', {
             id: this.id + 'window',
             title: "Network editor",
             width: 800,
@@ -8651,11 +11364,15 @@ NetworkEditWidget.prototype = {
                 {
                     xtype: 'panel',
                     title: 'Add interaction',
-                    width: 170,
+                    width: 200,
                     border: 0,
                     bodyPadding: 10,
                     style: {
                         borderRight: '1px solid lightgray'
+                    },
+                    defaults: {
+                        width: '100%',
+                        labelWidth: 55
                     },
                     items: [
                         this.sourceTextfield,
@@ -8664,45 +11381,51 @@ NetworkEditWidget.prototype = {
                         {
                             xtype: 'button',
                             text: 'Add interaction',
-                            handler: function ( bt, e ) {
+                            handler: function (bt, e) {
                                 var sourceId = _this.sourceTextfield.getValue();
                                 var targetId = _this.targetTextfield.getValue();
                                 var relation = _this.relationTextfield.getValue();
-                                if ( sourceId !== '' && targetId !== '' && relation !== '' ) {
+                                if (sourceId !== '' && targetId !== '' && relation !== '') {
                                     var edgeId = sourceId + '_' + relation + '_' + targetId;
 
-                                    var sourceVertex = _this.network.getVertexById( sourceId );
-                                    if ( typeof sourceVertex === 'undefined' ) {
-                                        sourceVertex = new Vertex( {
+                                    var sourceVertex = _this.network.getVertexById(sourceId);
+                                    if (typeof sourceVertex === 'undefined') {
+                                        sourceVertex = new Vertex({
                                             id: sourceId
-                                        } );
-                                        _this.network.addVertex( {
+                                        });
+                                        _this.network.addVertex({
                                             vertex: sourceVertex,
-                                            vertexConfig: new VertexConfig( {} )
-                                        }, true );
+                                            vertexConfig: new VertexConfig({
+                                                rendererConfig: _this.networkViewer.session.getVertexDefaults()
+                                            })
+                                        }, true);
                                     }
-                                    var targetVertex = _this.network.getVertexById( targetId );
-                                    if ( typeof targetVertex === 'undefined' ) {
-                                        targetVertex = new Vertex( {
+                                    var targetVertex = _this.network.getVertexById(targetId);
+                                    if (typeof targetVertex === 'undefined') {
+                                        targetVertex = new Vertex({
                                             id: targetId
-                                        } );
-                                        _this.network.addVertex( {
+                                        });
+                                        _this.network.addVertex({
                                             vertex: targetVertex,
-                                            vertexConfig: new VertexConfig( {} )
-                                        }, true );
+                                            vertexConfig: new VertexConfig({
+                                                rendererConfig: _this.networkViewer.session.getVertexDefaults()
+                                            })
+                                        }, true);
                                     }
-                                    var edge = new Edge( {
+                                    var edge = new Edge({
                                         id: edgeId,
                                         relation: relation,
                                         source: sourceVertex,
                                         target: targetVertex,
                                         weight: 1,
                                         directed: true
-                                    } );
-                                    _this.network.addEdge( {
+                                    });
+                                    _this.network.addEdge({
                                         edge: edge,
-                                        edgeConfig: new EdgeConfig( {} )
-                                    } );
+                                        edgeConfig: new EdgeConfig({
+                                            rendererConfig: _this.networkViewer.session.getEdgeDefaults()
+                                        })
+                                    });
 
                                     _this.networkViewer.refreshNetwork();
                                 }
@@ -8717,26 +11440,26 @@ NetworkEditWidget.prototype = {
                     this.hide();
                 }
             }
-        } );
+        });
     },
     getElements: function () {
         var edges = this.network.graph.edges;
         var vertices = this.network.graph.vertices;
         var elements = [];
         var verticesHash = {};
-        for ( var i = 0, l = edges.length; i < l; i++ ) {
+        for (var i = 0, l = edges.length; i < l; i++) {
             var edge = edges[i];
-            if ( typeof edge !== 'undefined' ) {
-                elements.push( edge );
+            if (typeof edge !== 'undefined') {
+                elements.push(edge);
                 verticesHash[edge.source.id] = edge.source;
                 verticesHash[edge.target.id] = edge.target;
             }
         }
-        for ( var i = 0; i < vertices.length; i++ ) {
+        for (var i = 0; i < vertices.length; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
-                if ( vertex.edges.length == 0 && typeof verticesHash[vertex.id] === 'undefined' ) {
-                    elements.push( {source: vertex} );
+            if (typeof vertex !== 'undefined') {
+                if (vertex.edges.length == 0 && typeof verticesHash[vertex.id] === 'undefined') {
+                    elements.push({source: vertex});
                 }
             }
         }
@@ -8857,18 +11580,19 @@ SIFNetworkFileWidget.prototype.processData = function ( graph ) {
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 TextNetworkFileWidget.prototype = new NetworkFileWidget();
 
-function TextNetworkFileWidget ( args ) {
-    NetworkFileWidget.prototype.constructor.call( this, args );
+function TextNetworkFileWidget(args) {
+    NetworkFileWidget.prototype.constructor.call(this, args);
 
     this.title = 'Import a Network Text file';
-    this.id = Utils.genId( 'TextNetworkFileWidget' );
+    this.id = Utils.genId('TextNetworkFileWidget');
 
-    this.columnsNumberStore = Ext.create( 'Ext.data.Store', {
+    this.columnsNumberStore = Ext.create('Ext.data.Store', {
         fields: ['name', 'num'],
         data: []
-    } );
+    });
 
     this.height = 450;
 
@@ -8877,38 +11601,39 @@ function TextNetworkFileWidget ( args ) {
     this.targetColumnIndex;
 };
 
+
 TextNetworkFileWidget.prototype.getFileUpload = function () {
     var _this = this;
 
-    this.fileUpload = Ext.create( 'Ext.form.field.File', {
+    this.fileUpload = Ext.create('Ext.form.field.File', {
         msgTarget: 'side',
         allowBlank: false,
         emptyText: 'Text network file',
         flex: 1,
         buttonText: 'Browse local',
         listeners: {
-            change: function ( f, v ) {
-                _this.panel.setLoading( true );
-                var file = document.getElementById( _this.fileUpload.fileInputEl.id ).files[0];
-                var node = Ext.DomQuery.selectNode( 'input[id=' + f.getInputId() + ']' );
-                node.value = v.replace( "C:\\fakepath\\", "" );
+            change: function (f, v) {
+                _this.panel.setLoading(true);
+                var file = document.getElementById(_this.fileUpload.fileInputEl.id).files[0];
+                var node = Ext.DomQuery.selectNode('input[id=' + f.getInputId() + ']');
+                node.value = v.replace("C:\\fakepath\\", "");
 
-                _this.dataAdapter = new TextNetworkDataAdapter( {
-                    dataSource: new FileDataSource( {file: file} ),
+                _this.dataAdapter = new TextNetworkDataAdapter({
+                    dataSource: new FileDataSource({file: file}),
                     handlers: {
-                        'data:load': function ( event ) {
-                            _this._processColumns( event.sender );
+                        'data:load': function (event) {
+                            _this._processColumns(event.sender);
                             _this.parsePanel.show();
                         },
-                        'error:parse': function ( event ) {
-                            _this.infoLabel.setText( '<span class="err">' + event.errorMsg + '</span>', false );
-                            _this.panel.setLoading( false );
+                        'error:parse': function (event) {
+                            _this.infoLabel.setText('<span class="err">' + event.errorMsg + '</span>', false);
+                            _this.panel.setLoading(false);
                         }
                     }
-                } );
+                });
             }
         }
-    } );
+    });
 
     return this.fileUpload;
 };
@@ -8916,7 +11641,7 @@ TextNetworkFileWidget.prototype.getFileUpload = function () {
 TextNetworkFileWidget.prototype.addCustomComponents = function () {
     var _this = this;
 
-    this.sourceCombo = Ext.create( 'Ext.form.field.ComboBox', {
+    this.sourceCombo = Ext.create('Ext.form.field.ComboBox', {
         labelAlign: 'top',
         flex: 1,
         fieldLabel: 'Choose source column',
@@ -8929,17 +11654,17 @@ TextNetworkFileWidget.prototype.addCustomComponents = function () {
         queryMode: 'local',
         forceSelection: true,
         listeners: {
-            change: function ( field, e ) {
+            change: function (field, e) {
                 var value = field.getValue();
-                console.log( value );
-                if ( value != null ) {
+                console.log(value);
+                if (value != null) {
                     _this.sourceColumnIndex = value;
                     _this.processColumnNumbers();
                 }
             }
         }
-    } );
-    this.relationCombo = Ext.create( 'Ext.form.field.ComboBox', {
+    });
+    this.relationCombo = Ext.create('Ext.form.field.ComboBox', {
         labelAlign: 'top',
         flex: 1,
         fieldLabel: 'Choose relation column',
@@ -8952,17 +11677,17 @@ TextNetworkFileWidget.prototype.addCustomComponents = function () {
         queryMode: 'local',
         forceSelection: true,
         listeners: {
-            change: function ( field, e ) {
+            change: function (field, e) {
                 var value = field.getValue();
-                console.log( value );
-                if ( value != null ) {
+                console.log(value);
+                if (value != null) {
                     _this.relationColumnIndex = value;
                     _this.processColumnNumbers();
                 }
             }
         }
-    } );
-    this.targetCombo = Ext.create( 'Ext.form.field.ComboBox', {
+    });
+    this.targetCombo = Ext.create('Ext.form.field.ComboBox', {
         labelAlign: 'top',
         fieldLabel: 'Choose target column',
         flex: 1,
@@ -8975,26 +11700,26 @@ TextNetworkFileWidget.prototype.addCustomComponents = function () {
         queryMode: 'local',
         forceSelection: true,
         listeners: {
-            change: function ( field, e ) {
+            change: function (field, e) {
                 var value = field.getValue();
-                console.log( value );
-                if ( value != null ) {
+                console.log(value);
+                if (value != null) {
                     _this.targetColumnIndex = value;
                     _this.processColumnNumbers();
                 }
             }
         }
-    } );
+    });
 
-    var separatorStore = Ext.create( 'Ext.data.Store', {
+    var separatorStore = Ext.create('Ext.data.Store', {
         fields: ['name', 'value'],
         data: [
             {name: 'Tab', value: '\t'},
             {name: 'Comma', value: ','},
             {name: 'Semicolon', value: ';'}
         ]
-    } );
-    this.separatorCombo = Ext.create( 'Ext.form.field.ComboBox', {
+    });
+    this.separatorCombo = Ext.create('Ext.form.field.ComboBox', {
         xtype: 'combo',
         labelAlign: 'top',
         width: 185,
@@ -9009,25 +11734,26 @@ TextNetworkFileWidget.prototype.addCustomComponents = function () {
         forceSelection: true,
         listeners: {
             afterrender: function () {
-                this.select( this.getStore().getAt( 0 ) );
+                this.select(this.getStore().getAt(0));
             },
-            change: function ( field, e ) {
+            change: function (field, e) {
                 var value = field.getValue();
-                if ( value != null ) {
-                    if ( typeof _this.dataAdapter !== 'undefined' ) {
+                if (value != null) {
+                    if (typeof _this.dataAdapter !== 'undefined') {
                         _this.dataAdapter.separator = value;
                         _this.dataAdapter.parse();
-                        _this._processColumns( _this.dataAdapter );
+                        _this._processColumns(_this.dataAdapter);
                         _this.grid.store.removeAll();
                     }
                 }
             }
         }
-    } );
+    });
 
-    this.parsePanel = Ext.create( 'Ext.panel.Panel', {
+    this.parsePanel = Ext.create('Ext.panel.Panel', {
         dock: 'top',
         hidden: true,
+        border:false,
 //        title: 'Parse options',
         layout: {
             type: 'vbox',
@@ -9062,19 +11788,20 @@ TextNetworkFileWidget.prototype.addCustomComponents = function () {
                 ]
             }
         ]
-    } );
+    });
 
-    this.panel.addDocked( this.parsePanel );
+    this.panel.down().addDocked(this.parsePanel);
 };
 
-TextNetworkFileWidget.prototype._processColumns = function ( adapter ) {
+
+TextNetworkFileWidget.prototype._processColumns = function (adapter) {
     var _this = this;
 
     var columnsNumbers = [];
-    for ( var i = 0; i < adapter.columnLength; i++ ) {
-        columnsNumbers.push( {name: 'Column ' + (i + 1), num: i + 1} );
+    for (var i = 0; i < adapter.columnLength; i++) {
+        columnsNumbers.push({name: 'Column ' + (i + 1), num: i + 1});
     }
-    this.columnsNumberStore.loadData( columnsNumbers );
+    this.columnsNumberStore.loadData(columnsNumbers);
 
     delete this.sourceColumnIndex;
     delete this.relationColumnIndex;
@@ -9083,24 +11810,23 @@ TextNetworkFileWidget.prototype._processColumns = function ( adapter ) {
     this.relationCombo.reset();
     this.targetCombo.reset();
 
-    this.infoLabel.setText( '<span class="info">Parse complete using <span class="key">' + this.separatorCombo.getRawValue() + '</span> character.</span>',
-        false );
+    this.infoLabel.setText('<span class="info">Parse complete using <span class="key">' + this.separatorCombo.getRawValue() + '</span> character.</span>', false);
 
-    this.panel.setLoading( false );
+    this.panel.setLoading(false);
 };
 
 TextNetworkFileWidget.prototype.processColumnNumbers = function () {
     var _this = this;
 
-    if ( typeof this.sourceColumnIndex !== 'undefined' && typeof this.relationColumnIndex !== 'undefined' && typeof this.targetColumnIndex !== 'undefined' ) {
-        this.panel.setLoading( true );
-        var graph = this.dataAdapter.parseColumns( this.sourceColumnIndex - 1, this.relationColumnIndex - 1, this.targetColumnIndex - 1 );
-        this.processData( graph );
+    if (typeof this.sourceColumnIndex !== 'undefined' && typeof this.relationColumnIndex !== 'undefined' && typeof this.targetColumnIndex !== 'undefined') {
+        this.panel.setLoading(true);
+        var graph = this.dataAdapter.parseColumns(this.sourceColumnIndex - 1, this.relationColumnIndex - 1, this.targetColumnIndex - 1);
+        this.processData(graph);
     }
 
 };
 
-TextNetworkFileWidget.prototype.processData = function ( graph ) {
+TextNetworkFileWidget.prototype.processData = function (graph) {
     var _this = this;
     try {
         this.content = graph; //para el onOK.notify event
@@ -9109,19 +11835,19 @@ TextNetworkFileWidget.prototype.processData = function ( graph ) {
 
         var edges = graph.edges;
         var storeData = [];
-        for ( var i = 0; i < edges.length; i++ ) {
+        for (var i = 0; i < edges.length; i++) {
             var edge = edges[i];
-            storeData.push( [edge.source.id, edge.relation, edge.target.id] );
+            storeData.push([edge.source.id, edge.relation, edge.target.id]);
         }
-        this.gridStore.loadData( storeData );
+        this.gridStore.loadData(storeData);
 
-        this.infoLabel.setText( '<span class="ok">File loaded sucessfully</span>', false );
-        this.countLabel.setText( 'Vertices:<span class="info">' + verticesLength + '</span> edges:<span class="info">' + edgesLength + '</span>', false );
+        this.infoLabel.setText('<span class="ok">File loaded sucessfully</span>', false);
+        this.countLabel.setText('Vertices:<span class="info">' + verticesLength + '</span> edges:<span class="info">' + edgesLength + '</span>', false);
 
-    } catch ( e ) {
-        this.infoLabel.setText( '<span class="err">File not valid </span>' + e, false );
+    } catch (e) {
+        this.infoLabel.setText('<span class="err">File not valid </span>' + e, false);
     }
-    this.panel.setLoading( false );
+    this.panel.setLoading(false);
 };
 /*
  * Copyright (c) 2012 Francisco Salavert (ICM-CIPF)
@@ -9602,9 +12328,9 @@ function CheckBrowser ( appName ) {
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function GenericFormPanel ( args ) {
+function GenericFormPanel(args) {
     var _this = this;
-    _.extend( this, Backbone.Events );
+    _.extend(this, Backbone.Events);
 
     this.analysis;
     this.form = null;
@@ -9615,11 +12341,13 @@ function GenericFormPanel ( args ) {
     this.labelWidth = 150;
 
     this.type;
+    this.style;
     this.title;
     this.resizable;
     this.width = 500;
     this.height;
     this.border = true;
+    this.formBorder = true;
     this.taskbar;
     this.bodyPadding;
     this.headerConfig;
@@ -9628,95 +12356,104 @@ function GenericFormPanel ( args ) {
         height: 30
     };
 
-    _.extend( this, args );
+    _.extend(this, args);
 
-    this.panelId = this.analysis + "-FormPanel";
 
-    this.runAnalysisSuccess = function ( response ) {
-        if ( response.errorMsg !== '' ) {
-            Ext.Msg.show( {
+    this.runAnalysisSuccess = function (response) {
+        if (response.errorMsg !== '') {
+            Ext.Msg.show({
                 title: "Error",
                 msg: response.errorMsg,
                 buttons: Ext.Msg.OK,
                 icon: Ext.Msg.ERROR
-            } );
+            });
         } else {
-            Ext.example.msg( 'Job Launched', 'It will be listed soon' );
-            console.log( response );
-            if ( _this.type == "window" ) {
+            Utils.msg('Job Launched', 'It will be listed soon');
+            if (!_this.testing) {
+                _this.clean();
+            }
+            console.log(response);
+            if (_this.type == "window") {
                 _this.panel.hide();
             }
         }
     };
     //events attachments
-    this.on( this.handlers );
+    this.on(this.handlers);
 
 }
 
 GenericFormPanel.prototype.draw = function () {
     var _this = this;
-    if ( this.panel == null ) {
-        if ( this.type == "window" ) {
-            this.panel = Ext.create( 'Ext.window.Window', {
-                id: this.panelId,
+    if (this.panel == null) {
+        if (this.type == "window") {
+            this.panel = Ext.create('Ext.window.Window', {
                 title: this.title,
                 closable: this.closable,
                 minimizable: this.minimizable,
                 resizable: this.resizable,
-                bodyStyle: 'background:white;',
-                overflowY: 'auto',
+//                bodyStyle: 'background:white;',
+//                overflowY: 'auto',
 //                taskbar: this.taskbar,
-                items: [this.getForm()],
+                layout: 'fit',
+                items: {
+                    border: 0,
+                    items: [this.getForm()]
+                },
                 listeners: {
                     minimize: function () {
                         this.hide();
+                    },
+                    close: function () {
+                        this.hide();
                     }
                 }
-            } );
+            });
         }
         else {
-            this.panel = Ext.create( 'Ext.panel.Panel', {
-                id: this.panelId,
+            this.panel = Ext.create('Ext.panel.Panel', {
                 title: this.title,
                 closable: this.closable,
 //                defaults: {margin: 30},
                 style: this.style,
                 overflowY: 'auto',
                 items: [this.getForm()],
-                border: 0,
+                border: this.border,
                 bodyPadding: this.bodyPadding,
                 header: this.headerConfig,
                 listeners: {
                     beforeclose: function () {
-                        _this.panel.up().remove( _this.panel, false );
-                        console.log( 'closing' );
+                        _this.panel.up().remove(_this.panel, false);
+                        console.log('closing');
                         return false;
                     }
                 }
-            } );
+            });
         }
+        this.panelId = this.panel.getId();
     }
     return this.panel;
 };
 
+
 GenericFormPanel.prototype.show = function () {
-    if ( typeof this.panel !== 'undefined' ) {
+    if (typeof this.panel !== 'undefined') {
         this.panel.show();
     }
 };
 
 GenericFormPanel.prototype.hide = function () {
-    if ( typeof this.panel !== 'undefined' ) {
+    if (typeof this.panel !== 'undefined') {
         this.panel.hide();
     }
 };
 
 GenericFormPanel.prototype.getForm = function () {
-    if ( this.form == null ) {
+    if (this.form == null) {
         var items = this.getPanels();
-        items.push( this.getJobPanel() );
+        items.push(this.getJobPanel());
 
-        this.form = Ext.create( 'Ext.form.Panel', {
+        this.form = Ext.create('Ext.form.Panel', {
             border: 0,
             width: this.width,
             padding: 5,
@@ -9725,8 +12462,15 @@ GenericFormPanel.prototype.getForm = function () {
                 align: 'stretch'
             },
             items: items,
-            buttons: [this.getRunButton()]
-        } );
+            bbar: {
+                layout: {
+                    pack: 'end'
+                },
+                items: [
+                    this.getRunButton()
+                ]
+            }
+        });
     }
 
     return this.form;
@@ -9738,22 +12482,22 @@ GenericFormPanel.prototype.getPanels = function () {
 
 GenericFormPanel.prototype.getJobPanel = function () {
     var _this = this;
-    var jobNameField = Ext.create( 'Ext.form.field.Text', {
+    var jobNameField = Ext.create('Ext.form.field.Text', {
         id: this.id + "jobname",
         name: "jobname",
         fieldLabel: 'Name',
         labelWidth: this.labelWidth,
         emptyText: "Job name",
         allowBlank: false
-    } );
+    });
 
-    var jobDescriptionField = Ext.create( 'Ext.form.field.TextArea', {
+    var jobDescriptionField = Ext.create('Ext.form.field.TextArea', {
         id: this.id + "jobdescription",
         name: "jobdescription",
         labelWidth: this.labelWidth,
         fieldLabel: 'Description',
         emptyText: "Description"
-    } );
+    });
 
 //	var bucketList= Ext.create('Ext.data.Store', {
 //		fields: ['value', 'name'],
@@ -9762,31 +12506,31 @@ GenericFormPanel.prototype.getJobPanel = function () {
 //		       ]
 //	});
 //	var jobDestinationBucket = this.createCombobox("jobdestinationbucket", "Destination bucket", bucketList, 0, 100);
-    var jobFolder = this.createOpencgaBrowserCmp( {
-        id: Utils.genId( 'jobFolder' ),
+    var jobFolder = this.createOpencgaBrowserCmp({
+        id: Utils.genId('jobFolder'),
         fieldLabel: 'Folder',
         dataParamName: 'outdir',
         mode: 'folderSelection',
         defaultFileLabel: 'Default job folder',
         allowBlank: true
-    } );
+    });
 
-    var jobPanel = Ext.create( 'Ext.panel.Panel', {
+    var jobPanel = Ext.create('Ext.panel.Panel', {
         title: 'Job information',
         header: this.headerFormConfig,
-        border: this.border,
-        bodyPadding: 5,
-        width: '100%',
+        border: this.formBorder,
+        bodyPadding: 10,
+        defaults: {margin: '5 0 0 0'},
         buttonAlign: 'center',
         items: [jobNameField, jobDescriptionField/*, jobFolder*/] //TODO Job folder is not fully supported,
-    } );
+    });
 
     return jobPanel;
 };
 
 GenericFormPanel.prototype.getRunButton = function () {
     var _this = this;
-    return Ext.create( 'Ext.button.Button', {
+    return Ext.create('Ext.button.Button', {
         text: 'Run',
         width: this.buttonConfig.width,
         height: this.buttonConfig.height,
@@ -9794,19 +12538,20 @@ GenericFormPanel.prototype.getRunButton = function () {
         cls: 'btn btn-default',
         formBind: true, // only enabled if the form is valid
         handler: function () {
+            _this.paramsWS = {};
             var formParams = _this.getForm().getForm().getValues();
-            for ( var param in formParams ) {
+            for (var param in formParams) {
                 _this.paramsWS[param] = formParams[param];
             }
             _this.beforeRun();
             _this.run();
         }
-    } );
+    });
 };
 
 GenericFormPanel.prototype.setAccountParams = function () {
-    this.paramsWS["sessionid"] = $.cookie( 'bioinfo_sid' );
-    this.paramsWS["accountid"] = $.cookie( 'bioinfo_account' );
+    this.paramsWS["sessionid"] = $.cookie('bioinfo_sid');
+    this.paramsWS["accountid"] = $.cookie('bioinfo_account');
 };
 
 GenericFormPanel.prototype.beforeRun = function () {
@@ -9815,19 +12560,33 @@ GenericFormPanel.prototype.beforeRun = function () {
 };
 
 GenericFormPanel.prototype.run = function () {
-    this.setAccountParams();
-    (this.paramsWS['outdir'] === '') ? delete this.paramsWS['outdir'] : console.log( this.paramsWS['outdir'] );
 
-    if ( !this.testing ) {
-        OpencgaManager.runAnalysis( {
+    delete this.paramsWS['browseFieldLabel'];
+
+    this.setAccountParams();
+
+    if (this.paramsWS['outdir'] === '') {
+        delete this.paramsWS['outdir']
+    }
+
+    if (!this.testing) {
+        OpencgaManager.runAnalysis({
             analysis: this.analysis,
             paramsWS: this.paramsWS,
             success: this.runAnalysisSuccess
-        } );
+        });
+        this.trigger('after:run', {sender: this});
+    } else {
+        console.log("@@ Watch out!!! testing flag is on, so job will not launched.")
     }
     //debug
-    console.log( this.paramsWS );
-    this.trigger( 'after:run', {sender: this} );
+    console.log("@@ Form paramsWS")
+    console.log(this.paramsWS);
+
+};
+
+GenericFormPanel.prototype.clean = function () {
+    this.getForm().reset();
 };
 
 /////////////////////////////////////////
@@ -9835,8 +12594,8 @@ GenericFormPanel.prototype.run = function () {
 //Functions to create sencha components//
 /////////////////////////////////////////
 /////////////////////////////////////////
-GenericFormPanel.prototype.createCombobox = function ( name, label, data, defaultValue, labelWidth, margin ) {
-    return Ext.create( 'Ext.form.field.ComboBox', {
+GenericFormPanel.prototype.createCombobox = function (name, label, data, defaultValue, labelWidth, margin) {
+    return Ext.create('Ext.form.field.ComboBox', {
         id: name,
         name: name,
         fieldLabel: label,
@@ -9844,107 +12603,103 @@ GenericFormPanel.prototype.createCombobox = function ( name, label, data, defaul
         queryMode: 'local',
         displayField: 'name',
         valueField: 'value',
-        value: data.getAt( defaultValue ).get( 'value' ),
+        value: data.getAt(defaultValue).get('value'),
         labelWidth: labelWidth,
         margin: margin,
         editable: false,
         allowBlank: false
-    } );
+    });
 };
 
-GenericFormPanel.prototype.createCheckBox = function ( name, label, checked, margin, disabled, handler ) {
-    return Ext.create( 'Ext.form.field.Checkbox', {
+GenericFormPanel.prototype.createCheckBox = function (name, label, checked, margin, disabled, handler) {
+    return Ext.create('Ext.form.field.Checkbox', {
         id: name,
         name: name,
         boxLabel: label,
         checked: (checked || false),
         disabled: disabled,
         margin: (margin || '0 0 0 0')
-    } );
+    });
 };
 
-GenericFormPanel.prototype.createRadio = function ( name, group, checked, hidden ) {
-    var cb = Ext.create( 'Ext.form.field.Radio', {
+GenericFormPanel.prototype.createRadio = function (name, group, checked, hidden) {
+    var cb = Ext.create('Ext.form.field.Radio', {
         id: name + "_" + this.id,
         boxLabel: name,
         inputValue: name,
         checked: checked,
         name: group,
         hidden: hidden
-    } );
+    });
     return cb;
 };
 
-GenericFormPanel.prototype.createLabel = function ( text, margin ) {
-    var label = Ext.create( 'Ext.form.Label', {
+GenericFormPanel.prototype.createLabel = function (text, margin) {
+    var label = Ext.create('Ext.form.Label', {
         id: text + "_" + this.id,
         margin: (margin || "15 0 0 0"),
         html: '<span class="emph">' + text + '</span>'
-    } );
+    });
     return label;
 };
-GenericFormPanel.prototype.createTextFields = function ( name ) {
-    var tb = Ext.create( 'Ext.form.field.Text', {
+GenericFormPanel.prototype.createTextFields = function (name) {
+    var tb = Ext.create('Ext.form.field.Text', {
         id: name + "_" + this.id,
         fieldLabel: name,
         name: name
 //		allowBlank: false
-    } );
+    });
     return tb;
 };
 
-GenericFormPanel.prototype.createOpencgaBrowserCmp = function ( args ) {//fieldLabel, dataParamName, mode, btnMargin, defaultFileLabel
-    var _this = this;
-    var btnBrowse = Ext.create( 'Ext.button.Button', {
-        text: 'Browse...',
-        width: 150,
-        handler: function () {
-            if ( args.beforeClick != null ) {
-                args.beforeClick( args );
-            }
-            _this.opencgaBrowserWidget.once( 'select', function ( response ) {
-                if ( typeof response !== 'undefined' ) {
-                    var value = 'buckets:' + response.bucketId + ':' + response.id.replace( /\//g, ":" );
-                    fileSelectedLabel.update( '<span class="emph">' + response.id + '</span>', false );
-                    hiddenField.setValue( value );//this is send to the ws
-                }
-            } );
-            _this.opencgaBrowserWidget.show( {mode: args.mode, allowedTypes: args.allowedTypes} );
-        }
-    } );
 
-    var fileSelectedLabel = Ext.create( 'Ext.Component', {
+GenericFormPanel.prototype.createOpencgaBrowserCmp = function (args) {//fieldLabel, dataParamName, mode, btnMargin, defaultFileLabel
+    var _this = this;
+
+    var field = Ext.create('Ext.form.field.Text', {
         id: args.id,
-        width: _this.labelWidth,
-        margin: '5 10',
-        html: args.defaultFileLabel || "No file selected"
-    } );
+        fieldLabel: args.fieldLabel,
+        labelWidth: _this.labelWidth,
+        editable: false,
+        name: 'browseFieldLabel',
+        value: args.defaultFileLabel || "browse file...",
+        allowBlank: (args.allowBlank || false),
+        listeners: {
+            focus: function () {
+                if (args.beforeClick != null) {
+                    args.beforeClick(args);
+                }
+                _this.opencgaBrowserWidget.once('select', function (response) {
+                    if (typeof response !== 'undefined') {
+                        field.setValue(response.id);
+                        hiddenField.setValue(response.pathQuery);//this is send to the ws
+                        if (args.onSelect) {
+                            args.onSelect(response);
+                        }
+                    }
+                });
+                _this.opencgaBrowserWidget.show({mode: args.mode, allowedTypes: args.allowedTypes});
+            }
+        }
+    });
 
     //not shown, just for validation
-    var hiddenField = Ext.create( 'Ext.form.field.Text', {
+    var hiddenField = Ext.create('Ext.form.field.Text', {
         id: args.id + 'hidden',
-        name: args.dataParamName,
+        editable: false,
         hidden: true,
+        name: args.dataParamName,
+        value: "",
         allowBlank: (args.allowBlank || false)
-    } );
+    });
 
-    return Ext.create( 'Ext.container.Container', {
-//		bodyPadding:10,
-//		defaults:{margin:'5 0 0 5'},
+    return Ext.create('Ext.form.FieldContainer', {
         hidden: args.hidden,
-        layout: 'hbox',
         items: [
-            {
-                xtype: 'box',
-                html: args.fieldLabel + ':',
-                width: 154,
-                margin: '5 0'
-            },
-            btnBrowse,
-            fileSelectedLabel,
+            field,
             hiddenField
         ]
-    } );
+    });
 };
 
 /*
@@ -11378,11 +14133,11 @@ LoginWidget.prototype.checkAccountId = function ( a, b, c ) {
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function OpencgaBrowserWidget ( args ) {
+function OpencgaBrowserWidget(args) {
     var _this = this;
 
-    _.extend( this, Backbone.Events );
-    this.id = Utils.genId( "uploadWidget" );
+    _.extend(this, Backbone.Events);
+    this.id = Utils.genId("uploadWidget");
 
     this.targetId;
     this.suiteId;
@@ -11392,25 +14147,26 @@ function OpencgaBrowserWidget ( args ) {
     this.title = 'Cloud data';
     this.enableTextModeUW = true; // Enable Text Mode in the Upload Widget
 
-    //set instantiation args, must be last
-    _.extend( this, args );
 
-    this.on( this.handlers );
+    //set instantiation args, must be last
+    _.extend(this, args);
+
+    this.on(this.handlers);
 
     this.rendered = false;
-    if ( this.autoRender ) {
-        this.render( this.targetId );
+    if (this.autoRender) {
+        this.render(this.targetId);
     }
 }
 
 OpencgaBrowserWidget.prototype = {
-    show: function ( args ) {
-        if ( !_.isUndefined( args ) ) {
+    show: function (args) {
+        if (!_.isUndefined(args)) {
             this.mode = args.mode;
             this.allowedTypes = args.allowedTypes;
         }
-        console.log( this.mode )
-        console.log( this.allowedTypes )
+        console.log(this.mode)
+        console.log(this.allowedTypes)
         this.panel.show();
     },
     hide: function () {
@@ -11422,13 +14178,13 @@ OpencgaBrowserWidget.prototype = {
         /**ID**/
         this.searchFieldId = this.id + "_searchField";
 
-        this.createBucketSuccess = function ( response ) {
-            if ( response.errorMsg === '' ) {
-                _this.trigger( 'need:refresh', {sender: _this} );
+        this.createBucketSuccess = function (response) {
+            if (response.errorMsg === '') {
+                _this.trigger('need:refresh', {sender: _this});
             } else {
-                Ext.Msg.alert( "Create project", response.errorMsg );
+                Ext.Msg.alert("Create project", response.errorMsg);
             }
-            _this.panel.setLoading( false );
+            _this.panel.setLoading(false);
             Ext.getBody().unmask();
         };
 
@@ -11436,8 +14192,8 @@ OpencgaBrowserWidget.prototype = {
     },
     draw: function () {
         var _this = this;
-        if ( !this.rendered ) {
-            console.info( 'Login Widget is not rendered yet' );
+        if (!this.rendered) {
+            console.info('Login Widget is not rendered yet');
             return;
         }
 
@@ -11445,30 +14201,31 @@ OpencgaBrowserWidget.prototype = {
         this.uploadWidget = this._createUploadWidget();
 
         /* Panel */
-        this.panel = this._createPanel( this.targetId );
+        this.panel = this._createPanel(this.targetId);
 //        this.panel.show();
     },
     _createUploadWidget: function () {
         var _this = this;
-        var uploadWidget = new UploadWidget( {
+        var uploadWidget = new UploadWidget({
             suiteId: this.suiteId,
             opencgaBrowserWidget: this,
             chunkedUpload: this.chunkedUpload,
             enableTextMode: this.enableTextModeUW,
             handlers: {
-                'object:upload': function ( e ) {
-                    if ( e.data.status == 'done' ) {
-                        _this.trigger( 'need:refresh', {sender: _this} );
+                'object:upload': function (e) {
+                    if (e.data.status == 'done') {
+                        _this.trigger('need:refresh', {sender: _this});
                     }
                 }
             }
-        } );
+        });
         return uploadWidget;
     },
-    _createPanel: function ( targetId ) {
+    _createPanel: function (targetId) {
         var _this = this;
 
-        this.folderStore = Ext.create( 'Ext.data.TreeStore', {
+
+        this.folderStore = Ext.create('Ext.data.TreeStore', {
             id: this.id + 'folderStore',
             fields: ['text', 'oid'],
             root: {
@@ -11477,15 +14234,15 @@ OpencgaBrowserWidget.prototype = {
                 children: []
             },
             listeners: {
-                beforeinsert: function ( este, node ) {
-                    if ( node.isLeaf() ) {
-//                        console.log(node.raw.oid + " is a file");
+                beforeinsert: function (este, node) {
+                    if (node.isLeaf()) {
+//                        console.log(node.data.oid + " is a file");
                         return false; //cancel append because is leaf
                     }
                 }
             }
-        } );
-        this.allStore = Ext.create( 'Ext.data.TreeStore', {
+        });
+        this.allStore = Ext.create('Ext.data.TreeStore', {
             id: this.id + 'allStore',
             fields: ['text', 'oid'],
             root: {
@@ -11493,77 +14250,75 @@ OpencgaBrowserWidget.prototype = {
                 text: 'Drive',
                 children: []
             }
-        } );
-        this.filesStore = Ext.create( 'Ext.data.Store', {
-            fields: ['oid', 'fileBioType', 'fileType', 'fileFormat', 'fileName', 'multiple', 'diskUsage', 'creationTime', 'responsible', 'organization', 'date',
-                'description', 'status', 'statusMessage', 'members'],
+        });
+        this.filesStore = Ext.create('Ext.data.Store', {
+            fields: ['oid', 'fileBioType', 'fileType', 'fileFormat', 'fileName', 'multiple', 'diskUsage', 'creationTime', 'responsible', 'organization', 'date', 'description', 'status', 'statusMessage', 'members'],
             data: []
-        } );
+        });
 
-        var refreshBucketAction = Ext.create( 'Ext.Action', {
+        var refreshBucketAction = Ext.create('Ext.Action', {
             icon: Utils.images.refresh,
             text: 'Refresh bucket',
-            handler: function ( widget, event ) {
+            handler: function (widget, event) {
                 var record = _this.folderTree.getSelectionModel().getSelection()[0];
-                if ( record ) {
-                    if ( record.raw.isBucket ) {
-                        OpencgaManager.refreshBucket( {
-                            accountId: $.cookie( "bioinfo_account" ),
-                            bucketId: record.raw.text,
-                            sessionId: $.cookie( "bioinfo_sid" ),
-                            success: function ( response ) {
-                                if ( response.errorMsg === '' ) {
-                                    Ext.example.msg( 'Refresh Bucket', '</span class="emph">' + response.result[0].msg + '</span>' );
-                                    _this.trigger( 'need:refresh', {sender: _this} );
+                if (record) {
+                    if (record.data.isBucket) {
+                        OpencgaManager.refreshBucket({
+                            accountId: $.cookie("bioinfo_account"),
+                            bucketId: record.data.text,
+                            sessionId: $.cookie("bioinfo_sid"),
+                            success: function (response) {
+                                if (response.errorMsg === '') {
+                                    Utils.msg('Refresh Bucket', '</span class="emph">' + response.result[0].msg + '</span>');
+                                    _this.trigger('need:refresh', {sender: _this});
                                 } else {
-                                    Ext.Msg.alert( "Refresh bucket", response.errorMsg );
+                                    Ext.Msg.alert("Refresh bucket", response.errorMsg);
                                 }
                             }
-                        } );
+                        });
 
                     }
                 }
             }
-        } );
+        });
 
-        var renameBucketAction = Ext.create( 'Ext.Action', {
+        var renameBucketAction = Ext.create('Ext.Action', {
 //            icon: Utils.images.refresh,
             text: 'Rename bucket',
-            handler: function ( widget, event ) {
+            handler: function (widget, event) {
                 var record = _this.folderTree.getSelectionModel().getSelection()[0];
-                if ( record ) {
-                    if ( record.raw.isBucket ) {
-                        Ext.Msg.prompt( 'Rename bucket', 'Please enter a new name:', function ( btn, text ) {
-                            if ( btn == 'ok' ) {
-                                text = text.replace( /[^a-z0-9-_.\/\s]/gi, '' ).trim();
+                if (record) {
+                    if (record.data.isBucket) {
+                        Ext.Msg.prompt('Rename bucket', 'Please enter a new name:', function (btn, text) {
+                            if (btn == 'ok') {
+                                text = text.replace(/[^a-z0-9-_.\/\s]/gi, '').trim();
 
-                                OpencgaManager.renameBucket( {
-                                    accountId: $.cookie( "bioinfo_account" ),
-                                    bucketId: record.raw.bucketId,
+                                OpencgaManager.renameBucket({
+                                    accountId: $.cookie("bioinfo_account"),
+                                    bucketId: record.data.bucketId,
                                     newBucketId: text,
-                                    sessionId: $.cookie( "bioinfo_sid" ),
-                                    success: function ( response ) {
-                                        if ( response.errorMsg === '' ) {
-                                            _this.trigger( 'need:refresh', {sender: _this} );
-                                            Ext.example.msg( 'Rename bucket', '</span class="emph">' + response.result[0].msg + '</span>' );
+                                    sessionId: $.cookie("bioinfo_sid"),
+                                    success: function (response) {
+                                        if (response.errorMsg === '') {
+                                            _this.trigger('need:refresh', {sender: _this});
+                                            Utils.msg('Rename bucket', '</span class="emph">' + response.result[0].msg + '</span>');
                                         } else {
-                                            Ext.Msg.alert( 'Rename bucket', response.errorMsg );
+                                            Ext.Msg.alert('Rename bucket', response.errorMsg);
                                         }
                                     }
-                                } );
+                                });
                             }
-                        }, null, null, "new name" );
+                        }, null, null, "new name");
                     }
                 }
             }
-        } );
+        });
 
-        this.folderTree = Ext.create( 'Ext.tree.Panel', {
+        this.folderTree = Ext.create('Ext.tree.Panel', {
             //xtype:"treepanel",
             id: this.id + "activeTracksTree",
             title: "Upload & Manage",
             bodyPadding: "5 0 0 0",
-            margin: "-1 0 0 0",
             border: false,
             autoScroll: true,
             flex: 4,
@@ -11587,11 +14342,11 @@ OpencgaBrowserWidget.prototype = {
 //                ,
 //                {
 //                    xtype: 'actioncolumn',
-//                    menuDisabled: true,
+//                    menuDisabled:[pan], true,
 //                    align: 'center',
 //                    width: 30,
 //                    renderer: function (value, metaData, record) {
-//                        if (record.raw.isBucket) {
+//                        if (record.data.isBucket) {
 //                            this.icon = Utils.images.refresh;
 //                            this.tooltip = 'Refresh bucket to find new files';
 //                        } else {
@@ -11600,17 +14355,17 @@ OpencgaBrowserWidget.prototype = {
 //                        }
 //                    },
 //                    handler: function (grid, rowIndex, colIndex, actionItem, event, record, row) {
-//                        if (record.raw.isBucket) {
+//                        if (record.data.isBucket) {
 //                            var opencgaManager = new OpencgaManager();
 //                            opencgaManager.onRefreshBucket.addEventListener(function (sender, res) {
-//                                Ext.example.msg('Refresh Bucket', '</span class="emph">' + res + '</span>');
+//                                Utils.msg('Refresh Bucket', '</span class="emph">' + res + '</span>');
 //                                if (res.indexOf("ERROR") != -1) {
 //                                    console.log(res);
 //                                } else {
 //                                    _this.trigger('need:refresh',{sender:_this});
 //                                }
 //                            });
-//                            opencgaManager.refreshBucket($.cookie("bioinfo_account"), record.raw.text, $.cookie("bioinfo_sid"));
+//                            opencgaManager.refreshBucket($.cookie("bioinfo_account"), record.data.text, $.cookie("bioinfo_sid"));
 //                        }
 //
 //                    }
@@ -11622,126 +14377,132 @@ OpencgaBrowserWidget.prototype = {
                     ptype: 'treeviewdragdrop'
                 },
                 listeners: {
-                    drop: function ( node, data, overModel, dropPosition, eOpts ) {
+                    drop: function (node, data, overModel, dropPosition, eOpts) {
                         var record = data.records[0];
                         //check if is leaf and if the record has a new index
-                        if ( record.isLeaf() && record.data.index != record.removedFrom && record.data.checked ) {
+                        if (record.isLeaf() && record.data.index != record.removedFrom && record.data.checked) {
                             var id = record.data.trackId;
-                            _this.setTrackIndex( id, record.data.index );
+                            _this.setTrackIndex(id, record.data.index);
                         }
                     },
-                    itemcontextmenu: function ( este, record, item, index, e ) {
+                    itemcontextmenu: function (este, record, item, index, e) {
                         e.stopEvent();
                         var items = [];
-                        console.log( record )
-                        if ( record.raw.isBucket ) {
-                            items.push( refreshBucketAction );
-                            items.push( renameBucketAction );
-                            var contextMenu = Ext.create( 'Ext.menu.Menu', {
+                        console.log(record)
+                        if (record.data.isBucket) {
+                            items.push(refreshBucketAction);
+                            items.push(renameBucketAction);
+                            var contextMenu = Ext.create('Ext.menu.Menu', {
                                 items: items
-                            } );
-                            contextMenu.showAt( e.getXY() );
+                            });
+                            contextMenu.showAt(e.getXY());
                         }
                         return false;
                     }
                 }
             },
             listeners: {
-                selectionchange: function ( este, selected, eOpts ) {
+                selectionchange: function (este, selected, eOpts) {
                     var record = selected[0];
-                    if ( typeof record != 'undefined' ) {//avoid deselection
+                    if (typeof record != 'undefined') {//avoid deselection
                         var field, deep;
-                        if ( record.raw.isBucket != null ) {//is a bucket
+                        if (record.data.isBucket != null) {//is a bucket
                             field = 'text';
                             deep = false;
                         } else {
                             field = 'oid';
                             deep = true;
                         }
-                        var node = _this.allStore.getRootNode().findChild( field, record.raw[field], deep );
+                        var node = _this.allStore.getRootNode().findChild(field, record.data[field], deep);
                         var childs = [];
                         _this.selectedFolderNode = {value: node.data[field], field: field};
-                        node.eachChild( function ( n ) {
-                            childs.push( n.raw );
-                        } );
-                        _this.filesGrid.setTitle( node.getPath( "text", " / " ) );
-                        _this.filesStore.loadData( childs );
-                        if ( _this.mode == "folderSelection" ) {
-                            _this.selectedFileNode = node.raw;
+
+                        for(var index in node.data.children){
+                            childs.push(node.data.children[index]);
+                        }
+
+//                        node.eachChild(function (n) {
+//                            childs.push(n.data);
+//                        });
+                        _this.filesGrid.setTitle(node.getPath("text", " / "));
+                        _this.filesStore.loadData(childs);
+                        if (_this.mode == "folderSelection") {
+                            _this.selectedFileNode = node.data;
                             _this.selectButton.enable();
                         }
                     }
                 },
-                viewready: function ( este, eOpts ) {//Fires when the grid view is available (use this for selecting a default row).
-                    setTimeout( function () { // forced to do this because some ExtJS 4.2.0 event problem
-                        var node = este.getRootNode().getChildAt( 0 );
-                        if ( typeof node != 'undefined' ) {
-                            este.getSelectionModel().select( node );
+                viewready: function (este, eOpts) {//Fires when the grid view is available (use this for selecting a default row).
+                    setTimeout(function () { // forced to do this because some ExtJS 4.2.0 event problem
+                        var node = este.getRootNode().getChildAt(0);
+                        if (typeof node != 'undefined') {
+                            este.getSelectionModel().select(node);
                         }
-                    }, 0 );
+                    }, 0);
                 },
-                checkchange: function ( node, checked ) {
+                checkchange: function (node, checked) {
                 },
-                itemmouseenter: function ( este, record ) {
+                itemmouseenter: function (este, record) {
                 },
-                itemmouseleave: function ( este, record ) {
+                itemmouseleave: function (este, record) {
                 }
             },
             store: this.folderStore
-        } );
+        });
+
 
         /*MANAGE BUCKETS*/
-        var newProjectButton = Ext.create( 'Ext.button.Button', {
+        var newProjectButton = Ext.create('Ext.button.Button', {
             text: 'OK',
             handler: function () {
                 _this.createProject();
                 _this.folderTree.toggleCollapse();
                 //manageProjects.toggleCollapse();
             }
-        } );
-        var newProjectNameField = Ext.create( 'Ext.form.field.Text', {
+        });
+        var newProjectNameField = Ext.create('Ext.form.field.Text', {
             id: this.id + "newProjectNameField",
 //        	width: 160,
             emptyText: 'name',
             allowBlank: false
-        } );
-        var newProjectDescriptionField = Ext.create( 'Ext.form.field.TextArea', {
+        });
+        var newProjectDescriptionField = Ext.create('Ext.form.field.TextArea', {
             id: this.id + "newProjectDescriptionField",
 //        	width: 160,
             emptyText: 'description'
-        } );
-        var newProjectCont = Ext.create( 'Ext.container.Container', {
+        });
+        var newProjectCont = Ext.create('Ext.container.Container', {
             flex: 1,
             layout: { type: 'hbox', align: 'stretch'},
             items: [newProjectNameField, newProjectDescriptionField]
-        } );
-        var manageProjects = Ext.create( 'Ext.panel.Panel', {
+        });
+        var manageProjects = Ext.create('Ext.panel.Panel', {
             title: "Create bucket",
             bodyPadding: 5,
             border: false,
             items: [newProjectNameField, newProjectDescriptionField, newProjectButton]
-        } );
+        });
         /*END MANAGE PROJECTS*/
 
+
         /*Files grid*/
-        var indexAction = Ext.create( 'Ext.Action', {
+        var indexAction = Ext.create('Ext.Action', {
             icon: Utils.images.info,  // Use a URL in the icon config
             text: 'Create index',
 //            disabled: true,
-            handler: function ( widget, event ) {
+            handler: function (widget, event) {
                 var record = _this.filesGrid.getSelectionModel().getSelection()[0];
-                if ( record ) {
+                if (record) {
 
-                    OpencgaManager.indexer( {
-                        accountId: $.cookie( "bioinfo_account" ),
-                        sessionId: $.cookie( "bioinfo_sid" ),
-                        bucketId: record.raw.bucketId,
+                    OpencgaManager.indexer({
+                        accountId: $.cookie("bioinfo_account"),
+                        sessionId: $.cookie("bioinfo_sid"),
+                        bucketId: record.data.bucketId,
                         objectId: record.data.oid,
-                        success: function ( response ) {
-                            debugger
-                            console.log( response );
-                            Ext.example.msg( "indexer", response );
-                            record.raw.indexerId = response;
+                        success: function (response) {
+                            console.log(response);
+                            Utils.msg("indexer", response);
+                            record.data.indexerId = response;
 //                                if (response.indexOf("ERROR:") != -1){
 //                                }else{
 //                                    //delete complete
@@ -11749,14 +14510,15 @@ OpencgaBrowserWidget.prototype = {
 //                                    _this.trigger('need:refresh',{sender:_this});
 //                                }
                         }
-                    } );
+                    });
 
-//                    console.log(record.raw.status);
-//                    if (record.raw.status.indexOf('indexer') == -1) {
+
+//                    console.log(record.data.status);
+//                    if (record.data.status.indexOf('indexer') == -1) {
 //                        opencgaManager.onIndexer.addEventListener(function (sender, response) {
 //                            console.log(response)
-//                            Ext.example.msg("indexer", response);
-//                            record.raw.indexerId = response;
+//                            Utils.msg("indexer", response);
+//                            record.data.indexerId = response;
 ////                                if (response.indexOf("ERROR:") != -1){
 ////                                }else{
 ////                                    //delete complete
@@ -11764,12 +14526,12 @@ OpencgaBrowserWidget.prototype = {
 ////                                    _this.trigger('need:refresh',{sender:_this});
 ////                                }
 //                        });
-//                        opencgaManager.indexer($.cookie("bioinfo_account"), $.cookie("bioinfo_sid"), record.raw.bucketId, record.data.oid);
+//                        opencgaManager.indexer($.cookie("bioinfo_account"), $.cookie("bioinfo_sid"), record.data.bucketId, record.data.oid);
 //                    } else {
-//                        Ext.example.msg('Indexer', 'The file is already being indexed');
+//                        Utils.msg('Indexer', 'The file is already being indexed');
 //                        opencgaManager.onIndexerStatus.addEventListener(function (sender, response) {
 //                            console.log(response)
-//                            Ext.example.msg("indexer status", response);
+//                            Utils.msg("indexer status", response);
 ////                                if (response.indexOf("ERROR:") != -1){
 ////                                }else{
 ////                                    //delete complete
@@ -11777,75 +14539,74 @@ OpencgaBrowserWidget.prototype = {
 ////                                    _this.trigger('need:refresh',{sender:_this});
 ////                                }
 //                        });
-//                        opencgaManager.indexerStatus($.cookie("bioinfo_account"), $.cookie("bioinfo_sid"), record.raw.bucketId, record.data.oid, record.raw.status);
+//                        opencgaManager.indexerStatus($.cookie("bioinfo_account"), $.cookie("bioinfo_sid"), record.data.bucketId, record.data.oid, record.data.status);
 //                    }
                 }
             }
-        } );
-        var showName = Ext.create( 'Ext.Action', {
+        });
+        var showName = Ext.create('Ext.Action', {
 //            icon: Utils.images.info,
             text: 'Show name',
 //            disabled: true,
-            handler: function ( widget, event ) {
+            handler: function (widget, event) {
                 var rec = _this.filesGrid.getSelectionModel().getSelection()[0];
-                if ( rec ) {
-                    Ext.example.msg( 'objectId', '' + rec.get( 'oid' ) );
+                if (rec) {
+                    Utils.msg('objectId', '' + rec.get('oid'));
                 }
             }
-        } );
+        });
 
-        var deleteAction = Ext.create( 'Ext.Action', {
+        var deleteAction = Ext.create('Ext.Action', {
             icon: Utils.images.del,
             text: 'Delete this file',
 //            disabled: true,
-            handler: function ( widget, event ) {
+            handler: function (widget, event) {
                 var record = _this.filesGrid.getSelectionModel().getSelection()[0];
-                if ( record ) {
-                    Ext.MessageBox.confirm( 'Confirm', 'Are you sure you want to delete this file?<p class="emph">' + record.data.fileName + '<p>',
-                        function ( answer ) {
-                            if ( answer == "yes" ) {
-                                console.log( "deleting" )
+                if (record) {
+                    Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this file?<p class="emph">' + record.data.fileName + '<p>', function (answer) {
+                        if (answer == "yes") {
+                            console.log("deleting")
 
-                                OpencgaManager.deleteObjectFromBucket( {
-                                    accountId: $.cookie( "bioinfo_account" ),
-                                    sessionId: $.cookie( "bioinfo_sid" ),
-                                    bucketId: record.raw.bucketId,
-                                    objectId: record.data.oid,
-                                    success: function ( response ) {
-                                        if ( response.errorMsg === '' ) {
-                                            Ext.example.msg( 'Deleting', '</span class="emph">' + response.result[0].msg + '</span>' );
-                                            _this.filesGrid.store.remove( record );
-                                        } else {
-                                            Ext.Msg.alert( 'Deleting', response.errorMsg );
-                                        }
+                            OpencgaManager.deleteObjectFromBucket({
+                                accountId: $.cookie("bioinfo_account"),
+                                sessionId: $.cookie("bioinfo_sid"),
+                                bucketId: record.data.bucketId,
+                                objectId: record.data.oid,
+                                success: function (response) {
+                                    if (response.errorMsg === '') {
+                                        Utils.msg('Deleting', '</span class="emph">' + response.result[0].msg + '</span>');
+                                        _this.filesGrid.store.remove(record);
+                                    } else {
+                                        Ext.Msg.alert('Deleting', response.errorMsg);
                                     }
-                                } );
-                            }
-                        } );
+                                }
+                            });
+                        }
+                    });
                 }
             }
-        } );
+        });
 
-        this.filesGrid = Ext.create( 'Ext.grid.Panel', {
-            title: this.allStore.getRootNode().getPath( "text", " / " ),
+        this.filesGrid = Ext.create('Ext.grid.Panel', {
+            title: this.allStore.getRootNode().getPath("text", " / "),
             store: this.filesStore,
             flex: 4,
             border: false,
             viewConfig: {
                 stripeRows: true,
                 listeners: {
-                    itemcontextmenu: function ( este, record, item, index, e ) {
+                    itemcontextmenu: function (este, record, item, index, e) {
                         e.stopEvent();
                         var items = [showName];
-                        console.log( record )
-                        if ( record.raw.fileFormat == 'bam' || record.raw.fileFormat == 'vcf' ) {
-                            items.push( indexAction );
+                        console.log(record)
+                        if (record.data.fileFormat == 'bam' || record.data.fileFormat == 'vcf') {
+                            items.push(indexAction);
                         }
-                        items.push( deleteAction );
-                        var contextMenu = Ext.create( 'Ext.menu.Menu', {
+                        items.push(deleteAction);
+                        var contextMenu = Ext.create('Ext.menu.Menu', {
                             items: items
-                        } );
-                        contextMenu.showAt( e.getXY() );
+                        });
+                        contextMenu.showAt(e.getXY());
                         return false;
                     }
                 }
@@ -11854,26 +14615,26 @@ OpencgaBrowserWidget.prototype = {
                 mode: 'SINGLE',
                 //allowDeselect:true,
                 listeners: {
-                    selectionchange: function ( este, item ) {
+                    selectionchange: function (este, item) {
                         _this.selectButton.disable();
-                        if ( item.length > 0 ) {//se compr
-                            _this.selectedFileNode = item[0].raw;
-                            var type = item[0].raw.fileType;
-                            var fileFormat = item[0].raw.fileFormat;
-                            if ( _this.mode === "fileSelection" && type === "dir" ) {
+                        if (item.length > 0) {//se compr
+                            _this.selectedFileNode = item[0].data;
+                            var type = item[0].data.fileType;
+                            var fileFormat = item[0].data.fileFormat;
+                            if (_this.mode === "fileSelection" && type === "dir") {
                                 return;
                             }
-                            console.log( _this.allowedTypes )
-                            if ( typeof _this.allowedTypes != 'undefined' && _this.allowedTypes.indexOf( fileFormat ) == -1 ) {
+                            console.log(_this.allowedTypes)
+                            if (typeof _this.allowedTypes != 'undefined' && _this.allowedTypes.indexOf(fileFormat) == -1) {
                                 _this.selectButton.disable();
-                                console.log( 'file format NOT allowed -' + fileFormat + '- ' )
+                                console.log('file format NOT allowed -' + fileFormat + '- ')
                                 return;
                             }
-                            if ( _this.mode === "folderSelection" && type !== "dir" ) {
+                            if (_this.mode === "folderSelection" && type !== "dir") {
                                 return;
                             }
 
-                            console.log( 'file format allowed -' + fileFormat + '- ' );
+                            console.log('file format allowed -' + fileFormat + '- ');
                             _this.selectButton.enable();
                             //this.selectedLabel.setText('<p>The selected file <span class="emph">'+item[0].data.fileName.substr(0,40)+'</span><span class="ok"> is allowed</span>.</p>',false);
                             //TODO por defecto cojo el primero pero que pasa si el data contiene varios ficheros??
@@ -11885,7 +14646,7 @@ OpencgaBrowserWidget.prototype = {
             },
             columns: [
                 { text: 'File type', xtype: 'actioncolumn', menuDisabled: true, align: 'center', width: 54, icon: Utils.images.bluebox,
-                    renderer: function ( value, metaData, record ) {
+                    renderer: function (value, metaData, record) {
                         this.icon = Utils.images[record.data.fileType];
                         this.tooltip = record.data.fileType;
                     }
@@ -11893,29 +14654,35 @@ OpencgaBrowserWidget.prototype = {
                 { text: 'Name', dataIndex: 'fileName', flex: 2 },
                 { text: 'Creation time', dataIndex: 'creationTime', flex: 1 }
             ]
-        } );
+        });
         /**/
 
-        this.panAccordion = Ext.create( 'Ext.panel.Panel', {
-            minWidth: 125,
+        this.panAccordion = Ext.create('Ext.panel.Panel', {
+            minWidth: 200,
             minHeight: 250,
             flex: 1,
-            cls: 'ocb-border-right-lightgrey',
             border: false,
             layout: 'accordion',
             items: [this.folderTree, manageProjects /*, panFilter*/]
-        } );
+        });
 
-        this.selectButton = Ext.create( 'Ext.button.Button', {
+        this.selectButton = Ext.create('Ext.button.Button', {
             text: 'Ok',
             disabled: true,
             handler: function () {
-                _this.trigger( 'select', {id: _this.selectedFileNode.oid, bucketId: _this.selectedFileNode.bucketId} );
+                var idQuery = _this.selectedFileNode.oid.replace(/\//g, ":");
+                _this.trigger('select', {
+                    id: _this.selectedFileNode.oid,
+                    idQuery: idQuery,
+                    pathQuery: 'buckets:' + _this.selectedFileNode.bucketId + ':' + idQuery,
+                    path: 'buckets/' + _this.selectedFileNode.bucketId + '/' + _this.selectedFileNode.oid,
+                    bucketId: _this.selectedFileNode.bucketId
+                });
                 _this.panel.hide();
             }
-        } );
+        });
 
-        this.activeUploadsCont = Ext.create( 'Ext.panel.Panel', {
+        this.activeUploadsCont = Ext.create('Ext.panel.Panel', {
             title: 'Active uploads',
             animCollapse: false,
             hidden: true,
@@ -11925,71 +14692,71 @@ OpencgaBrowserWidget.prototype = {
             border: 0,
             cls: 'ocb-border-top-lightgrey',
             items: []
-        } );
+        });
+
 
         /**MAIN PANEL**/
-        //		this.height=205+(26*suites.length);//segun el numero de suites
+//		this.height=205+(26*suites.length);//segun el numero de suites
 
         var tbarObj = {items: []};
-        switch ( this.mode ) {
+        switch (this.mode) {
             case "folderSelection" :
                 var item;
                 item = {text: 'New folder', handler: function () {
                     _this.folderTree.expand();
                     _this.createFolder();
                 }};
-                tbarObj.items.splice( 0, 0, item );
+                tbarObj.items.splice(0, 0, item);
                 item = {text: 'New bucket', handler: function () {
                     manageProjects.expand();
                 }};
-                tbarObj.items.splice( 0, 0, item );
-                this.filesStore.filter( "fileType", /dir/ );
+                tbarObj.items.splice(0, 0, item);
+                this.filesStore.filter("fileType", /dir/);
                 break;
             case "manager" :
                 var item;
                 item = {text: 'Upload local file', handler: function () {
                     _this.drawUploadWidget();
                 }};
-                tbarObj.items.splice( 0, 0, item );
+                tbarObj.items.splice(0, 0, item);
                 item = {text: 'New folder', handler: function () {
                     _this.folderTree.expand();
                     _this.createFolder();
                 }};
-                tbarObj.items.splice( 0, 0, item );
+                tbarObj.items.splice(0, 0, item);
                 item = {text: 'New bucket', handler: function () {
                     manageProjects.expand();
                 }};
-                tbarObj.items.splice( 0, 0, item );
+                tbarObj.items.splice(0, 0, item);
                 this.selectButton.hide();
                 break;
 
             default :
                 var item;
-                item = {text: '<span class="info">Upload local file</span>', handler: function () {
+                item = {text: 'Upload local file', handler: function () {
                     _this.drawUploadWidget();
                 }};
-                tbarObj.items.push( item );
-                tbarObj.items.push( '-' );
+                tbarObj.items.push(item);
                 item = {text: 'New folder', handler: function () {
                     _this.folderTree.expand();
                     _this.createFolder();
                 }};
-                tbarObj.items.push( item );
+                tbarObj.items.push(item);
                 item = {text: 'New bucket', handler: function () {
                     manageProjects.expand();
                 }};
-                tbarObj.items.push( item );
+                tbarObj.items.push(item);
                 break;
         }
 
-        if ( this.chunkedUpload == true ) {
-            tbarObj.items.push( {
+        if (this.chunkedUpload == true) {
+            tbarObj.items.push({
                 id: this.id + 'activeUploadsButton',
                 text: 'Active uploads',
                 enableToggle: true,
                 pressed: false,
                 toggleHandler: function () {
-                    if ( this.pressed ) {
+                    if (this.pressed) {
                         _this.activeUploadsCont.show();
                         //                    _this.viewUploads();
                     } else {
@@ -11997,9 +14764,9 @@ OpencgaBrowserWidget.prototype = {
                         //                    _this.viewBuckets();
                     }
                 }
-            } );
+            });
         }
-        var panel = Ext.create( 'Ext.window.Window', {
+        var panel = Ext.create('Ext.window.Window', {
             title: 'Upload & Manage',
             resizable: false,
             minimizable: true,
@@ -12011,30 +14778,41 @@ OpencgaBrowserWidget.prototype = {
             width: this.width,
             minWidth: this.width,
             resizable: true,
-            layout: { type: 'vbox', align: 'stretch'},
-            tbar: tbarObj,
-            items: [
-                {
-                    xtype: 'container',
-                    flex: 3,
-                    minWidth: 125,
-                    layout: { type: 'hbox', align: 'stretch'},
-                    items: [this.panAccordion, this.filesGrid]
-                },
-                this.activeUploadsCont
-            ],
-            buttonAlign: 'right',
-            buttons: [
-                {
-                    text: 'Close',
-                    handler: function () {
-                        _this.filesGrid.getSelectionModel().deselectAll();
-                        _this.trigger( 'select' );
-                        _this.panel.hide();
-                    }
-                },
-                this.selectButton
-            ],
+            layout: 'fit',
+            items: {
+                border: 0,
+                layout: { type: 'vbox', align: 'stretch'},
+                items: [
+                    {
+                        xtype: 'container',
+                        flex: 3,
+                        minWidth: 125,
+                        layout: { type: 'hbox', align: 'stretch'},
+                        items: [this.panAccordion, this.filesGrid]
+                    },
+                    this.activeUploadsCont
+                ],
+                tbar: tbarObj,
+                bbar: {
+                    layout: {
+                        pack: 'end'
+                    },
+                    defaults: {
+                        width: 100
+                    },
+                    items: [
+                        {
+                            text: 'Close',
+                            handler: function () {
+                                _this.filesGrid.getSelectionModel().deselectAll();
+                                _this.trigger('select');
+                                _this.panel.hide();
+                            }
+                        },
+                        this.selectButton
+                    ]
+                }
+            },
             listeners: {
                 scope: this,
                 minimize: function () {
@@ -12044,15 +14822,15 @@ OpencgaBrowserWidget.prototype = {
                     delete this.panel;
                 }
             }
-        } );
+        });
 
         this._updateFolderTree();
         return panel;
     },
 
-    setAccountData: function ( data ) {
+    setAccountData: function (data) {
         this.accountData = data;
-        if ( this.rendered ) {
+        if (this.rendered) {
             this._updateFolderTree();
         }
     },
@@ -12066,35 +14844,35 @@ OpencgaBrowserWidget.prototype = {
     _updateFolderTree: function () {
         var _this = this;
 //        console.log("updating folder tree");
-        var find = function ( str, arr ) {
-            for ( var i = 0; i < arr.length; i++ ) {
-                if ( arr[i].text == str ) {
+        var find = function (str, arr) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].text == str) {
                     return i;
                 }
             }
             return -1;
         };
 
-        if ( this.accountData != null && this.accountData.accountId != null ) {
+        if (this.accountData != null && this.accountData.accountId != null) {
 //            console.log('generating tree..')
             this.folderStore.getRootNode().removeAll();
             this.allStore.getRootNode().removeAll();
             this.filesStore.removeAll();
 //            this.folderTree.getSelectionModel().deselectAll();
-            for ( var i = 0; i < this.accountData.buckets.length; i++ ) {
+            for (var i = 0; i < this.accountData.buckets.length; i++) {
                 var files = [];
                 var folders = [];
-                for ( var j = 0; j < this.accountData.buckets[i].objects.length; j++ ) {
+                for (var j = 0; j < this.accountData.buckets[i].objects.length; j++) {
                     var data = this.accountData.buckets[i].objects[j];
                     data["bucketId"] = this.accountData.buckets[i].id;
                     //sencha uses id so need to rename to oid, update: sencha can use id but dosent like char '/' on the id string
 
-                    if ( data.id != null ) {
+                    if (data.id != null) {
                         data["oid"] = data.id;
                         delete data.id;
                     }
-                    var pathArr = data.oid.split( "/" );
-                    if ( data.fileType == "dir" ) {
+                    var pathArr = data.oid.split("/");
+                    if (data.fileType == "dir") {
                         data["expanded"] = true;
                         data["icon"] = Utils.images.dir;
                     } else {
@@ -12106,16 +14884,16 @@ OpencgaBrowserWidget.prototype = {
                     var currentFiles = files;
                     var currentFolders = folders;
 
-                    for ( var k = 0; k < pathArr.length; k++ ) {
-                        var found = find( pathArr[k], currentFiles );
-                        if ( found != -1 ) {
+                    for (var k = 0; k < pathArr.length; k++) {
+                        var found = find(pathArr[k], currentFiles);
+                        if (found != -1) {
                             currentFiles = currentFiles[found].children;
                         } else {
                             var children = [];
-                            var idx = currentFiles.push( {text: pathArr[k], children: children} ) - 1;
-                            if ( typeof pathArr[k + 1] == 'undefined' ) {//isLast
-                                for ( key in data ) {
-                                    if ( key != "children" ) {
+                            var idx = currentFiles.push({text: pathArr[k], children: children}) - 1;
+                            if (typeof pathArr[k + 1] == 'undefined') {//isLast
+                                for (key in data) {
+                                    if (key != "children") {
                                         currentFiles[idx][key] = data[key];
                                     }
                                 }
@@ -12125,16 +14903,16 @@ OpencgaBrowserWidget.prototype = {
                         }
 
                         //ignore files, only folders
-                        var found = find( pathArr[k], currentFolders );
-                        if ( found != -1 ) {
+                        var found = find(pathArr[k], currentFolders);
+                        if (found != -1) {
                             currentFolders = currentFolders[found].children;
                         } else {
                             var children = [];
-                            if ( data.fileType == "dir" ) {
-                                var idx = currentFolders.push( {text: pathArr[k], children: children} ) - 1;
-                                if ( typeof pathArr[k + 1] == 'undefined' ) {//isLast
-                                    for ( key in data ) {
-                                        if ( key != "children" ) {
+                            if (data.fileType == "dir") {
+                                var idx = currentFolders.push({text: pathArr[k], children: children}) - 1;
+                                if (typeof pathArr[k + 1] == 'undefined') {//isLast
+                                    for (key in data) {
+                                        if (key != "children") {
                                             currentFolders[idx][key] = data[key];
                                         }
                                     }
@@ -12147,22 +14925,22 @@ OpencgaBrowserWidget.prototype = {
                     }
                 }
 
-                this.allStore.getRootNode().appendChild( {
+                this.allStore.getRootNode().appendChild({
                     text: this.accountData.buckets[i].name,
                     bucketId: this.accountData.buckets[i].name,
                     oid: "", icon: Utils.images.bucket,
                     expanded: true,
                     isBucket: true,
                     children: files
-                } );
-                this.folderStore.getRootNode().appendChild( {
+                });
+                this.folderStore.getRootNode().appendChild({
                     text: this.accountData.buckets[i].name,
                     bucketId: this.accountData.buckets[i].name,
                     oid: "", icon: Utils.images.bucket,
                     expanded: true,
                     isBucket: true,
                     children: folders
-                } );
+                });
             }
         }
 
@@ -12170,35 +14948,36 @@ OpencgaBrowserWidget.prototype = {
 //        this.folderStore.getRootNode().collapse();
 //        this.folderStore.getRootNode().expand();
 
+
         //reselect nodes after account update
-        if ( this.selectedFolderNode != null ) { //devuelve el value y el field porque el bucket no tiene oid
-            var lastNode = this.folderTree.getRootNode().findChild( this.selectedFolderNode.field, this.selectedFolderNode.value, true );
-            if ( lastNode != null ) {
-                this.folderTree.getSelectionModel().select( lastNode );
+        if (this.selectedFolderNode != null) { //devuelve el value y el field porque el bucket no tiene oid
+            var lastNode = this.folderTree.getRootNode().findChild(this.selectedFolderNode.field, this.selectedFolderNode.value, true);
+            if (lastNode != null) {
+                this.folderTree.getSelectionModel().select(lastNode);
             }
         }
-        if ( this.selectedFileNode != null ) { //devuelve el value y el field porque el bucket no tiene oid
-            var index = this.filesGrid.getStore().findExact( 'oid', this.selectedFileNode.oid );
-            if ( index != -1 ) {
-                this.filesGrid.getSelectionModel().select( index );
+        if (this.selectedFileNode != null) { //devuelve el value y el field porque el bucket no tiene oid
+            var index = this.filesGrid.getStore().findExact('oid', this.selectedFileNode.oid);
+            if (index != -1) {
+                this.filesGrid.getSelectionModel().select(index);
             }
         }
     },
 
-    addUpload: function ( file, fileuploadWorker ) {
-        var pbar = Ext.create( 'Ext.ProgressBar', {
+    addUpload: function (file, fileuploadWorker) {
+        var pbar = Ext.create('Ext.ProgressBar', {
             text: 'Ready',
             width: 250,
             margin: '4 6 0 6'
-        } );
-        var nameBox = Ext.create( 'Ext.Component', {
-            html: file.name.substr( 0, 67 ),
+        });
+        var nameBox = Ext.create('Ext.Component', {
+            html: file.name.substr(0, 67),
             width: 430,
             margin: '7 6 0 6'
-        } );
+        });
 //        #ffffd6  amarillete
         // #1155cc azulete
-        var btn = Ext.create( 'Ext.Button', {
+        var btn = Ext.create('Ext.Button', {
             text: '<span style="color:#1155cc">Cancel</span>',
             margin: '3 6 0 4',
             width: 50,
@@ -12206,42 +14985,43 @@ OpencgaBrowserWidget.prototype = {
                 fileuploadWorker.terminate();
                 cont.destroy();
             }
-        } );
-        var cont = Ext.create( 'Ext.container.Container', {
+        });
+        var cont = Ext.create('Ext.container.Container', {
             padding: '3 6 0 6',
             layout: 'hbox',
             items: [nameBox, pbar, btn]
-        } );
-        fileuploadWorker.onmessage = function ( e ) {
+        });
+        fileuploadWorker.onmessage = function (e) {
             var res = e.data;
-            console.log( "@@@@@@@@@@@@@@@@ WORKER event message" );
-            console.log( res );
-            pbar.updateProgress( (res.chunkId + 1) / res.total, 'uploading part ' + (res.chunkId + 1) + ' of ' + res.total, false );
-            if ( res.finished == true ) {
-                btn.setText( '<span style="color:#1155cc">Done </span>' );
+            console.log("@@@@@@@@@@@@@@@@ WORKER event message");
+            console.log(res);
+            pbar.updateProgress((res.chunkId + 1) / res.total, 'uploading part ' + (res.chunkId + 1) + ' of ' + res.total, false);
+            if (res.finished == true) {
+                btn.setText('<span style="color:#1155cc">Done </span>');
             }
 //            _this.adapter.onIndexer(function(data){
 //                console.log(data);
 //            });
 //            _this.adapter.indexer($.cookie("bioinfo_account"),objectId);
         };
-        this.activeUploadsCont.add( cont );
-        Ext.getCmp( this.id + 'activeUploadsButton' ).toggle( true );
+        this.activeUploadsCont.add(cont);
+        Ext.getCmp(this.id + 'activeUploadsButton').toggle(true);
     },
     viewBuckets: function () {
         var _this = this;
-        _this.panel.removeAll( false );
-        _this.panel.add( _this.panAccordion );
-        _this.panel.add( _this.filesGrid );
+        _this.panel.removeAll(false);
+        _this.panel.add(_this.panAccordion);
+        _this.panel.add(_this.filesGrid);
 
     },
     viewUploads: function () {
         var _this = this;
-        _this.panel.removeAll( false );
-        _this.panel.add( _this.activeUploadsCont );
+        _this.panel.removeAll(false);
+        _this.panel.add(_this.activeUploadsCont);
     }
     //endclass
 };
+
 
 OpencgaBrowserWidget.prototype.setFilter = function () {
     var _this = this;
@@ -12250,57 +15030,57 @@ OpencgaBrowserWidget.prototype.setFilter = function () {
 
     this.folderStore.clearFilter();
 
-    if ( recordOrigin != null ) {
-        switch ( recordOrigin.data.suiteId ) {
+    if (recordOrigin != null) {
+        switch (recordOrigin.data.suiteId) {
             case  "all":
                 break;
             case  "Uploaded Data":
-                this.folderStore.filter( function ( item ) {
+                this.folderStore.filter(function (item) {
                     return item.data.jobId < 0;
-                } );
+                });
                 break;
             case  "Job Generated":
-                this.folderStore.filter( function ( item ) {
+                this.folderStore.filter(function (item) {
                     return item.data.jobId > 0;
-                } );
+                });
                 break;
         }
     }
-    if ( recordSuite != null ) {
-        switch ( recordSuite.data.suiteId ) {
+    if (recordSuite != null) {
+        switch (recordSuite.data.suiteId) {
             case  1:
                 break;
             default :
-                this.folderStore.filter( function ( item ) {
+                this.folderStore.filter(function (item) {
                     return item.data.suiteId == recordSuite.data.suiteId;
-                } );
+                });
         }
     }
 
-    this.folderStore.filter( function ( item ) {
-        var str = Ext.getCmp( _this.searchFieldId ).getValue().toLowerCase();
-        if ( item.data.name.toLowerCase().indexOf( str ) < 0 ) {
+    this.folderStore.filter(function (item) {
+        var str = Ext.getCmp(_this.searchFieldId).getValue().toLowerCase();
+        if (item.data.name.toLowerCase().indexOf(str) < 0) {
             return false;
         }
         return true;
-    } );
+    });
 };
 
-OpencgaBrowserWidget.prototype.checkTags = function ( tags ) {
-    for ( var i = 0; i < this.tags.length; i++ ) {
-        if ( this.tags[i].indexOf( '|' ) > -1 ) {
-            var orTags = this.tags[i].split( '|' );
+OpencgaBrowserWidget.prototype.checkTags = function (tags) {
+    for (var i = 0; i < this.tags.length; i++) {
+        if (this.tags[i].indexOf('|') > -1) {
+            var orTags = this.tags[i].split('|');
             var orMatch = false;
-            for ( var j = 0; j < orTags.length; j++ ) {
-                if ( tags.indexOf( orTags[j] ) > -1 ) {
+            for (var j = 0; j < orTags.length; j++) {
+                if (tags.indexOf(orTags[j]) > -1) {
                     orMatch = true;
                 }
             }
-            if ( !orMatch ) {
+            if (!orMatch) {
                 return false;
             }
         } else {
-            if ( tags.indexOf( this.tags[i] ) == -1 ) {
+            if (tags.indexOf(this.tags[i]) == -1) {
                 return false;
             }
         }
@@ -12309,40 +15089,41 @@ OpencgaBrowserWidget.prototype.checkTags = function ( tags ) {
 
 };
 
+
 OpencgaBrowserWidget.prototype.createProject = function () {
     var _this = this;
-    var name = Ext.getCmp( this.id + "newProjectNameField" ).getValue();
-    var desc = Ext.getCmp( this.id + "newProjectDescriptionField" ).getValue();
-    if ( name != "" ) {
+    var name = Ext.getCmp(this.id + "newProjectNameField").getValue();
+    var desc = Ext.getCmp(this.id + "newProjectDescriptionField").getValue();
+    if (name != "") {
         Ext.getBody().mask();
-        _this.panel.setLoading( "Creating project" );
+        _this.panel.setLoading("Creating project");
 
-        OpencgaManager.createBucket( {
+        OpencgaManager.createBucket({
             bucketId: name,
             description: desc,
-            accountId: $.cookie( "bioinfo_account" ),
-            sessionId: $.cookie( "bioinfo_sid" ),
+            accountId: $.cookie("bioinfo_account"),
+            sessionId: $.cookie("bioinfo_sid"),
             success: this.createBucketSuccess
-        } );
+        });
     }
 };
 
 OpencgaBrowserWidget.prototype._getFolderTreeSelection = function () {
     var selectedBuckets = this.folderTree.getSelectionModel().getSelection();
-    if ( selectedBuckets.length < 1 ) {
-        Ext.example.msg( 'No folder selected', 'Please select a bucket or a folder.' );
+    if (selectedBuckets.length < 1) {
+        Utils.msg('No folder selected', 'Please select a bucket or a folder.');
         return null;
     } else {
         var record = selectedBuckets[0];
         var bucketName;
         var parent = '';
-        if ( record.raw.fileType != null && record.raw.fileType == "dir" ) {
-            var path = record.getPath( "text", "/" ).substr( 1 );
-            var pathArr = path.split( "/", 2 );
-            parent = path.replace( pathArr.join( "/" ), "" ).substr( 1 ) + "/";
+        if (record.data.fileType != null && record.data.fileType == "dir") {
+            var path = record.getPath("text", "/").substr(1);
+            var pathArr = path.split("/", 2);
+            parent = path.replace(pathArr.join("/"), "").substr(1) + "/";
             bucketName = pathArr[1];
         } else {
-            bucketName = record.raw.text;
+            bucketName = record.data.text;
         }
         return {bucketId: bucketName, directory: parent};
     }
@@ -12351,401 +15132,43 @@ OpencgaBrowserWidget.prototype._getFolderTreeSelection = function () {
 OpencgaBrowserWidget.prototype.drawUploadWidget = function () {
     var _this = this;
     var folderSelection = this._getFolderTreeSelection();
-    if ( folderSelection != null ) {
-        _this.uploadWidget.draw( folderSelection );
+    if (folderSelection != null) {
+        _this.uploadWidget.draw(folderSelection);
     }
 };
 
 OpencgaBrowserWidget.prototype.createFolder = function () {
     var _this = this;
-    if ( this.accountData.buckets.length < 1 ) {
-        Ext.MessageBox.alert( 'No buckets found', 'Please create and select a bucket.' );
+    if (this.accountData.buckets.length < 1) {
+        Ext.MessageBox.alert('No buckets found', 'Please create and select a bucket.');
     } else {
         var folderSelection = this._getFolderTreeSelection();
-        if ( folderSelection != null ) {
-            Ext.Msg.prompt( 'New folder', 'Please enter a name for the new folder:', function ( btn, text ) {
-                if ( btn == 'ok' ) {
-                    text = text.replace( /[^a-z0-9-_.\s]/gi, '' );
+        if (folderSelection != null) {
+            Ext.Msg.prompt('New folder', 'Please enter a name for the new folder:', function (btn, text) {
+                if (btn == 'ok') {
+                    text = text.replace(/[^a-z0-9-_.\s]/gi, '');
                     text = text.trim() + "/";
 
-                    OpencgaManager.createDirectory( {
-                        accountId: $.cookie( "bioinfo_account" ),
-                        sessionId: $.cookie( "bioinfo_sid" ),
+                    OpencgaManager.createDirectory({
+                        accountId: $.cookie("bioinfo_account"),
+                        sessionId: $.cookie("bioinfo_sid"),
                         bucketId: folderSelection.bucketId,
                         objectId: folderSelection.directory + text,
-                        success: function ( response ) {
-                            if ( response.errorMsg === '' ) {
-                                Ext.example.msg( 'Create folder', '</span class="emph">' + response.result[0].msg + '</span>' );
-                                _this.trigger( 'need:refresh', {sender: _this} );
+                        success: function (response) {
+                            if (response.errorMsg === '') {
+                                Utils.msg('Create folder', '</span class="emph">' + response.result[0].msg + '</span>');
+                                _this.trigger('need:refresh', {sender: _this});
                             } else {
-                                Ext.Msg.alert( 'Create folder', response.errorMsg );
+                                Ext.Msg.alert('Create folder', response.errorMsg);
                             }
                         }
-                    } );
+                    });
 
                 }
-            }, null, null, "New Folder" );
+            }, null, null, "New Folder");
         }
     }
 };
-
-/*
- * Copyright (c) 2012 Francisco Salavert (ICM-CIPF)
- * Copyright (c) 2012 Ruben Sanchez (ICM-CIPF)
- * Copyright (c) 2012 Ignacio Medina (ICM-CIPF)
- *
- * This file is part of JS Common Libs.
- *
- * JS Common Libs is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * JS Common Libs is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
- */
-
-function PagedViewListWidget ( args ) {
-    var _this = this;
-    _.extend( this, Backbone.Events );
-    this.id = Utils.genId( "PagedViewListWidget" );
-
-    this._data = null;
-    this.targetId = null;
-
-    this.pageSize = 6;
-    this.storeFields = {};
-    this.template = {};
-    this.width = 280;
-    this.height = 550;
-    this.title = "";
-    this.order = 0;
-    this.border = 0;
-    this.mode = "view";
-    this.sort = 'DESC';
-    this.headerConfig;
-
-    _.extend( this, args );
-
-    this.currentPage = 1;
-    this.pageFieldId = this.id + '_pageField';
-    this.pageLabelId = this.id + '_pageLabel';
-    this.pagbarId = this.id + '_pagbar';
-    this.panelId = this.id + '_panel';
-
-    /**Events i send**/
-
-    this.textFilterFunction = function ( item ) {
-        var str = Ext.getCmp( _this.id + "searchField" ).getValue().toLowerCase();
-        if ( item.data.name.toLowerCase().indexOf( str ) < 0 ) {
-            return false;
-        }
-        return true;
-    };
-
-    this.on( this.handlers );
-
-};
-
-PagedViewListWidget.prototype.getData = function () {
-    return this._data;
-};
-
-PagedViewListWidget.prototype._setData = function ( data ) {
-    this._data = data;
-};
-
-//PagedViewListWidget.prototype.getPageSize = function (){
-//	return this.pageSize;
-//};
-
-//PagedViewListWidget.prototype.getItemsCount = function (){
-//	return this.getData().length;
-//};
-
-//PagedViewListWidget.prototype.getPageCount = function (){
-//	return Math.ceil(this.getItemsCount() / this.getPageSize());
-//};
-
-/**FILTER **/
-PagedViewListWidget.prototype.setFilter = function ( filterFunction ) {
-    this.store.clearFilter();
-
-    if ( filterFunction != null ) {
-        this.filterFunction = filterFunction;
-        this.store.filter( [filterFunction, this.textFilterFunction] );
-    } else {
-        this.store.filter( [this.textFilterFunction] );
-    }
-
-};
-
-/** DRAW **/
-PagedViewListWidget.prototype.draw = function ( data ) {
-
-    this._setData( data );
-//	this.changeOrder();
-    this.render();
-
-    this.store.loadData( this.getData() );
-    if ( this.filterFunction != null ) {
-        this.setFilter( this.filterFunction );
-//		this._setData(this.store.data.items);
-    }
-//	this.changePage(this.currentPage, this.getData(), true);
-
-};
-/** CLEAN **/
-PagedViewListWidget.prototype.clean = function () {
-    if ( this.panel != null ) {
-        this.panel.destroy();
-        delete this.panel;
-    }
-};
-
-//PagedViewListWidget.prototype.changePage = function (numberPage, data, restUpdated){
-//	if((data != null) && (data.length > 0)){
-//		if ((numberPage > 0) && (numberPage <= this.getPageCount())){
-//			this.currentPage = numberPage;
-//			Ext.getCmp(this.pageLabelId).setText(numberPage+' of '+ this.getPageCount());
-//			if (restUpdated != true){				
-//				Ext.getCmp(this.pageFieldId).setValue(numberPage);
-//			} 
-//			var dataPage = new Array(); 
-//			for ( var i = (this.getPageSize() * numberPage)- this.getPageSize(); i < this.getPageSize() * numberPage; i++) {
-//				if (data[i] != null){
-//					dataPage.push(data[i]);
-//				}
-//			}
-//			this.store.loadData(dataPage, false);
-//			}
-//	}
-//	else{
-//		this.store.removeAll();
-//		this.currentPage=1;
-//		Ext.getCmp(this.pageFieldId).setValue(this.currentPage);
-//		Ext.getCmp(this.pageLabelId).setText('No data found');
-//		
-//	}	
-//};
-
-//PagedViewListWidget.prototype.changeOrder = function (){
-////	console.log(this.id+": "+this.sort);
-//	if(this.sort == "desc"){
-//		var aux = new Array();
-//		var data = this.getData();
-//		if(data != null){		
-//			for ( var i = data.length-1; i >= 0; i--) {
-//				aux.push(data[i]);
-//			}
-//		}
-//		this._setData(aux);
-//	}
-//};
-
-PagedViewListWidget.prototype.render = function () {
-    var _this = this;
-    if ( this.panel == null ) {
-        this.tpl = new Ext.XTemplate( this.template );
-
-        this.store = Ext.create( 'Ext.data.Store', {
-            fields: this.storeFields,
-            sorters: [
-                { property: 'date', direction: 'DESC'}
-            ],
-            autoLoad: false
-        } );
-
-        var pan = null;
-
-        if ( this.mode == "view" ) {
-            this.view = Ext.create( 'Ext.view.View', {
-                id: this.id + "view",
-                padding: 15,
-                store: this.store,
-                tpl: this.tpl,
-                height: this.height,
-                trackOver: true,
-                autoScroll: true,
-                overItemCls: 'list-item-hover',
-                itemSelector: '.joblist-item',
-                listeners: {
-                    itemclick: function ( este, record ) {
-                        console.log( record.data );
-                        console.log( record.data.id );
-                        _this.trigger( 'item:click', {sender: _this, item: record} );
-                    },
-                    itemcontextmenu: function ( este, record, item, index, e ) {
-                        e.stopEvent();
-                        _this.trigger( 'item:contextmenu', {sender: _this, record: record, originalEvent: e} );
-                        return false;
-                    }
-                }
-            } );
-
-            pan = this.view;
-        }
-
-        if ( this.mode == "grid" ) {
-            var columns = [];
-            for ( var j = 0; j < this.storeFields.length; j++ ) {
-                columns.push( {header: this.storeFields[j], dataIndex: this.storeFields[j], flex: 1} );
-            }
-            this.grid = Ext.create( 'Ext.grid.Panel', {
-                store: this.store,
-                columns: columns,
-                border: 0
-            } );
-            pan = this.grid;
-        }
-
-        /**TEXT SEARCH FILTER**/
-        var searchField = Ext.create( 'Ext.form.field.Text', {
-            id: this.id + "searchField",
-            flex: 1,
-            margin: "0 1 0 0",
-            emptyText: 'enter search term',
-            enableKeyEvents: true,
-            listeners: {
-                change: function () {
-                    _this.setFilter( null );
-                }
-            }
-        } );
-
-        this.pagBar = Ext.create( 'Ext.toolbar.Toolbar', {
-            id: this.pagbarId,
-            style: 'border: ' + this.border,
-            cls: 'smokeback',
-            items: [
-//							{
-//							    id : this.id+'btnPrev',
-//							    iconCls: Ext.baseCSSPrefix + 'tbar-page-prev',
-//							    tooltip:'Previous Page',
-//							    listeners: {
-//							        scope: this,
-//							        click: this.onPrevClick
-//							    }
-//							},
-//							'-',
-//							{	
-//							    xtype: 'numberfield',
-//							    id: this.pageFieldId,
-//							    cls: Ext.baseCSSPrefix + 'tbar-page-number',
-//							    allowDecimals: false,
-//							    minValue: 1,
-//							    value:1,
-//							    hideTrigger: true,
-//							    enableKeyEvents: true,
-//							    selectOnFocus: true,
-//							    submitValue: false,
-//							    width: 30,
-//							    margins: '-1 2 3 2',
-//							    listeners: {
-//							        scope: this,
-//							        keyup: this.onPageChange
-//							    }
-//							},
-//							'-',
-//							{
-//							    id : this.id+'btnNext',
-//							    iconCls: Ext.baseCSSPrefix + 'tbar-page-next',
-//							    tooltip:'Next Page',
-//							    listeners: {
-//							        scope: this,
-//							        click: this.onNextClick
-//							    }
-//							},
-//			//				'-',
-//							{
-//							    xtype: 'label',
-//							    id: this.pageLabelId,
-//							    text: '',
-//							    margins: '5 0 0 5'
-//							},
-                {
-                    id: this.id + 'btnSort',
-                    iconCls: 'icon-order-desc',
-                    tooltip: 'Change order',
-                    handler: function () {
-                        if ( _this.sort == "DESC" ) {
-                            _this.sort = "ASC";
-                            _this.store.sort( 'date', 'ASC' );
-                            this.setIconCls( 'icon-order-asc' );
-                        }
-                        else {
-                            _this.sort = "DESC";
-                            _this.store.sort( 'date', 'DESC' );
-                            this.setIconCls( 'icon-order-desc' );
-                        }
-                    }
-                },
-                searchField,
-                {
-                    id: this.id + 'btnClear',
-//							    iconCls: 'icon-delete',
-                    text: 'Clear',
-                    margin: "0 2 0 0",
-                    tooltip: 'Clear search box',
-                    handler: function () {
-                        searchField.reset();
-                    }
-                }
-
-            ]
-        } );
-//				this.currentPage = Ext.getCmp(this.pageFieldId).getValue();
-
-        this.panel = Ext.create( 'Ext.panel.Panel', {
-            id: this.panelId,
-            title: this.title,
-            header: this.headerConfig,
-            border: this.border,
-            width: this.width,
-            tbar: this.pagBar,
-            items: [pan]
-        } );
-
-//				this.view.setHeight(this.panel.getHeight());
-        var target = Ext.getCmp( this.targetId );
-        if ( target instanceof Ext.panel.Panel ) {
-            target.insert( this.order, this.panel );
-            //target.setActiveTab(1);//si no se pone el active da un error de EXT
-            //target.setActiveTab(0);//si no se pone el active da un error de EXT
-            //pan.setHeight = this.panel.getHeight();
-        } else {
-            this.panel.render( this.targetId );
-        }
-    }
-};
-
-PagedViewListWidget.prototype.show = function () {
-    if ( this.panel != null ) {
-        this.panel.show();
-    }
-};
-PagedViewListWidget.prototype.hide = function () {
-    if ( this.panel != null ) {
-        this.panel.hide();
-    }
-};
-
-/** Paging bar Events **/
-//PagedViewListWidget.prototype.onPageChange = function (object, event, option){
-//	this.changePage(Ext.getCmp(this.pageFieldId).getValue(), this.getData());
-//};
-//PagedViewListWidget.prototype.onPrevClick = function () {
-//	this.changePage(this.currentPage - 1, this.getData());
-//};
-//PagedViewListWidget.prototype.onNextClick = function () {
-//	this.changePage(this.currentPage + 1, this.getData());
-//};
-/** END Paging bar Events **/
 
 /*
  * Copyright (c) 2012 Francisco Salavert (ICM-CIPF)
@@ -14308,1015 +16731,31 @@ ResultWidget.prototype.getInfo = function ( groupName ) {
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function ResultWidget ( args ) {
+function UploadWidget(args) {
     var _this = this;
-
-    //set default args
-    this.extItems = [];
-
-    this.collapseInformation = false;
-    this.drawIndex = true;
-    this.title = '';
-
-    //set instantiation args, must be last
-    _.extend( this, args );
-
-    this.panelId = null;
-    this.type;
-    this.networkViewerId = null;
-    this.genomeMapsId = null;
-}
-
-ResultWidget.prototype = {
-    id: "ResultWidget" + Math.round( Math.random() * 10000 ),
-    draw: function ( sid, record ) {
-        var _this = this;
-        this.job = record.raw;
-
-        this.job['command'] = Utils.parseJobCommand( this.job );
-
-        this.jobId = this.job.id;
-        this.id = this.jobId + this.id;
-        this.panelId = "ResultWidget_" + this.jobId;
-
-        this.panel = Ext.getCmp( this.panelId );
-
-        var title = this.title;
-        if ( this.title === '' ) {
-            title = this.job.name;
-        } else {
-            title = this.title + ' - ' + this.job.name
-        }
-
-        if ( this.panel == null ) {
-            if ( this.type == "window" ) {
-                this.panel = Ext.create( 'Ext.window.Window', {
-                    id: this.panelId,
-                    bodyStyle: 'background:white;',
-                    title: title,
-                    closable: true,
-                    autoScroll: true,
-                    overflowY: 'auto',
-                    layout: {
-                        type: 'vbox',
-                        align: 'stretch'
-                    }
-                } );
-            } else {
-                this.panel = Ext.create( 'Ext.panel.Panel', {
-                    id: this.panelId,
-                    border: 0,
-                    title: title,
-                    closable: true,
-                    autoScroll: true,
-                    layout: {
-                        type: 'vbox',
-                        align: 'stretch'
-                    }
-                } );
-                Ext.getCmp( this.targetId ).add( this.panel );
-            }
-            this.panel.setLoading( "Loading job info..." );
-
-            var url = OpencgaManager.jobResultUrl( {
-                accountId: $.cookie( "bioinfo_account" ),
-                sessionId: sid,
-                jobId: this.jobId,
-                format: "json"
-            } );
-            console.log( url );
-            $.getScript( url, function () {
-                _this.panel.setLoading( false );
-                _this.result = RESULT;
-                var layout = _this.result[_this.layoutName].layout;
-                layout.outputItems = _this.job.outputData.sort( layout.sortOutputItems );
-                layout.job = _this.job;
-
-                /**/
-                if ( typeof layout.oldXML !== 'undefined' ) {
-                    _this._parseOldXML( layout );
-                }
-                /**/
-
-                _this.render( _this.result );
-
-                if ( _this.type == "window" ) {
-                    _this.panel.show();
-                } else {
-                    Ext.getCmp( _this.targetId ).setActiveTab( _this.panel );
-                }
-            } );
-        } else {
-            if ( this.type == "window" ) {
-                this.panel.show();
-            } else {
-                Ext.getCmp( this.targetId ).setActiveTab( this.panel );
-            }
-
-        }
-    },
-    render: function ( resultData ) {
-        var _this = this;
-        console.log( this.application );
-
-        var getJobInfo = function ( args ) {
-            var args = args || {};
-            var itemTpl = new Ext.XTemplate(
-                '<div class="s110">',
-                '<div style="display:inline-block;color:steelblue;width: 45px;">Id: </div>{id}<br>',
-                '<div style="display:inline-block;color:steelblue;width: 45px;">Name: </div>{name}<br>',
-                '<div style="display:inline-block;color:steelblue;width: 45px;">Tool: </div>{toolName}<br>',
-                '<div style="display:inline-block;color:steelblue;width: 45px;">Date: </div>{date}<br>',
-                '</div>',
-                '<p class="tip emph">{description}</p>',
-                '<p class="">{command.html}</p>'
-            );
-            var container = Ext.create( 'Ext.panel.Panel', {
-                title: 'Information',
-                header: {
-                    baseCls: 'ocb-panel-title'
-                },
-                border: false,
-                collapsible: true,
-                titleCollapse: true,
-                collapsed: _this.collapseInformation,
-                margin: 10,
-                bodyPadding: 10,
-                items: [
-                    {
-                        xtype: 'box',
-                        data: _this.job,
-                        tpl: itemTpl
-                    },
-                    {
-                        xtype: 'container', layout: 'hbox', margin: '10 0 0 0', defaults: {margin: '0 5 0 5'},
-                        items: [
-                            {
-                                xtype: 'button',
-                                text: 'download',
-                                handler: function () {
-                                    OpencgaManager.downloadJob( $.cookie( 'bioinfo_account' ), $.cookie( 'bioinfo_sid' ), _this.jobId );
-                                }
-                            },
-                            {
-                                xtype: 'button',
-                                text: 'delete',
-                                handler: function () {
-                                    Ext.Msg.confirm( "Delete job", "Are you sure you want to delete this job?", function ( btnClicked ) {
-                                        if ( btnClicked == "yes" ) {
-                                            OpencgaManager.deleteJob( {
-                                                accountId: $.cookie( 'bioinfo_account' ),
-                                                sessionId: $.cookie( 'bioinfo_sid' ),
-                                                jobId: _this.jobId,
-                                                success: function ( response ) {
-                                                    if ( response.errorMsg === '' ) {
-                                                        Ext.example.msg( 'Delete job', '</span class="emph">' + response.result[0].msg + '</span>' );
-                                                    } else {
-                                                        Ext.Msg.alert( 'Delete job, try again later.', response.errorMsg );
-                                                    }
-                                                }
-                                            } );
-                                        }
-                                    } );
-                                }
-                            }
-                        ]
-                    }
-                ]
-            } );
-            if ( typeof args.items != 'undefined' ) {
-                container.child( 'container' ).add( args.items );
-            }
-            return container;
-        };
-
-        var getResultIndex = function ( children ) {
-            var boxes = [];
-            for ( var i = 0; i < children.length; i++ ) {
-                boxes.push( Ext.create( 'Ext.Component', {
-                    cls: 'dedo',
-                    overCls: 'u err',
-                    resultId: _this.jobId + children[i].title.replace( / /g, '' ),
-                    html: children[i].title,
-                    listeners: {
-                        afterrender: function ( este ) {
-                            this.getEl().on( "click", function () {
-                                var pos = $( '#' + este.resultId ).position();
-                                if ( typeof pos != 'undefined' ) {
-                                    var top = pos.top;
-                                    $( _this.panel.getEl().dom ).children().scrollTop( top - 10 );
-                                }
-
-                                var tab = Ext.getCmp( este.resultId );//for tab mode
-                                var parent = tab.up();
-                                if ( parent.isXType( 'tabpanel' ) ) {
-                                    parent.setActiveTab( tab );
-                                }
-                            } );
-                        }
-                    }
-                } ) );
-            }
-            return Ext.create( 'Ext.panel.Panel', {
-                title: 'Result index',
-                header: {
-                    baseCls: 'ocb-panel-title'
-                },
-                border: false,
-                collapsible: true,
-                titleCollapse: true,
-                margin: 10,
-                bodyPadding: 10,
-                items: boxes
-            } );
-        };
-
-        var itemTpl = new Ext.XTemplate(
-            '<span class="s120">{title}</span>',
-            '<span class="ok"> {pathi} </span>',
-            '<span class="info"> {date}</span><br>'
-        );
-
-        var processLeafItem = function ( item ) {
-            var boxes = [];
-            var itemBox;
-            for ( var j = 0; j < item.renderers.length; j++ ) {
-                var renderer = item.renderers[j];
-                switch ( renderer.type ) {
-                    case 'note':
-                        itemBox = Ext.create( 'Ext.Component', {
-                            html: renderer.html,
-                            item: item,
-//                            overCls: 'encima',
-                            cls: 'inlineblock whiteborder'
-                        } );
-                        break;
-                    case 'message':
-                        itemBox = Ext.create( 'Ext.Component', {
-                            html: '<div class="alert alert-' + item.type + '" style="text-align: center;font-size: 20px">' + item.title + '</div>',
-                            item: item,
-                            padding: 3
-                        } );
-                        break;
-                    case 'text':
-                        itemBox = Ext.create( 'Ext.Component', {
-                            html: '<span class="key">' + item.title + ': </span> <span class="emph">' + item.file + '</span>',
-                            item: item,
-//                            overCls: 'encima',
-                            cls: 'inlineblock whiteborder'
-                        } );
-                        break;
-                    case 'file':
-                        itemBox = Ext.create( 'Ext.Component', {
-                            html: '<span class="key">' + item.title + '</span><span class="file">' + item.file + '</span>',
-                            item: item,
-                            padding: 3,
-                            overCls: 'encima',
-                            cls: 'inlineblock whiteborder',
-                            listeners: {
-                                afterrender: function () {
-                                    var item = this.item;
-                                    this.getEl().on( "click", function () {
-                                        console.log( item );
-                                        OpencgaManager.poll( {
-                                            accountId: $.cookie( 'bioinfo_account' ),
-                                            sessionId: $.cookie( 'bioinfo_sid' ),
-                                            jobId: _this.jobId,
-                                            filename: item.file,
-                                            zip: true
-                                        } );
-                                    } );
-                                }
-                            }
-                        } );
-                        break;
-                    case 'image':
-                        var url = OpencgaManager.pollurl( {
-                            accountId: $.cookie( 'bioinfo_account' ),
-                            sessionId: $.cookie( 'bioinfo_sid' ),
-                            jobId: _this.jobId,
-                            filename: item.file
-                        } );
-                        itemBox = Ext.create( 'Ext.Img', {
-                            src: url,
-                            listeners: {
-                                render: function ( imgCmp ) {
-                                    this.mon( this.getEl(), 'load', function ( e ) {
-                                        imgCmp.setWidth( this.getWidth() );
-                                        imgCmp.setHeight( this.getHeight() );
-                                    } );
-                                }
-                            }
-                        } );
-                        break;
-                    case 'piechart':
-
-                        var url = OpencgaManager.pollurl( {
-                            accountId: $.cookie( 'bioinfo_account' ),
-                            sessionId: $.cookie( 'bioinfo_sid' ),
-                            jobId: _this.jobId,
-                            filename: item.file
-                        } );
-
-                        var imgURL;
-                        $.ajax( {
-                            type: "GET",
-                            async: false,
-                            url: url,
-                            success: function ( data ) {
-                                if ( data != "" ) {
-                                    var lines = data.split( "\n" );
-                                    var fields = [];
-                                    var names = [];
-                                    var values = [];
-                                    var normValues = [];
-                                    var total = 0;
-                                    for ( var i = 0; i < lines.length; i++ ) {
-                                        fields.push( lines[i].split( "\t" ) );
-                                        if ( fields[i][0] != "" ) {
-                                            names.push( fields[i][0] );
-                                        }
-                                        if ( fields[i][1] != null ) {
-                                            total = total + parseFloat( fields[i][1] );
-                                            values.push( fields[i][1] );
-                                        }
-                                    }
-                                    for ( var i = 0; i < values.length; i++ ) {
-                                        normValues.push( Math.round( parseFloat( values[i] ) / total * 100 ) );
-                                    }
-                                    names = names.toString().replace( /,/gi, "|" );
-                                    imgURL = 'https://chart.googleapis.com/chart?cht=p&chs=600x300&chd=t:' + normValues + '&chl=' + names
-                                        + '&chtt=Consequence+types&chts=000000,14.5';
-                                }
-                            }
-                        } );
-
-//                        itemBox = Ext.create('Ext.Component', {
-//                            html: '<div>' + img + '</div>',
-//                        });
-
-                        itemBox = Ext.create( 'Ext.Img', {
-                            src: imgURL,
-                            listeners: {
-                                render: function ( imgCmp ) {
-                                    this.mon( this.getEl(), 'load', function ( e ) {
-                                        imgCmp.setWidth( this.getWidth() );
-                                        imgCmp.setHeight( this.getHeight() );
-                                    } );
-                                }
-                            }
-                        } );
-                        break;
-                    case 'scatter':
-                        var url = OpencgaManager.pollurl( {
-                            accountId: $.cookie( 'bioinfo_account' ),
-                            sessionId: $.cookie( 'bioinfo_sid' ),
-                            jobId: _this.jobId,
-                            filename: item.file
-                        } );
-                        var data = [];
-                        $.ajax( {
-                            type: "GET",
-                            async: false,
-                            url: url,
-                            success: function ( d ) {
-                                var d = JSON.parse( d );
-                                if ( typeof renderer.processData === 'function' ) {
-                                    data = renderer.processData( d );
-                                } else {
-                                    data = d;
-                                }
-                            }
-                        } );
-                        var store = Ext.create( 'Ext.data.JsonStore', {
-                            fields: renderer.fields,
-                            data: data
-                        } );
-
-                        var chart = Ext.create( 'Ext.chart.Chart', {
-                            renderTo: Ext.getBody(),
-                            width: 500,
-                            height: 200,
-                            animate: false,
-//                            theme: 'Category1',
-                            store: store,
-                            axes: [
-                                {
-                                    type: 'Numeric',
-                                    position: 'left',
-                                    fields: renderer.y.fields,
-                                    title: renderer.y.title,
-                                    grid: true,
-                                    maximum: renderer.y.max
-                                },
-                                {
-                                    type: 'Numeric',
-                                    position: 'bottom',
-                                    fields: renderer.x.fields,
-                                    title: renderer.x.title,
-                                    grid: true
-                                }
-                            ],
-                            series: [
-                                {
-                                    tips: {
-                                        trackMouse: true,
-                                        style: {
-                                            backgroundColor: 'white'
-                                        },
-                                        renderer: function ( este, item ) {
-                                            var xValue = item.storeItem.get( renderer.x.field );
-                                            var yValue = item.storeItem.get( renderer.y.field );
-                                            var html = '<div>' + renderer.x.field + ': <span style="font-weight: bold">' + xValue + '</span></div>' +
-                                                '<div>' + renderer.y.field + ': <span style="font-weight: bold">' + yValue + '</span></div>';
-                                            this.update( html );
-                                        }
-                                    },
-                                    type: 'scatter',
-                                    renderer: function ( sprite, record, attributes, index, store ) {
-                                        if ( typeof renderer.config !== 'undefined' ) {
-                                            return Ext.apply( attributes, renderer.config( record.raw ) );
-                                        }
-                                    },
-                                    markerConfig: {
-                                        type: 'circle',
-                                        radius: 2,
-                                        size: 5
-                                    },
-                                    axis: 'left',
-                                    xField: renderer.x.field,
-                                    yField: renderer.y.field
-                                }
-                            ]
-                        } );
-
-                        itemBox = Ext.create( 'Ext.container.Container', {
-                            margin: '10 0 0 0',
-                            items: [
-                                {
-                                    xtype: 'box',
-                                    html: '<span class="key s120">' + item.title + '</span>'
-                                },
-                                chart
-                            ]
-                        } );
-                        break;
-                    case 'memory-grid':
-                        //Renderer must provide a data function and a field function
-                        var url = OpencgaManager.pollurl( {
-                            accountId: $.cookie( 'bioinfo_account' ),
-                            sessionId: $.cookie( 'bioinfo_sid' ),
-                            jobId: _this.jobId,
-                            filename: item.file
-                        } );
-                        var data = [];
-                        var fields = [];
-                        $.ajax( {
-                            type: "GET",
-                            async: false,
-                            url: url,
-                            success: function ( d ) {
-                                var d = JSON.parse( d );
-                                data = renderer.data( d );
-                                fields = renderer.fields( d );
-                            }
-                        } );
-                        var store = Ext.create( 'Ext.data.Store', {
-                            pageSize: 50,
-                            proxy: {
-                                type: 'memory'
-                            },
-                            fields: ['0', '1', '2', "3"],
-                            data: data
-                        } );
-                        var columns = [];
-                        for ( var i = 0; i < fields.length; i++ ) {
-                            columns.push( {
-                                "header": fields[i], "dataIndex": i, flex: 1
-                            } );
-                        }
-                        itemBox = Ext.create( 'Ext.grid.Panel', {
-                            title: item.title,
-                            flex: 1,
-                            store: store,
-                            height: 200,
-                            width: 400,
-                            loadMask: true,
-                            plugins: ['bufferedrenderer'],
-                            columns: columns
-                        } );
-                        break;
-                    case 'grid':
-                        var id = 'resultTable_' + _this.jobId + item.file;
-                        var resultTable = new ResultTable( _this.jobId, item.file, item.tags, {targetId: id, tableLayout: renderer.tableLayout} );
-                        itemBox = Ext.create( 'Ext.Component', {
-                            flex: 1,
-                            resultTable: resultTable,
-                            html: '<div id="' + id + '" style="padding:5px;"> </div>',
-                            listeners: {
-                                afterrender: function ( este ) {
-                                    este.resultTable.draw();
-                                }
-                            }
-                        } );
-                        break;
-                    case 'table':
-                        var url = OpencgaManager.pollurl( {
-                            accountId: $.cookie( 'bioinfo_account' ),
-                            sessionId: $.cookie( 'bioinfo_sid' ),
-                            jobId: _this.jobId,
-                            filename: item.file
-                        } );
-                        $.ajax( {
-                            type: "GET",
-                            async: false,
-                            url: url,
-                            success: function ( data ) {
-                                var tableHtml = '<table cellspacing="0" style="border-collapse: collapse;border:1px solid #ccc;"><tbody>';
-                                var lines = data.split( '\n' );
-                                var numLines = 0;
-                                for ( var i = 0; i < lines.length; i++ ) {
-                                    var line = lines[i];
-                                    if ( line.charAt( 0 ) != '#' && line.trim() != '' ) {
-                                        numLines++;
-                                        if ( renderer.header && numLines == 1 ) {
-                                            tableHtml += '<tr style="border-collapse: collapse;border:1px solid #ccc;font-weight:bold;">';
-                                        } else {
-                                            tableHtml += '<tr style="border-collapse: collapse;border:1px solid #ccc;">';
-                                        }
-                                        var fields = line.split( '\t' );
-                                        for ( var j = 0; j < fields.length; j++ ) {
-                                            var field = fields[j];
-                                            tableHtml +=
-                                                '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">'
-                                                + field + '</td>';
-                                        }
-                                        tableHtml += '</tr>';
-                                    }
-                                }
-                                tableHtml += '</tbody></table>';
-
-                                itemBox = Ext.create( 'Ext.Component', {
-                                    flex: 1,
-                                    html: tableHtml
-                                } );
-
-                            }
-                        } );
-                        break;
-                    case 'genome-viewer':
-                        var gm_id = Utils.genId( 'gm' );
-                        var vfw_id = Utils.genId( 'vfw' );
-                        var html =
-                                '<div style="width:1500px;height:1200px;">' +
-                                '<div id="' + vfw_id + '" style="width:1500px;">' +
-                                '</div>' +
-                                '<div id="' + gm_id + '" style="width:1500px;height:800px;">' +
-                                '</div>' +
-                                '</div>';
-                        itemBox = Ext.create( 'Ext.Component', {
-                            flex: 1,
-                            html: html,
-                            listeners: {
-                                afterrender: function () {
-                                    var gv = _this._createGenomeViewer( gm_id );
-                                    _this._createVariantFilterWidget( vfw_id, gv, _this.result[_this.layoutName].layout.variantFilterFiles,
-                                        renderer.tableLayout );
-                                }
-                            }
-                        } );
-                        break;
-                    case 'variant-stats-widget':
-                        var height = 800;
-                        itemBox = Ext.create( 'Ext.container.Container', {
-                            height: height,
-                            width: '95%',
-                            style: {
-                                position: 'relative'
-                            },
-                            listeners: {
-                                afterrender: function () {
-                                    var variantStatsWidget = new VariantStatsWidget( {
-                                        targetId: itemBox,
-                                        height: height,
-                                        closable: false,
-                                        border: true,
-//                                        title:  _this.job.name,
-                                        job: _this.job,
-                                        autoRender: true
-                                    } );
-                                    variantStatsWidget.draw();
-                                }
-                            }
-                        } );
-
-                        break;
-
-                    case 'variant-widget':
-                        var height = 800;
-                        itemBox = Ext.create( 'Ext.container.Container', {
-                            height: height,
-                            width: '95%',
-                            style: {
-                                position: 'relative'
-                            },
-                            listeners: {
-                                afterrender: function () {
-                                    var variantWidget = new VariantWidget( {
-                                        targetId: itemBox,
-                                        height: height,
-                                        closable: false,
-                                        border: true,
-//                                        title:  _this.job.name,
-                                        job: _this.job,
-                                        autoRender: true
-                                    } );
-                                    variantWidget.draw();
-                                }
-                            }
-                        } );
-
-                        break;
-                }
-                boxes.push( itemBox );
-            }
-            return Ext.create( 'Ext.container.Container', {
-                title: item.title,
-                margin: '0 0 5 0',
-                items: boxes
-            } );
-        };
-
-        /* Process recursively the result structure */
-        var getDetailsAsDocument = function ( item, isRoot ) {
-            var boxes;
-            if ( typeof item.children != 'undefined' ) {
-                if ( typeof item.children == 'function' ) {
-                    item.children = item.children();
-                }
-                boxes = [];
-                for ( var i = 0; i < item.children.length; i++ ) {
-                    boxes.push( getDetailsAsDocument( item.children[i] ) );
-                }
-                if ( isRoot == true ) {
-                    var detailsItemsContainer;
-                    if ( item.presentation == 'tabs' ) {
-                        detailsItemsContainer = Ext.create( 'Ext.tab.Panel', {
-                            plain: true,
-                            border: 0,
-                            layout: {
-                                type: 'vbox',
-                                align: 'stretch'
-                            },
-                            defaults: {
-                                overflowX: 'scroll',
-                                padding: 10
-                            },
-                            items: boxes,
-//                            listeners:{
-//                                tabchange:function(tabPanel, newTab){
-//                                    newTab.getHeight();
-//                                }
-//                            }
-                        } );
-                    } else {
-                        detailsItemsContainer = Ext.create( 'Ext.container.Container', {
-                            items: boxes
-                        } );
-                    }
-                    return Ext.create( 'Ext.panel.Panel', {
-                        title: 'Result details',
-//                        title: item.title,
-                        header: {
-                            baseCls: 'ocb-panel-title'
-                        },
-                        border: false,
-                        collapsible: true,
-                        titleCollapse: true,
-                        margin: 10,
-                        bodyPadding: 10,
-                        items: [
-                            detailsItemsContainer
-                        ]
-                    } );
-                } else {
-
-                    if ( _.isUndefined( item.title ) ) {
-
-                        debugger
-                    }
-
-                    return Ext.create( 'Ext.container.Container', {
-                        id: _this.jobId + item.title.replace( / /g, '' ),
-                        title: item.title,
-                        margin: '0 0 20 0',
-                        items: [
-                            {
-                                xtype: 'box',
-                                overCls: 'dedo',
-                                cls: 'panel-border-bottom', margin: '0 20 10 0',
-                                data: item, tpl: itemTpl,
-                                listeners: {
-                                    afterrender: function () {
-                                        this.getEl().on( "click", function () {
-                                            $( _this.panel.getEl().dom ).children().scrollTop( 0 );
-                                        } );
-                                    }
-                                }
-                            },
-                            {
-                                xtype: 'container',
-                                items: boxes
-                            }
-                        ]
-                    } );
-                }
-            } else {
-                return processLeafItem( item );
-            }
-        };
-
-        var detailedResutls = getDetailsAsDocument( resultData[this.layoutName].layout, true );
-        this.panel.add( getJobInfo( {items: this.extItems} ) );
-        if ( this.drawIndex === true ) {
-            var indexResutl = getResultIndex( resultData[this.layoutName].layout.children );
-            this.panel.insert( indexResutl );
-        }
-        this.panel.add( detailedResutls );
-
-    },//end render
-
-    _createGenomeViewer: function ( targetId ) {
-        console.log( 'creating result genome viewer in: ' + targetId );
-        var _this = this;
-        var genomeViewer = new GenomeViewer( {
-            targetId: targetId,
-            autoRender: true,
-            sidePanel: false,
-            region: new Region( DEFAULT_SPECIES.region ),
-            species: DEFAULT_SPECIES,
-            border: true,
-            version: '',
-            resizable: false,
-//            trackPanelScrollWidth: 36,
-//            zoom: urlZoom,
-//            confPanelHidden: confPanelHidden,
-//            regionPanelHidden: regionPanelHidden,
-            availableSpecies: AVAILABLE_SPECIES,
-            popularSpecies: POPULAR_SPECIES,
-            drawNavigationBar: true,
-            drawStatusBar: true,
-//            height: this.height - this.headerWidget.height,
-//            width: this.width-18,
-            handlers: {
-                'species:change': function ( event ) {
-//            _this._setTracks();
-//            _this.setTracksMenu();
-                    _this.species = event.species;
-                    var text = _this.species.text + ' <span style="color: #8396b2">' + _this.species.assembly + '</span>';
-                    _this.headerWidget.setDescription( text );
-//                    _this._refreshInitialTracksConfig();
-                }
-            }
-        } );
-        genomeViewer.draw();
-
-        var renderer = new FeatureRenderer( FEATURE_TYPES.gene );
-        renderer.on( {
-            'feature:click': function ( event ) {
-                console.log( event )
-                new GeneInfoWidget( null, _this.species ).draw( event );
-            }
-        } );
-        var geneOverview = new FeatureTrack( {
-            targetId: null,
-            id: 2,
-            title: 'Gene',
-            minHistogramRegionSize: 20000000,
-            maxLabelRegionSize: 10000000,
-            height: 100,
-
-            renderer: renderer,
-
-            dataAdapter: new CellBaseAdapter( {
-                category: "genomic",
-                subCategory: "region",
-                resource: "gene",
-                params: {
-                    exclude: 'transcripts'
-                },
-                species: genomeViewer.species,
-                cacheConfig: {
-                    chunkSize: 50000
-                }
-            } )
-        } );
-        genomeViewer.addOverviewTrack( geneOverview );
-
-//        var sequence = new SequenceTrack({
-//            targetId: null,
-//            id: 1,
-//            title: 'Sequence',
-//            histogramZoom: 20,
-//            transcriptZoom: 50,
-//            height: 30,
-//            visibleRange: {start: 99, end: 100},
-//            featureTypes: FEATURE_TYPES,
-//
-//            renderer: new SequenceRenderer(),
-//
-//            dataAdapter: new SequenceAdapter({
-//                category: "genomic",
-//                subCategory: "region",
-//                resource: "sequence",
-//                species: genomeViewer.species,
-//                featureCache: {
-//                    gzip: true,
-//                    chunkSize: 1000
-//                }
-//            })
-//        });
-//
-//        genomeViewer.addTrack(sequence);
-
-        var gene = new GeneTrack( {
-            targetId: null,
-            id: 2,
-            title: 'Gene',
-            histogramZoom: 20,
-            transcriptZoom: 50,
-            height: 140,
-            visibleRange: {start: 0, end: 100},
-            featureTypes: FEATURE_TYPES,
-
-            renderer: new GeneRenderer(),
-
-            dataAdapter: new CellBaseAdapter( {
-                category: "genomic",
-                subCategory: "region",
-                resource: "gene",
-                species: genomeViewer.species,
-                featureCache: {
-                    gzip: true,
-                    chunkSize: 50000
-                },
-                filters: {},
-                options: {},
-                featureConfig: FEATURE_CONFIG.gene
-            } )
-        } );
-        genomeViewer.addTrack( gene );
-
-//        var snp = new FeatureTrack({
-//            targetId: null,
-//            id: 4,
-//            title: 'SNP',
-//            histogramZoom: 70,
-//            labelZoom: 80,
-//            height: 100,
-//            visibleRange: {start: 0, end: 100},
-//            featureTypes: FEATURE_TYPES,
-//
-//            renderer: new FeatureRenderer('snp'),
-//
-//            dataAdapter: new CellBaseAdapter({
-//                category: "genomic",
-//                subCategory: "region",
-//                resource: "snp",
-//                params: {
-//                    exclude: 'transcriptVariations,xrefs,samples'
-//                },
-//                species: genomeViewer.species,
-//                featureCache: {
-//                    gzip: true,
-//                    chunkSize: 10000
-//                },
-//                filters: {},
-//                options: {},
-//                featureConfig: FEATURE_CONFIG.snp
-//            })
-//        });
-//
-//        genomeViewer.addTrack(snp);
-
-        genomeViewer.chromosomePanel.hide();
-        genomeViewer.karyotypePanel.hide();
-
-        var filteredFile = this.result[_this.layoutName].layout.filteredFile;
-        if ( !_.isUndefined( filteredFile ) ) {
-            OpencgaManager.poll( {
-                accountId: $.cookie( 'bioinfo_account' ),
-                sessionId: $.cookie( 'bioinfo_sid' ),
-                jobId: _this.jobId,
-                filename: filteredFile,
-                zip: false,
-                success: function ( data ) {
-                    if ( data.indexOf( "ERROR" ) != -1 ) {
-                        console.error( data );
-                    }
-                    var vcfDataAdapter = new VCFDataAdapter( new StringDataSource( data ), {async: false, species: genomeViewer.species} );
-
-                    var fileTrack = new FeatureTrack( {
-                        targetId: null,
-                        id: "VCF file",
-                        title: filteredFile,
-                        height: 150,
-                        minHistogramRegionSize: 12000,
-                        maxLabelRegionSize: 3000,
-                        renderer: new FeatureRenderer( FEATURE_TYPES.vcf ),
-                        dataAdapter: vcfDataAdapter
-                    } );
-
-                    genomeViewer.addTrack( fileTrack );
-                }
-            } );
-        } else {
-            console.log( "No filtered VCF file." );
-        }
-
-        return genomeViewer;
-    },
-    _createVariantFilterWidget: function ( targetId, gv, variantFilterFiles, tableLayout ) {
-        var variantFilterWidget = new VariantFilterWidget( this.jobId, {
-            width: 1500,
-            height: 300,
-            targetId: targetId,
-            viewer: gv,
-//            fileNames:_this.variantFiles
-            fileNames: variantFilterFiles,
-            tableLayout: tableLayout
-        } );
-        variantFilterWidget.getPanel( targetId );
-
-        return variantFilterWidget;
-    },
-
-    /*************************************/
-    /*************************************/
-    /*************************************/
-    _parseOldXML: function ( layout ) {
-
-        OpencgaManager.poll( {
-            accountId: $.cookie( 'bioinfo_account' ),
-            sessionId: $.cookie( 'bioinfo_sid' ),
-            jobId: layout.job.id,
-            filename: layout.oldXML,
-            zip: false,
-            async: false,
-            success: function ( data ) {
-                var xmlDoc = $.parseXML( data );
-                layout.xml = $( xmlDoc );
-            }
-        } );
-    }
-
-};
-/*
- * Copyright (c) 2012 Francisco Salavert (ICM-CIPF)
- * Copyright (c) 2012 Ruben Sanchez (ICM-CIPF)
- * Copyright (c) 2012 Ignacio Medina (ICM-CIPF)
- *
- * This file is part of JS Common Libs.
- *
- * JS Common Libs is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * JS Common Libs is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
- */
-
-function UploadWidget ( args ) {
-    var _this = this;
-    _.extend( this, Backbone.Events );
-    this.id = Utils.genId( "uploadWidget" );
+    _.extend(this, Backbone.Events);
+    this.id = Utils.genId("uploadWidget");
 
     this.targetId = null;
     this.suiteId = null;
     this.chunkedUpload = false;
     this.enableTextMode = true;
 
-    if ( typeof args !== 'undefined' ) {
+    if (typeof args !== 'undefined') {
         this.targetId = args.targetId || this.targetId;
         this.suiteId = args.suiteId || this.suiteId;
         this.opencgaBrowserWidget = args.opencgaBrowserWidget || this.opencgaBrowserWidget;
         this.chunkedUpload = args.chunkedUpload || this.chunkedUpload;
     }
-    this.uploadObjectToBucketSuccess = function ( response ) {
-        if ( response.errorMsg === '' ) {
-            Ext.example.msg( 'Object upload', '</span class="emph">' + response.result[0].msg + '</span>' );
-            _this.uploadComplete( response.result[0].msg );
+    this.uploadObjectToBucketSuccess = function (response) {
+        if (response.errorMsg === '') {
+            Utils.msg('Object upload', '</span class="emph">' + response.result[0].msg + '</span>');
+            _this.uploadComplete(response.result[0].msg);
         } else {
-            Ext.Msg.alert( 'Object upload', response.errorMsg );
-            _this.uploadFailed( response.errorMsg );
+            Ext.Msg.alert('Object upload', response.errorMsg);
+            _this.uploadFailed(response.errorMsg);
         }
-        _this.trigger( 'object:upload', {sender: _this, data: response.result[0].msg } );
+        _this.trigger('object:upload', {sender: _this, data: response.result[0].msg });
     };
 
     this.uploadButtonId = this.id + '_uploadButton';
@@ -15325,9 +16764,9 @@ function UploadWidget ( args ) {
     this.selectedDataType = null;
 
     //set instantiation args, must be last
-    _.extend( this, args );
+    _.extend(this, args);
 
-    this.on( this.handlers );
+    this.on(this.handlers);
 
 }
 
@@ -15336,15 +16775,16 @@ function UploadWidget ( args ) {
 //};
 
 UploadWidget.prototype = {
-    getTypeValidation: function ( types ) {
-        return function ( filename ) {
-            var regex = new RegExp( '^.*\\.(' + types + ')$', 'i' );
-            return regex.test( filename );
+    getTypeValidation: function (types) {
+        return function (filename) {
+            var regex = new RegExp('^.*\\.(' + types + ')$', 'i');
+            return regex.test(filename);
         }
     }
 };
 
-UploadWidget.prototype.draw = function ( opencgaLocation ) {
+
+UploadWidget.prototype.draw = function (opencgaLocation) {
     this.opencgaLocation = opencgaLocation;
     var dataTypes = {
         "9": [
@@ -15353,14 +16793,14 @@ UploadWidget.prototype.draw = function ( opencgaLocation ) {
                 { text: "Gene/Transcript", tag: "idlist:gene:transcript"}//si son varios van separados por ->  :
             ] },
             { text: "Feature", children: [
-                { text: "VCF 4.0", tag: "vcf", validate: this.getTypeValidation( 'vcf' )},
+                { text: "VCF 4.0", tag: "vcf", validate: this.getTypeValidation('vcf')},
 //		                { text: "Tabix index", tag:"tbi"},
                 { text: "GFF2", tag: "gff2"},
                 { text: "GFF3", tag: "gff3"},
                 { text: "GTF", tag: "gtf"},
                 { text: "BED", tag: "bed"},
-                { text: "BAM", tag: "bam", validate: this.getTypeValidation( 'bam' )},
-                { text: "BAI", tag: "bai", validate: this.getTypeValidation( 'bai' )},
+                { text: "BAM", tag: "bam", validate: this.getTypeValidation('bam')},
+                { text: "BAI", tag: "bai", validate: this.getTypeValidation('bai')},
                 { text: "Expression", tag: "expression"}
             ] }
         ],
@@ -15389,31 +16829,31 @@ UploadWidget.prototype.draw = function ( opencgaLocation ) {
             {text: "Sequence", tag: "sequence"}
         ],
         "22": [
-            {text: "Tabbed text file", tag: "txt", validate: this.getTypeValidation( 'txt|text' )},
-            {text: "CEL compressed file", tag: "cel", validate: this.getTypeValidation( 'zip|tar|tar.gz|tgz' )}
+            {text: "Tabbed text file", tag: "txt", validate: this.getTypeValidation('txt|text')},
+            {text: "CEL compressed file", tag: "cel", validate: this.getTypeValidation('zip|tar|tar.gz|tgz')}
         ],
         "85": [
             { text: "Feature", children: [
-                { text: "VCF 4.0", tag: "vcf", validate: this.getTypeValidation( 'vcf' )},
-                { text: "PED", tag: "ped", validate: this.getTypeValidation( 'ped' )}
+                { text: "VCF 4.0", tag: "vcf", validate: this.getTypeValidation('vcf')},
+                { text: "PED", tag: "ped", validate: this.getTypeValidation('ped')}
             ] }
         ],
         "cellmaps": [
             { text: "Network", children: [
-                { text: "SIF", tag: "sif", validate: this.getTypeValidation( 'sif' )},
-                { text: "Expresion matrix", tag: "txt", validate: this.getTypeValidation( 'txt' )},
-                { text: "Text", tag: "txt", validate: this.getTypeValidation( 'txt' )}
+                { text: "SIF", tag: "sif", validate: this.getTypeValidation('sif')},
+                { text: "Expresion matrix", tag: "txt", validate: this.getTypeValidation('txt')},
+                { text: "Text", tag: "txt", validate: this.getTypeValidation('txt')}
             ] }
         ]
     };
 
-    if ( typeof dataTypes[this.suiteId] === 'undefined' ) {
-        this.render( [
+    if (typeof dataTypes[this.suiteId] === 'undefined') {
+        this.render([
             {text: "No data types defined"}
-        ] );
+        ]);
     } else {
-        this.checkDataTypes( dataTypes[this.suiteId] );
-        this.render( dataTypes[this.suiteId] );
+        this.checkDataTypes(dataTypes[this.suiteId]);
+        this.render(dataTypes[this.suiteId]);
     }
 
 //    switch (this.suiteId) {
@@ -15453,19 +16893,19 @@ UploadWidget.prototype.draw = function ( opencgaLocation ) {
 };
 
 UploadWidget.prototype.clean = function () {
-    if ( this.panel != null ) {
+    if (this.panel != null) {
         this.panel.destroy();
         delete this.panel;
-        console.log( this.id + ' PANEL DELETED' );
+        console.log(this.id + ' PANEL DELETED');
     }
 };
 
-UploadWidget.prototype.checkDataTypes = function ( dataTypes ) {
-    for ( var i = 0; i < dataTypes.length; i++ ) {
-        if ( dataTypes[i]["children"] != null ) {
+UploadWidget.prototype.checkDataTypes = function (dataTypes) {
+    for (var i = 0; i < dataTypes.length; i++) {
+        if (dataTypes[i]["children"] != null) {
             dataTypes[i]["iconCls"] = 'icon-box';
             dataTypes[i]["expanded"] = true;
-            this.checkDataTypes( dataTypes[i]["children"] );
+            this.checkDataTypes(dataTypes[i]["children"]);
         } else {
             dataTypes[i]["iconCls"] = 'icon-blue-box';
             dataTypes[i]["leaf"] = true;
@@ -15473,25 +16913,27 @@ UploadWidget.prototype.checkDataTypes = function ( dataTypes ) {
     }
 };
 
-UploadWidget.prototype.render = function ( dataTypes ) {
+UploadWidget.prototype.render = function (dataTypes) {
     var _this = this;
-    if ( this.panel == null ) {
-        var store = Ext.create( 'Ext.data.TreeStore', {
+    if (this.panel == null) {
+        var store = Ext.create('Ext.data.TreeStore', {
             root: {
                 expanded: true,
                 text: "Data type",
                 children: dataTypes
             }
-        } );
-        var height = Object.keys( store.tree.nodeHash ).length * 23;
-        if ( height < 250 ) {
-            height = 250;
-        }
+        });
+//        var height = Object.keys(store.tree.nodeHash).length * 23;
+//        if (height < 250) {
+//            height = 250;
+//        }
+
+        var height = 400;
 
         var pan1Width = 250;
-        var pan1 = Ext.create( 'Ext.tree.Panel', {
+        var pan1 = Ext.create('Ext.tree.Panel', {
             title: 'Select your data type',
-            bodyPadding: 10,
+            bodyPadding: '10 0 0 0',
             height: height,
             border: false,
             cls: 'ocb-border-right-lightgrey',
@@ -15501,22 +16943,22 @@ UploadWidget.prototype.render = function ( dataTypes ) {
             rootVisible: false,
             listeners: {
                 scope: this,
-                itemclick: function ( este, record ) {
-                    if ( record.data.leaf ) {
-                        this.selectedDataType = record.raw.tag;
-                        this.selectedDataTypeObj = record.raw;
-                        this.dataTypeLabel.setText( '<span class="info">Type:</span><span class="ok"> OK </span>', false );
+                itemclick: function (este, record) {
+                    if (record.data.leaf) {
+                        this.selectedDataType = record.data.tag;
+                        this.selectedDataTypeObj = record.data;
+                        this.dataTypeLabel.update('<span class="info">Type:</span><span class="ok"> OK </span>');
                     } else {
-                        this.selectedDataType = null;
-                        this.selectedDataTypeObj = null;
-                        this.dataTypeLabel.setText( '<span class="info">Select a data type</span><span class="err"> !!!</span>', false );
+                        this.selectedDataType = undefined;
+                        this.selectedDataTypeObj = undefined;
+                        this.dataTypeLabel.update('<span class="info">Select a data type</span><span class="err"> !!!</span>');
                     }
                     this.validate();
                 }
             }
-        } );
+        });
 
-        this.nameField = Ext.create( 'Ext.form.field.Text', {
+        this.nameField = Ext.create('Ext.form.field.Text', {
             name: 'datalabel',
             fieldLabel: 'Data name',
             labelWidth: 110,
@@ -15525,43 +16967,43 @@ UploadWidget.prototype.render = function ( dataTypes ) {
             enableKeyEvents: true,
             listeners: {
                 scope: this,
-                change: function ( el ) {
-                    if ( el.getValue() != "" ) {
-                        this.dataNameLabel.setText( '<span class="info">Name:</span><span class="ok"> OK </span>', false );
+                change: function (el) {
+                    if (el.getValue() != "") {
+                        this.dataNameLabel.update('<span class="info">Name:</span><span class="ok"> OK </span>');
                     } else {
-                        this.dataNameLabel.setText( '<span class="info">Enter the data name</span><span class="err"> !!!</span>', false );
+                        this.dataNameLabel.update('<span class="info">Enter the data name</span><span class="err"> !!!</span>');
                     }
                     this.validate();
                 }
             }
-        } );
-        this.textArea = Ext.create( 'Ext.form.field.TextArea', {
+        });
+        this.textArea = Ext.create('Ext.form.field.TextArea', {
             name: 'datadescription',
             fieldLabel: 'Data description',
             labelWidth: 110,
             msgTarget: 'side'
-        } );
-        this.organizationField = Ext.create( 'Ext.form.field.Text', {
+        });
+        this.organizationField = Ext.create('Ext.form.field.Text', {
             name: 'organization',
             fieldLabel: 'Organization',
             labelWidth: 110,
             msgTarget: 'side'
-        } );
-        this.responsableField = Ext.create( 'Ext.form.field.Text', {
+        });
+        this.responsableField = Ext.create('Ext.form.field.Text', {
             name: 'responsable',
             fieldLabel: 'Responsible',
             labelWidth: 110,
             msgTarget: 'side'
-        } );
-        this.acquisitiondate = Ext.create( 'Ext.form.field.Text', {
+        });
+        this.acquisitiondate = Ext.create('Ext.form.field.Text', {
             name: 'acquisitiondate',
             fieldLabel: 'Acquisition date',
             labelWidth: 110,
             msgTarget: 'side'
-        } );
+        });
 
         var pan2Width = 350;
-        var pan2 = Ext.create( 'Ext.panel.Panel', {
+        var pan2 = Ext.create('Ext.panel.Panel', {
             title: 'Some aditional data',
             width: pan2Width,
             border: false,
@@ -15570,45 +17012,43 @@ UploadWidget.prototype.render = function ( dataTypes ) {
             bodyPadding: 15,
             items: [this.nameField, this.textArea, this.organizationField, this.responsableField, this.acquisitiondate]
 
-        } );
+        });
 
-        this.dataTypeLabel = Ext.create( 'Ext.toolbar.TextItem', {
-            text: '<span class="info">Select a data type</span>'
-        } );
-        this.dataNameLabel = Ext.create( 'Ext.toolbar.TextItem', {
-            text: '<span class="info">Enter the data name</span>'
-        } );
-        this.dataFieldLabel = Ext.create( 'Ext.toolbar.TextItem', {
-            text: '<span class="info">Select a data file</span>'
-        } );
-        this.originCheck = Ext.create( 'Ext.form.field.Checkbox', {
+        this.dataTypeLabel = Ext.create('Ext.Component', {
+            html: '<span class="info">Select a data type</span>'
+        });
+        this.dataNameLabel = Ext.create('Ext.Component', {
+            html: '<span class="info">Enter the data name</span>'
+        });
+        this.dataFieldLabel = Ext.create('Ext.Component', {
+            html: '<span class="info">Select a data file</span>'
+        });
+        this.originCheck = Ext.create('Ext.form.field.Checkbox', {
             xtype: 'checkbox',
-            margin: '0 0 5 5',
             hidden: !this.enableTextMode,
             boxLabel: 'Text mode',
+            margin: '0 0 0 0',
             listeners: {
                 scope: this,
                 change: function () {
-                    if ( this.originCheck.getValue() ) {
-                        this.dataFieldLabel.setText( '<span class="ok">' + this.editor.getValue().length + '</span><span class="info"> chars</span>', false );
-                        this.uploadBar.hide();
+                    if (this.originCheck.getValue()) {
+                        this.dataFieldLabel.update('<span class="ok">' + this.editor.getValue().length + '</span><span class="info"> chars</span>');
+                        this.uploadField.hide();
                         this.editor.show();
-                        this.uploadField.destroy();
-                        this.uploadField.setRawValue( null );
-                        this.pan3.setHeight( 100 );
+                        this.uploadField.setRawValue(null);
+                        this.pan3.setHeight(100);
                     } else {
-                        this.dataFieldLabel.setText( '<span class="info">Select a data file</span>', false );
+                        this.dataFieldLabel.update('<span class="info">Select a data file</span>');
                         this.editor.hide();
-                        this.uploadBar.show();
-                        this.editor.setRawValue( null );
-                        this.createUploadField();
-                        this.pan3.setHeight( 30 );
+                        this.uploadField.show();
+                        this.editor.setRawValue(null);
+                        this.pan3.setHeight(55);
                     }
                     this.validate();
                 }
             }
-        } );
-        var uploadButton = Ext.create( 'Ext.button.Button', {
+        });
+        var uploadButton = Ext.create('Ext.button.Button', {
             id: this.uploadButtonId,
             text: 'Upload',
             disabled: true,
@@ -15618,15 +17058,16 @@ UploadWidget.prototype.render = function ( dataTypes ) {
 //				     title:'Uploading file',
 //				     msg: 'Please wait...'
 //				});
-                if ( _this.chunkedUpload ) {
+                if (_this.chunkedUpload) {
                     _this.uploadFile2();
                 } else {
                     _this.uploadFile();
                 }
             }
-        } );
+        });
 
-        this.editor = Ext.create( 'Ext.form.field.TextArea', {
+
+        this.editor = Ext.create('Ext.form.field.TextArea', {
             xtype: 'textarea',
             width: 602,
             flex: 1,
@@ -15639,39 +17080,26 @@ UploadWidget.prototype.render = function ( dataTypes ) {
             listeners: {
                 scope: this,
                 change: function () {
-                    this.dataFieldLabel.setText( '<span class="ok">' + this.editor.getValue().length + '</span> <span class="info"> chars</span>', false );
+                    this.dataFieldLabel.update('<span class="ok">' + this.editor.getValue().length + '</span> <span class="info"> chars</span>');
                     this.validate();
                 }
 
             }
-        } );
+        });
 
-        this.uploadBar = Ext.create( 'Ext.toolbar.Toolbar', {cls: "bio-border-false", dock: 'top', height: 28} );
-        this.createUploadField();
 
-        this.modebar = Ext.create( 'Ext.toolbar.Toolbar', {
-            dock: 'bottom',
-            height: 28,
-            colspan: 2,
-            cls: 'ocb-border-top-lightgrey',
-            border: false,
-            items: [this.dataTypeLabel, '-', /*this.dataNameLabel,'-',*/this.dataFieldLabel, '->', this.originCheck]
-        } );
-
-        var pan3 = Ext.create( 'Ext.panel.Panel', {
+        this.pan3 = Ext.create('Ext.panel.Panel', {
 //            title: 'File origin',
             colspan: 2,
             border: false,
             width: pan1Width + pan2Width,
-//            cls: 'panel-border-',
-            height: 30,
+            height: 55,
 //		    bodyStyle:{"background-color":"#d3e1f1"},
-            items: [this.editor],
-            dockedItems: [this.uploadBar]
-        } );
-        this.pan3 = pan3;
+            items: [this.editor]
+        });
+        this.createUploadField();
 
-        this.panel = Ext.create( 'Ext.window.Window', {
+        this.panel = Ext.create('Ext.window.Window', {
             title: 'Upload a data file',// + ' -  <span class="err">ZIP files will be allowed shortly</span>',
             iconCls: 'icon-upload',
             resizable: false,
@@ -15679,46 +17107,75 @@ UploadWidget.prototype.render = function ( dataTypes ) {
             constrain: true,
             closable: false,
             modal: true,
-            layout: {
-                type: 'table',
-                columns: 2,
-                rows: 3
+            items: {
+                border: 0,
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
+                items: [
+                    this.pan3,
+                    {
+                        xtype: 'container',
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretch'
+                        },
+                        items: [pan1, pan2]
+                    },
+                ],
+                dockedItems: [
+                    {
+                        xtype: 'toolbar',
+                        dock: 'bottom',
+                        layout: {
+                            pack: 'end'
+                        },
+                        defaults: {
+                            width: 100
+                        },
+                        items: [
+                            {
+                                text: "Close",
+                                handler: function () {
+                                    _this.panel.minimize();
+                                }
+                            },
+                            uploadButton
+                        ]
+                    },
+                    {
+                        xtype: 'toolbar',
+                        dock: 'bottom',
+                        items: [this.originCheck, '->', this.dataTypeLabel, /*this.dataNameLabel,'-',*/this.dataFieldLabel, ]
+                    },
+                ]
             },
-            items: [pan3, pan1, pan2, this.modebar], // pan3],
-            dockedItems: [],
-            buttonAlign: 'right',
-            buttons: [
-                {text: "Close", handler: function () {
-                    _this.panel.destroy();
-                }},
-                uploadButton
-            ],
             listeners: {
                 scope: this,
                 minimize: function () {
-                    this.panel.destroy();
-                },
-                destroy: function () {
-                    delete this.panel;
+                    this.panel.hide();
+                    this.uploadField.setRawValue(null);
+                    this.editor.setRawValue(null);
+                    this.originCheck.setValue(false);
                 }
             }
-        } );
-
+        });
     }
     this.panel.show();
 };
 
+
 UploadWidget.prototype.createUploadField = function () {
-    this.uploadField = Ext.create( 'Ext.form.field.File', {
+    this.uploadField = Ext.create('Ext.form.field.File', {
         id: this.uploadFieldId,
         xtype: 'filefield',
         name: 'file',
-        flex: 1,
-        padding: 1,
         msgTarget: 'side',
         emptyText: 'Choose a file',
+        margin:'12 0 0 12',
+        width: 500,
         allowBlank: false,
-        anchor: '100%',
         buttonText: 'Upload local file...',
         buttonAlign: 'left',
         rtl: false,
@@ -15729,8 +17186,8 @@ UploadWidget.prototype.createUploadField = function () {
                 this.validate();
             }
         }
-    } );
-    this.uploadBar.add( this.uploadField );
+    });
+    this.pan3.add(this.uploadField);
 };
 
 UploadWidget.prototype.validate = function () {
@@ -15739,39 +17196,42 @@ UploadWidget.prototype.validate = function () {
 //	console.log((this.uploadField.getRawValue()!="" || this.editor.getValue()!=""));
 
     var extensionValid = true;
-    if ( this.selectedDataTypeObj.validate != null ) {
-        extensionValid = this.selectedDataTypeObj.validate( Ext.getCmp( this.uploadFieldId ).getValue() );
+    if (typeof this.selectedDataTypeObj !== 'undefined') {
+        if (typeof this.selectedDataTypeObj.validate !== 'undefined') {
+            extensionValid = this.selectedDataTypeObj.validate(Ext.getCmp(this.uploadFieldId).getValue());
+        }
     }
 
-    if ( extensionValid && this.selectedDataType != null /*&& this.nameField.getValue() !=""*/ && (this.uploadField.getRawValue() != ""
-        || this.editor.getValue() != "") ) {
-        Ext.getCmp( this.uploadButtonId ).enable();
-        this.dataTypeLabel.setText( '<span class="info">Type:</span><span class="ok"> OK </span>', false );
+    if (extensionValid && this.selectedDataType != null /*&& this.nameField.getValue() !=""*/ && (this.uploadField.getRawValue() != "" || this.editor.getValue() != "")) {
+        Ext.getCmp(this.uploadButtonId).enable();
+        this.dataTypeLabel.update('<span class="info">Type:</span><span class="ok"> OK </span>');
     } else {
-        Ext.getCmp( this.uploadButtonId ).disable();
-        this.dataTypeLabel.setText( '<span class="info">Type:</span><span class="err"> Not valid </span>', false );
+        Ext.getCmp(this.uploadButtonId).disable();
+        this.dataTypeLabel.update('<span class="info">Type:</span><span class="err"> Not valid </span>');
     }
 
-    if ( this.originCheck.getValue() ) {
-        if ( this.nameField.getValue() == '' ) {
-            Ext.getCmp( this.uploadButtonId ).disable();
+    if (this.originCheck.getValue()) {
+        if (this.nameField.getValue() == '') {
+            Ext.getCmp(this.uploadButtonId).disable();
         } else {
-            Ext.getCmp( this.uploadButtonId ).enable();
+            Ext.getCmp(this.uploadButtonId).enable();
         }
     }
 };
 
+
 UploadWidget.prototype.fileSelected = function () {
     var inputId = this.uploadField.fileInputEl.id;
-    var file = document.getElementById( inputId ).files[0];
-    if ( file ) {
+    var file = document.getElementById(inputId).files[0];
+    if (file) {
         var fileSize = 0;
-        if ( file.size > 1024 * 1024 )
-            fileSize = (Math.round( file.size * 100 / (1024 * 1024) ) / 100).toString() + 'MB';
+        if (file.size > 1024 * 1024)
+            fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
         else
-            fileSize = (Math.round( file.size * 100 / 1024 ) / 100).toString() + 'KB';
+            fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
 
-        this.dataFieldLabel.setText( '<span class="info">Size: </span><span class="ok">' + fileSize + '</span>', false );
+
+        this.dataFieldLabel.update('<span class="info">Size: </span><span class="ok">' + fileSize + '</span>');
 //          document.getElementById('fileName').innerHTML = '<b>Name</b>: ' + file.name;
 //          document.getElementById('fileSize').innerHTML = '<b>Size</b>: ' + fileSize;
 //          document.getElementById('fileType').innerHTML = '<b>Type</b>: ' + file.type;
@@ -15780,69 +17240,71 @@ UploadWidget.prototype.fileSelected = function () {
 
 UploadWidget.prototype.uploadFile = function () {
     var _this = this;
-    Ext.getBody().mask( 'Uploading file...' );
+    Ext.getBody().mask('Uploading file...');
     this.panel.disable();
 
     var fd = new FormData();
     var inputFileName = null;
-    if ( this.originCheck.getValue() ) {
+    if (this.originCheck.getValue()) {
         inputFileName = this.nameField.getValue();
-        fd.append( "file", this.editor.getValue() );
+        fd.append("file", this.editor.getValue());
     } else {
-        var inputFile = document.getElementById( Ext.getCmp( this.uploadFieldId ).fileInputEl.id ).files[0];
+        var inputFile = document.getElementById(Ext.getCmp(this.uploadFieldId).fileInputEl.id).files[0];
         inputFileName = inputFile.name;
-        fd.append( "file", inputFile );
+        fd.append("file", inputFile);
     }
-    var sessionId = $.cookie( 'bioinfo_sid' );
+    var sessionId = $.cookie('bioinfo_sid');
     var objectId = this.opencgaLocation.directory + inputFileName;
-    objectId = objectId.replace( new RegExp( "/", "gi" ), ":" );
+    objectId = objectId.replace(new RegExp("/", "gi"), ":");
 
-    fd.append( "name", this.nameField.getValue() );
-    fd.append( "fileFormat", this.selectedDataType );
-    fd.append( "responsible", this.responsableField.getValue() );
-    fd.append( "organization", this.organizationField.getValue() );
-    fd.append( "date", this.acquisitiondate.getValue() );
-    fd.append( "description", this.textArea.getValue() );
-    fd.append( "objectid", objectId );
-    fd.append( "sessionid", sessionId );
+    fd.append("name", this.nameField.getValue());
+    fd.append("fileFormat", this.selectedDataType);
+    fd.append("responsible", this.responsableField.getValue());
+    fd.append("organization", this.organizationField.getValue());
+    fd.append("date", this.acquisitiondate.getValue());
+    fd.append("description", this.textArea.getValue());
+    fd.append("objectid", objectId);
+    fd.append("sessionid", sessionId);
+
 
     //TODO DELETE THIS
     this.objectID = this.opencgaLocation.bucketId + ":" + objectId;
 
     //accountid, sessionId, projectname, formData
 
-    OpencgaManager.uploadObjectToBucket( {
-        accountId: $.cookie( "bioinfo_account" ),
+
+    OpencgaManager.uploadObjectToBucket({
+        accountId: $.cookie("bioinfo_account"),
         sessionId: sessionId,
         bucketId: this.opencgaLocation.bucketId,
         objectId: objectId,
         formData: fd,
         success: this.uploadObjectToBucketSuccess
-    } );
+    });
 
 };
 
 UploadWidget.prototype.uploadFile2 = function () {
     var _this = this;
 
-    var inputFile = document.getElementById( Ext.getCmp( this.uploadFieldId ).fileInputEl.id ).files[0];
+    var inputFile = document.getElementById(Ext.getCmp(this.uploadFieldId).fileInputEl.id).files[0];
 
     var objectId = this.opencgaLocation.directory + inputFile.name;
-    objectId = objectId.replace( new RegExp( "/", "gi" ), ":" );
+    objectId = objectId.replace(new RegExp("/", "gi"), ":");
 
-    var fileuploadWorker = new Worker( WORKERS_PATH + 'worker-fileupload.js' );
-    this.opencgaBrowserWidget.addUpload( inputFile, fileuploadWorker );
-    fileuploadWorker.postMessage( {
+    var fileuploadWorker = new Worker(WORKERS_PATH + 'worker-fileupload.js');
+    this.opencgaBrowserWidget.addUpload(inputFile, fileuploadWorker);
+    fileuploadWorker.postMessage({
         'host': OPENCGA_HOST,
-        'accountId': $.cookie( "bioinfo_account" ),
-        'sessionId': $.cookie( "bioinfo_sid" ),
+        'accountId': $.cookie("bioinfo_account"),
+        'sessionId': $.cookie("bioinfo_sid"),
         'file': inputFile,
         'objectId': objectId,
         'fileFormat': this.selectedDataType,
         'bucketId': this.opencgaLocation.bucketId,
         'resume': true
-    } );
-    this.panel.close();
+    });
+    this.panel.hide();
 };
 
 //UploadWidget.prototype.uploadProgress = function(evt)  {
@@ -15858,21 +17320,21 @@ UploadWidget.prototype.uploadFile2 = function () {
 //    }
 //};
 
-UploadWidget.prototype.uploadComplete = function ( msg ) {
-    Ext.Msg.show( {
+UploadWidget.prototype.uploadComplete = function (msg) {
+    Ext.Msg.show({
         title: 'Upload status',
         msg: msg
-    } );
+    });
     this.panel.enable();
     Ext.getBody().unmask();
-    this.panel.close();
+    this.panel.hide();
 };
 
-UploadWidget.prototype.uploadFailed = function ( response ) {
-    Ext.Msg.show( {
+UploadWidget.prototype.uploadFailed = function (response) {
+    Ext.Msg.show({
         title: 'Upload status',
         msg: 'There was an error attempting to upload the file.'
-    } );
+    });
     this.panel.enable();
     Ext.getBody().unmask();
 };
@@ -15897,54 +17359,55 @@ UploadWidget.prototype.uploadFailed = function ( response ) {
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function UserListWidget ( args ) {
-    var _this = this;
-    this.id = "UserListWidget_" + Math.round( Math.random() * 10000000 );
-    this.data = new Array();
-
-    this.args = new Object();
-    this.timeout = 4000;
-    this.pagedViewList = args.pagedViewList;
-    this.suiteId = -1;
-    this.tools = [];
-
-    if ( args != null ) {
-        if ( args.timeout != null && args.timeout > 4000 ) {
-            this.timeout = args.timeout;
+function UserListWidget (args){
+	var _this = this;
+	this.id = "UserListWidget_"+ Math.round(Math.random()*10000000);
+	this.data = new Array();
+	
+	this.args = new Object();
+	this.timeout = 4000;
+	this.pagedViewList = args.pagedViewList;
+	this.suiteId=-1;
+	this.tools = [];
+	
+	if (args != null){
+        if (args.timeout != null && args.timeout > 4000){
+        	this.timeout = args.timeout;
         }
-        if ( args.suiteId != null ) {
-            this.suiteId = args.suiteId;
+        if (args.suiteId != null){
+        	this.suiteId = args.suiteId;
         }
-        if ( args.tools != null ) {
-            this.tools = args.tools;
+        if (args.tools != null){
+        	this.tools = args.tools;
         }
     }
 //	console.warn(this.id+' Minimum period is 4000 milliseconds, smaller values will be ignored');
 };
 
-UserListWidget.prototype.draw = function () {
-    var _this = this;
-
-    this.getResponse();
-    this.interval = setInterval( function () {_this.getResponse(); }, this.timeout );
+UserListWidget.prototype.draw =  function (){
+	var _this = this;
+	
+	this.getResponse();
+	this.interval = setInterval(function () {_this.getResponse(); }, this.timeout);
 };
 
-UserListWidget.prototype.getData = function () {
-    return this.data;
+
+UserListWidget.prototype.getData =  function (){
+	return this.data;
 };
 
-UserListWidget.prototype.getCount = function () {
-    return this.data.length;
+UserListWidget.prototype.getCount = function() {
+	return this.data.length;
 };
 
-UserListWidget.prototype.getResponse = function () {
-    /**Que cada clase hija llame a la funcion de WumDataAdapter que necesite**/
-    throw "abstract method must be implemented in child classes";
+UserListWidget.prototype.getResponse = function(){
+	/**Que cada clase hija llame a la funcion de WumDataAdapter que necesite**/
+	throw "abstract method must be implemented in child classes";
 };
 
-UserListWidget.prototype.render = function ( data ) {
-    /**Que cada clase hija renderize como quiera los datos, ya sea con sencha o con sencho**/
-    throw "abstract method must be implemented in child classes";
+UserListWidget.prototype.render =  function (data){
+	/**Que cada clase hija renderize como quiera los datos, ya sea con sencha o con sencho**/
+	throw "abstract method must be implemented in child classes";
 };
 
 /*
@@ -16136,154 +17599,165 @@ AttributeManagerIDB.prototype = {
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function AttributeManagerStore ( args ) {
+function AttributeManagerStore(args) {
     var _this = this;
-    _.extend( this, Backbone.Events );
-    this.id = Utils.genId( 'AttributeManagerStore' );
+    _.extend(this, Backbone.Events);
+    this.id = Utils.genId('AttributeManagerStore');
 
-    this.model = Ext.define( 'Attribute', {
-        extend: 'Ext.data.Model',
-        idProperty: 'Id'
-    } );
-    this.store = Ext.create( 'Ext.data.Store', {
+    this.store = Ext.create('Ext.data.Store', {
 //        groupField: 'selected',
         pageSize: 50,
         proxy: {
             type: 'memory'
         },
-        model: this.model,
+        fields: [],
+//        model: this.model,
         listeners: {
-            update: function ( st, record, operation, modifiedFieldNames ) {
-                if ( modifiedFieldNames && modifiedFieldNames[0] != 'Selected' ) {
-                    _this.trigger( 'change:recordsAttribute', {records: [record], attributeName: modifiedFieldNames[0], sender: this} );
+            update: function (st, record, operation, modifiedFieldNames) {
+                if (modifiedFieldNames && modifiedFieldNames[0] != 'Selected') {
+                    console.log("AttributeManagerStore - update")
+                    _this.trigger('change:recordsAttribute', {records: [record], attributeName: modifiedFieldNames[0], sender: this});
                 }
             }
+//            remove: function () {
+//                console.log("AttributeManagerStore - remove")
+//                _this.trigger('change:data', {sender: this});
+//            },
+//            add: function () {
+//                console.log("AttributeManagerStore - add")
+//                _this.trigger('change:data', {sender: this});
+//            }
         }
-    } );
+    });
 
     this.columnsGrid = [];
     this.attributes = [];
     this.filters = {};
 
     //set instantiation args, must be last
-    _.extend( this, args );
+    _.extend(this, args);
 
-    this.on( this.handlers );
+    this.on(this.handlers);
 
-    this._processAttribute( {name: "Selected", type: "boolean", defaultValue: false} );
-    for ( var i = 0; i < this.attributes.length; i++ ) {
-        this._processAttribute( this.attributes[i] );
+    this._processAttribute({name: "Selected", type: "boolean", defaultValue: false});
+    for (var i = 0; i < this.attributes.length; i++) {
+        this._processAttribute(this.attributes[i]);
     }
 };
 
 AttributeManagerStore.prototype = {
-    containsAttribute: function ( attribute ) {
-        for ( var i = 0; i < this.attributes.length; i++ ) {
-            if ( this.attributes[i].name == attribute.name ) return true; //if exists one with the same name
+    containsAttribute: function (attribute) {
+        for (var i = 0; i < this.attributes.length; i++) {
+            if (this.attributes[i].name == attribute.name) return true; //if exists one with the same name
         }
         return false;
     },
-    isAttributeLocked: function ( attributeName ) {
-        for ( var i = 0; i < this.attributes.length; i++ ) {
-            if ( this.attributes[i].name == attributeName && this.attributes[i].locked === true ) {
+    isAttributeLocked: function (attributeName) {
+        for (var i = 0; i < this.attributes.length; i++) {
+            if (this.attributes[i].name == attributeName && this.attributes[i].locked === true) {
                 return true;
             }
         }
         return false;
     },
-    addAttribute: function ( attribute, fireChangeEvent ) {
-        if ( this.containsAttribute( attribute ) ) {
+    addAttribute: function (attribute, fireChangeEvent) {
+        if (this.containsAttribute(attribute)) {
             return false;
         }
-        this.attributes.push( attribute );
-        this._processAttribute( attribute );
-        if ( fireChangeEvent !== false ) {
-            console.log( 'change:attributes - add one attr' )
-            this.trigger( 'change:attributes', {sender: this} );
+        this.attributes.push(attribute);
+        this._processAttribute(attribute);
+        if (fireChangeEvent !== false) {
+            console.log('addAttribute - change:attributes');
+            this.trigger('change:attributes', {sender: this});
         }
         return true;
     },
-    _processAttribute: function ( attribute ) {
+    _processAttribute: function (attribute) {
+        attribute.id = attribute.name;
         /** Id column is not editable **/
         var editor;
-        if ( attribute.name !== 'Id' ) {
+        if (attribute.name !== 'id') {
             editor = {xtype: 'textfield', allowBlank: true};
         }
 
-        if ( attribute.name !== 'Selected' ) {
-            this.columnsGrid.push( {
-                "text": attribute.name,
-                "dataIndex": attribute.name,
-                "editor": editor
-            } );
-        }
-        // set model fields
-        this.model.setFields( this.attributes );
-    },
-    addAttributes: function ( attributes ) {
-        for ( var i = 0; i < attributes.length; i++ ) {
-            this.addAttribute( attributes[i], false );
-        }
-        this.trigger( 'change:attributes', {sender: this} );
-    },
-    removeAttribute: function ( attributeName ) {
-        for ( var i = 0; i < this.attributes.length; i++ ) {
-            if ( this.attributes[i].name === attributeName &&
-                this.attributes[i].locked !== true &&
-                this.attributes[i].name !== 'Selected' ) {
-                this.columnsGrid.splice( i, 1 );
-                this.attributes.splice( i, 1 );
+        var columnConfig = {
+            "text": attribute.name,
+            "dataIndex": attribute.name,
+            "editor": editor
+        };
 
-                this.model.setFields( this.attributes );
-                this.trigger( 'change:attributes', {sender: this} );
+        if (attribute.name !== 'Selected') {
+            this.columnsGrid.push(columnConfig);
+        }
+
+        // set model fields
+        this.store.setFields(this.attributes);
+    },
+    addAttributes: function (attributes) {
+        for (var i = 0; i < attributes.length; i++) {
+            this.addAttribute(attributes[i], false);
+        }
+        console.log('addAttributes - change:attributes');
+        this.trigger('change:attributes', {sender: this});
+    },
+    removeAttribute: function (attributeName) {
+        for (var i = 0; i < this.attributes.length; i++) {
+            if (this.attributes[i].name === attributeName &&
+                this.attributes[i].locked !== true &&
+                this.attributes[i].name !== 'Selected') {
+                this.columnsGrid.splice(i, 1);
+                this.attributes.splice(i, 1);
+
+                this.store.setFields(this.attributes);
+                console.log('removeAttribute - change:attributes');
+                this.trigger('change:attributes', {sender: this});
                 return true;
             }
         }
         return false;
     },
     updateAttribute: function () {
-        console.log( 'TODO' );
+        console.log('TODO');
     },
-    getAttribute: function ( attributeName ) {
-        for ( var i = 0; i < this.attributes.length; i++ ) {
-            if ( this.attributes[i].name == attributeName ) {
+    getAttribute: function (attributeName) {
+        for (var i = 0; i < this.attributes.length; i++) {
+            if (this.attributes[i].name == attributeName) {
                 return this.attributes[i];
             }
         }
     },
     getAttributeNames: function () {
         var nameList = [];
-        for ( var i = 0; i < this.attributes.length; i++ ) {
-            nameList.push( this.attributes[i].name );
+        for (var i = 0; i < this.attributes.length; i++) {
+            nameList.push(this.attributes[i].name);
         }
         return nameList;
     },
     // END attribute methods
 
-    setRecordAttributeById: function ( id, attributeName, value ) {
-        if ( this.isAttributeLocked( attributeName ) ) {
+
+    setRecordAttributeById: function (id, attributeName, value) {
+        if (this.isAttributeLocked(attributeName)) {
             return false;
         }
-        var data = this.store.snapshot || this.store.data;
-        var record = data.map[id];
-        if ( record ) {
-            record.set( attributeName, value );
+        var record = this.store.getById(id);
+        if (record) {
+            record.set(attributeName, value);
             record.commit();
         }
     },
-    setRecordAttributeByIds: function ( records ) {
+    setRecordAttributeByIds: function (records) {
         this.store.suspendEvents();
 //        console.time('AttributeManagerStore.setRecordAttributeByIds');
-        var data = this.store.snapshot || this.store.data;
-        for ( var i = 0; i < records.length; i++ ) {
+        for (var i = 0; i < records.length; i++) {
             var recordObject = records[i];
-            if ( !this.isAttributeLocked( recordObject.attributeName ) ) {
-                var record = data.map[recordObject.id];
-                if ( record ) { // if exists a row with this name
+            if (!this.isAttributeLocked(recordObject.attributeName)) {
+                var record = this.store.getById(recordObject.id);
+                if (record) { // if exists a row with this name
                     record.beginEdit();
-                    for ( var attributeName in recordObject ) {
-                        if ( attributeName !== 'id' ) {
-                            record.set( attributeName, recordObject[attributeName] );
+                    for (var attributeName in recordObject) {
+                        if (attributeName !== 'id') {
+                            record.set(attributeName, recordObject[attributeName]);
                         }
                     }
                     record.commit();
@@ -16293,137 +17767,138 @@ AttributeManagerStore.prototype = {
         }
 //        console.timeEnd('AttributeManagerStore.setRecordAttributeByIds');
         this.store.resumeEvents();
-        this.store.fireEvent( 'refresh' );
-        for ( var attributeName in recordObject ) {
-            this.trigger( 'change:recordsAttribute', {records: records, attributeName: attributeName, sender: this} );
+        this.store.fireEvent('refresh');
+        for (var attributeName in recordObject) {
+            this.trigger('change:recordsAttribute', {records: records, attributeName: attributeName, sender: this});
         }
     },
-    setRecordsAttribute: function ( records, attributeName, value ) {
-        if ( this.isAttributeLocked( attributeName ) ) {
+    setRecordsAttribute: function (records, attributeName, value) {
+        if (this.isAttributeLocked(attributeName)) {
             return false;
         }
         this.store.suspendEvents();
-        for ( var i = 0; i < records.length; i++ ) {
+        for (var i = 0; i < records.length; i++) {
             var record = records[i];
-            record.set( attributeName, value );
+            record.set(attributeName, value);
             record.commit();
         }
         this.store.resumeEvents();
-        this.store.fireEvent( 'refresh' );
-        this.trigger( 'change:recordsAttribute', {records: records, attributeName: attributeName, sender: this} );
+        this.store.fireEvent('refresh');
+        this.trigger('change:recordsAttribute', {records: records, attributeName: attributeName, sender: this});
     },
 //    addRecord: function (data, append) {
 //        this.store.loadData(data, append);
 //    },
-    addRecord: function ( data ) {
-        this.store.add( data );
+    addRecord: function (data) {
+        this.store.add(data);
     },
-    removeRecordById: function ( id ) {
-        var data = this.store.snapshot || this.store.data;
-        var record = data.map[id];
-        if ( record ) {
-            this.store.remove( record );
+    removeRecordById: function (id) {
+        var record = this.store.getById(id);
+        if (record) {
+            this.store.remove(record);
         }
     },
-    getValueByAttributeAndId: function ( id, attribute ) {
-        var data = this.store.snapshot || this.store.data;
-        var record = data.map[id];
-        if ( record ) {
-            return record.get( attribute );
+    getValueByAttributeAndId: function (id, attribute) {
+        var record = this.store.getById(id);
+        if (record) {
+            var value = record.get(attribute);
+            if (value) {
+                return value;
+            } else {
+                return '';
+            }
         }
     },
-    getOrderedIdsByAttribute: function ( attributeName ) {
-        var data = this.store.snapshot || this.store.data;
-        var records = data.items;
+    getOrderedIdsByAttribute: function (attributeName) {
+        var records = this.store.query().items;
         var values = [];
 
         var type = 'float';
         var checkType = true;
 
-        for ( var i = 0; i < records.length; i++ ) {
+        for (var i = 0; i < records.length; i++) {
             var record = records[i];
-            var id = record.get( 'Id' );
-            var value = record.get( attributeName );
+            var id = record.get('id');
+            var value = record.get(attributeName);
+            if (!value) {
+                value = '';
+            }
 
             /* detect number or string */
-            if ( checkType ) {
-                var parseResult = parseFloat( value );
-                if ( isNaN( parseResult ) ) {
+            if (checkType) {
+                var parseResult = parseFloat(value);
+                if (isNaN(parseResult)) {
                     var type = 'string';
                     checkType = false;
                 }
             }
             /* - - - - - - - - - - - - */
 
-            values.push( {id: id, value: value} );
+            values.push({id: id, value: value});
         }
-        switch ( type ) {
+        switch (type) {
             case 'float':
-                values.sort( function ( a, b ) {
+                values.sort(function (a, b) {
                     return a.value - b.value;
-                } );
+                });
                 break;
             /* string */
             default:
-                values.sort( function ( a, b ) {
-                    return a.value.localeCompare( b.value );
-                } );
+                values.sort(function (a, b) {
+                    return a.value.localeCompare(b.value);
+                });
         }
 
         return values;
     },
-    getIdsByAttributeValue: function ( attribute, value ) {
+    getIdsByAttributeValue: function (attribute, value) {
         var dupHash = {};
         var ids = [];
-        var mixedCollection = this.store.query( attribute, value, false, false, true );
-        for ( var i = 0; i < mixedCollection.items.length; i++ ) {
+        var mixedCollection = this.store.query(attribute, value, false, false, true);
+        for (var i = 0; i < mixedCollection.items.length; i++) {
             var item = mixedCollection.items[i];
-            var id = item.data["Id"];
-            if ( dupHash[id] !== true ) {
-                ids.push( item.data["Id"] );
+            var id = item.data["id"];
+            if (dupHash[id] !== true) {
+                ids.push(item.data["id"]);
             }
             dupHash[id] = true;
         }
         return ids;
     },
-    eachRecord: function ( eachFunction ) {
-        var data = this.store.snapshot || this.store.data;
-        var records = data.items;
-        for ( var i = 0; i < records.length; i++ ) {
+    eachRecord: function (eachFunction) {
+        var records = this.store.query().items;
+        for (var i = 0; i < records.length; i++) {
             var record = records[i];
-            eachFunction( record );
+            eachFunction(record);
         }
     },
     getRecords: function () {
-        var data = this.store.snapshot || this.store.data;
-        var records = data.items;
+        var records = this.store.query().items;
         return records;
     },
-    getValuesByAttribute: function ( attributeName ) {
-        var data = this.store.snapshot || this.store.data;
-        var records = data.items;
+    getValuesByAttribute: function (attributeName) {
+        var records = this.store.query().items;
         var values = [];
-        for ( var i = 0; i < records.length; i++ ) {
+        for (var i = 0; i < records.length; i++) {
             var record = records[i];
-            var value = record.get( attributeName );
-            var id = record.get( 'Id' );
-            if ( value != null && value !== '' ) {
-                values.push( {value: value, id: id} );
+            var value = record.get(attributeName);
+            var id = record.get('id');
+            if (value != null && value !== '') {
+                values.push({value: value, id: id});
             }
         }
         return values;
     },
-    getSelectedValuesByAttribute: function ( attributeName ) {
-        var data = this.store.snapshot || this.store.data;
-        var records = data.items;
+    getSelectedValuesByAttribute: function (attributeName) {
+        var records = this.store.query().items;
         var values = [];
-        for ( var i = 0; i < records.length; i++ ) {
+        for (var i = 0; i < records.length; i++) {
             var record = records[i];
-            var value = record.get( attributeName );
-            var id = record.get( 'Id' );
-            var selected = record.get( 'Selected' );
-            if ( selected === true && value != null && value !== '' ) {
-                values.push( {value: value, id: id} )
+            var value = record.get(attributeName);
+            var id = record.get('id');
+            var selected = record.get('Selected');
+            if (selected === true && value != null && value !== '') {
+                values.push({value: value, id: id})
             }
         }
         return values;
@@ -16432,60 +17907,58 @@ AttributeManagerStore.prototype = {
 //        var records = [];
 //        for (var i = 0; i < items.length; i++) {
 //            var item = items[i];
-//            var record = this.store.findRecord('Id', item.id);
+//            var record = this.store.findRecord('id', item.id);
 //            records.push(record);
 //        }
 //        return records;
 //    },
-    selectByItems: function ( items ) {
-        var data = this.store.snapshot || this.store.data;
+    selectByItems: function (items) {
         this.store.suspendEvents();
-        for ( var i = 0; i < items.length; i++ ) {
+        for (var i = 0; i < items.length; i++) {
             var item = items[i];
-            var record = data.map[item.id];
-            if ( record ) {
-                record.set( 'Selected', true );
+            var record = this.store.getById(item.id);
+            if (record) {
+                record.set('Selected', true);
                 record.commit();
             }
         }
         this.store.resumeEvents();
-        this.store.fireEvent( 'refresh' );
+        this.store.fireEvent('refresh');
     },
-    deselectByItems: function ( items ) {
-        var data = this.store.snapshot || this.store.data;
+    deselectByItems: function (items) {
         this.store.suspendEvents();
-        for ( var i = 0; i < items.length; i++ ) {
+        for (var i = 0; i < items.length; i++) {
             var item = items[i];
-            var record = data.map[item.id];
-            if ( record ) {
-                record.set( 'Selected', false );
+            var record = this.store.getById(item.id);
+            if (record) {
+                record.set('Selected', false);
                 record.commit();
             }
         }
         this.store.resumeEvents();
-        this.store.fireEvent( 'refresh' );
+        this.store.fireEvent('refresh');
     },
     selectAll: function () {
         this.store.suspendEvents();
-        var data = this.store.snapshot || this.store.data;
-        var records = data.items;
-        for ( var i = 0; i < records.length; i++ ) {
+        var records = this.store.query().items;
+        for (var i = 0; i < records.length; i++) {
             var record = records[i];
-            record.set( 'Selected', true );
+            record.set('Selected', true);
+            record.commit();
         }
         this.store.resumeEvents();
-        this.store.fireEvent( 'refresh' );
+        this.store.fireEvent('refresh');
     },
     deselectAll: function () {
         this.store.suspendEvents();
-        var data = this.store.snapshot || this.store.data;
-        var records = data.items;
-        for ( var i = 0; i < records.length; i++ ) {
+        var records = this.store.query().items;
+        for (var i = 0; i < records.length; i++) {
             var record = records[i];
-            record.set( 'Selected', false );
+            record.set('Selected', false);
+            record.commit();
         }
         this.store.resumeEvents();
-        this.store.fireEvent( 'refresh' );
+        this.store.fireEvent('refresh');
     },
     clean: function () {
         this.attributes = [];
@@ -16494,41 +17967,41 @@ AttributeManagerStore.prototype = {
         this.filters = {};
 
         this.store.removeAll();
-        this._processAttribute( {name: "Selected", type: "boolean", defaultValue: false} );
-        this.model.setFields( this.attributes );
+        this._processAttribute({name: "Selected", type: "boolean", defaultValue: false});
+        this.store.setFields(this.attributes);
 
-        this.trigger( 'change:attributes', {sender: this} );
+        console.log('clean - change:attributes');
+        this.trigger('change:attributes', {sender: this});
     },
-    getAsFile: function ( separator ) {
-        if ( typeof separator === 'undefined' ) {
+    getAsFile: function (separator) {
+        if (typeof separator === 'undefined') {
             separator = '\t';
         }
         // Attribute names
         var text = '';
 
         text += '#';
-        for ( var i = 0; i < this.attributes.length; i++ ) {
+        for (var i = 0; i < this.attributes.length; i++) {
             var attrName = this.attributes[i].name;
-            if ( attrName !== 'Selected' ) {
+            if (attrName !== 'Selected') {
                 text += attrName;
             }
-            if ( (i + 1) >= this.attributes.length ) {
+            if ((i + 1) >= this.attributes.length) {
                 break;
             }
             text += separator;
         }
         text += '\n';
 
-        var data = this.store.snapshot || this.store.data;
-        var records = data.items;
-        for ( var i = 0; i < records.length; i++ ) {
+        var records = this.store.query().items;
+        for (var i = 0; i < records.length; i++) {
             var record = records[i];
-            for ( var j = 0; j < this.attributes.length; j++ ) {
+            for (var j = 0; j < this.attributes.length; j++) {
                 var attrName = this.attributes[j].name;
-                if ( attrName !== 'Selected' ) {
-                    text += record.get( attrName );
+                if (attrName !== 'Selected') {
+                    text += record.get(attrName);
                 }
-                if ( (j + 1) >= this.attributes.length ) {
+                if ((j + 1) >= this.attributes.length) {
                     break;
                 }
                 text += separator;
@@ -16545,12 +18018,11 @@ AttributeManagerStore.prototype = {
         json.data = [];
 
         // add row values to data matrix
-        var data = this.store.snapshot || this.store.data;
-        var records = data.items;
-        for ( var j = 0; j < records.length; j++ ) {
-            json.data.push( [] );
-            for ( var i = 0; i < this.attributes.length; i++ ) {
-                json.data[j].push( records[j].getData()[this.attributes[i].name] );
+        var records = this.store.query().items;
+        for (var j = 0; j < records.length; j++) {
+            json.data.push([]);
+            for (var i = 0; i < this.attributes.length; i++) {
+                json.data[j].push(records[j].getData()[this.attributes[i].name]);
             }
         }
         return json;
@@ -16561,14 +18033,14 @@ AttributeManagerStore.prototype = {
 }
 
 // TODO CHECK
-AttributeManagerStore.prototype.updateAttribute = function ( oldName, newName, type, defaultValue ) {
-    for ( var i = 0; i < this.attributes.length; i++ ) {
-        if ( oldName != newName && this.attributes[i].name == newName ) return false;
+AttributeManagerStore.prototype.updateAttribute = function (oldName, newName, type, defaultValue) {
+    for (var i = 0; i < this.attributes.length; i++) {
+        if (oldName != newName && this.attributes[i].name == newName) return false;
     }
 
-    for ( var i = 0; i < this.attributes.length; i++ ) {
-        if ( this.attributes[i].name == oldName ) {
-            if ( oldName != newName ) {
+    for (var i = 0; i < this.attributes.length; i++) {
+        if (this.attributes[i].name == oldName) {
+            if (oldName != newName) {
                 this.columnsGrid[i].text = newName;
                 this.columnsGrid[i].dataIndex = newName;
                 this.attributes[i].name = newName;
@@ -16576,13 +18048,14 @@ AttributeManagerStore.prototype.updateAttribute = function ( oldName, newName, t
             this.attributes[i].type = type;
             this.attributes[i].defaultValue = defaultValue;
 
-            this.model.setFields( this.attributes );
+            this.store.setFields(this.attributes);
 
             return true;
         }
     }
     return false;
 };
+
 
 //-------------------------------modifyAttributeOfRows---------------------------//
 //Descripcion:
@@ -16594,6 +18067,7 @@ AttributeManagerStore.prototype.updateAttribute = function ( oldName, newName, t
 //value: (string) valor nuevo de ese atributo
 //-------------------------------------------------------------------------------//
 
+
 //-----------------------removeRow----------------------------------------------//
 //Descripcion:
 //Borra una fila identificada a partir del valor de un campo
@@ -16601,10 +18075,11 @@ AttributeManagerStore.prototype.updateAttribute = function ( oldName, newName, t
 //attribute: (string) campo en el que buscar
 //value: (string) nombre del campo que buscar
 //------------------------------------------------------------------------------//
-AttributeManagerStore.prototype.removeRow = function ( attribute, value ) {
+AttributeManagerStore.prototype.removeRow = function (attribute, value) {
     //obtenemos la posicion del dato y lo borramos
-    this.store.removeAt( this.store.find( attribute, value ) );
+    this.store.removeAt(this.store.find(attribute, value));
 };
+
 
 //-----------------------removeRows----------------------------------------------//
 //Descripcion:
@@ -16613,18 +18088,18 @@ AttributeManagerStore.prototype.removeRow = function ( attribute, value ) {
 //attribute: (string) campo en el que buscar
 //value: (string) nombre del campo que buscar
 //------------------------------------------------------------------------------//
-AttributeManagerStore.prototype.removeRows = function ( attribute, value ) {
+AttributeManagerStore.prototype.removeRows = function (attribute, value) {
     //obtenemos la posicion del dato y lo borramos
-    this.store.removeAt( this.store.find( attribute, value ) );
+    this.store.removeAt(this.store.find(attribute, value));
 
     var i = -1;
 
-    while ( this.store.find( attribute, value ) != -1 ) {
+    while (this.store.find(attribute, value) != -1) {
         //cada vez busca a partir de donde se quedó la ultima vez
-        i = this.store.find( attribute, value, i + 1 );
-        this.store.removeAt( i );
+        i = this.store.find(attribute, value, i + 1);
+        this.store.removeAt(i);
 
-        console.log( i );
+        console.log(i);
     }
 };
 
@@ -16632,8 +18107,9 @@ AttributeManagerStore.prototype.removeRows = function ( attribute, value ) {
  * Remove all stored attributes.
  */
 AttributeManagerStore.prototype.removeAll = function () {
-    this.store.removeAll( true );
+    this.store.removeAll(true);
 };
+
 
 //-----------------------getNumberOfRows----------------------------------------//
 //Descripcion:
@@ -16644,15 +18120,17 @@ AttributeManagerStore.prototype.getNumberOfRows = function () {
     return this.store.count();
 };
 
+
 //-----------------------getUniqueByAttribute-----------------------------//
 //Descripcion:
 //Devuelve los diferentes datos que hay en un atributo
 //Parametros:
 //attribute: (string) nombre del atributo 
 //------------------------------------------------------------------------------//
-AttributeManagerStore.prototype.getUniqueByAttribute = function ( attribute ) {
-    return this.store.collect( attribute, false, true );
+AttributeManagerStore.prototype.getUniqueByAttribute = function (attribute) {
+    return this.store.collect(attribute, false, true);
 };
+
 
 //-----------------------getPositionOfRow---------------------------------------//
 //Descripcion:
@@ -16661,10 +18139,11 @@ AttributeManagerStore.prototype.getUniqueByAttribute = function ( attribute ) {
 //attribute: (string) atributo por la que queremos buscar
 //value: (string) valor del atributo por la que queremos buscar
 //------------------------------------------------------------------------------//
-AttributeManagerStore.prototype.getPositionOfRow = function ( attribute, value ) {
-    var aux = this.store.find( attribute, value );
+AttributeManagerStore.prototype.getPositionOfRow = function (attribute, value) {
+    var aux = this.store.find(attribute, value);
     return(aux);
 };
+
 
 //-----------------------getRowByIndex------------------------------------------//
 //Descripcion:
@@ -16672,10 +18151,11 @@ AttributeManagerStore.prototype.getPositionOfRow = function ( attribute, value )
 //Parametros:
 //index:(number) index del dato del que queremos obtener informacion
 //------------------------------------------------------------------------------//
-AttributeManagerStore.prototype.getRowByIndex = function ( index ) {
-    var aux = this.store.getAt( index );
-    console.log( aux.data );
+AttributeManagerStore.prototype.getRowByIndex = function (index) {
+    var aux = this.store.getAt(index);
+    console.log(aux.data);
 };
+
 
 //-----------------------getRowRangeIndex---------------------------------------//
 //Descripcion:
@@ -16684,49 +18164,50 @@ AttributeManagerStore.prototype.getRowByIndex = function ( index ) {
 //startIndex: (number) index por el cual empezamos
 //endIndex: (number) index por el cual acabamos
 //------------------------------------------------------------------------------//
-AttributeManagerStore.prototype.getRowRangeIndex = function ( startIndex, endIndex ) {
-    var aux = this.store.getRange( startIndex, endIndex );
+AttributeManagerStore.prototype.getRowRangeIndex = function (startIndex, endIndex) {
+    var aux = this.store.getRange(startIndex, endIndex);
 
-    for ( var i = 0; i < aux.length; i++ ) {
-        console.log( aux[i].data );
+    for (var i = 0; i < aux.length; i++) {
+        console.log(aux[i].data);
     }
 };
 
-AttributeManagerStore.prototype.addFilter = function ( filterName, attribute, value ) {
-    if ( !this.filters[filterName] && attribute != null && value != null ) {
+
+AttributeManagerStore.prototype.addFilter = function (filterName, attribute, value) {
+    if (!this.filters[filterName] && attribute != null && value != null) {
         this.filters[filterName] = {"active": false, "attribute": attribute, "value": value};
-        this.enableFilter( filterName );
+        this.enableFilter(filterName);
         return true;
     }
     return false;
 };
 
-AttributeManagerStore.prototype.removeFilter = function ( filterName ) {
-    if ( this.filters[filterName] ) {
-        this.disableFilter( filterName );
+AttributeManagerStore.prototype.removeFilter = function (filterName) {
+    if (this.filters[filterName]) {
+        this.disableFilter(filterName);
         delete this.filters[filterName];
         return true;
     }
     return false;
 };
 
-AttributeManagerStore.prototype.enableFilter = function ( filterName ) {
+AttributeManagerStore.prototype.enableFilter = function (filterName) {
     this.filters[filterName].active = true;
 
     //this.store.filter(this.filters[filterName].attribute, this.filters[filterName].value); //filter for exactly match
-    var reg = new RegExp( "" + this.filters[filterName].value );
-    this.store.filter( Ext.create( 'Ext.util.Filter', {property: this.filters[filterName].attribute, value: reg, root: 'data'} ) );
+    var reg = new RegExp("" + this.filters[filterName].value);
+    this.store.filter(Ext.create('Ext.util.Filter', {property: this.filters[filterName].attribute, value: reg, root: 'data'}));
 };
 
-AttributeManagerStore.prototype.disableFilter = function ( filterName ) {
+AttributeManagerStore.prototype.disableFilter = function (filterName) {
     this.filters[filterName].active = false;
 
-    this.store.clearFilter( false );
-    for ( var filter in this.filters ) {
-        if ( this.filters[filter].active ) {
+    this.store.clearFilter(false);
+    for (var filter in this.filters) {
+        if (this.filters[filter].active) {
             //this.store.filter(this.filters[filterName].attribute, this.filters[filterName].value); //para filtrar cuando este escrito el nombre entero bien
-            var reg = new RegExp( "" + this.filters[filter].value );
-            this.store.filter( Ext.create( 'Ext.util.Filter', {property: this.filters[filter].attribute, value: reg, root: 'data'} ) );
+            var reg = new RegExp("" + this.filters[filter].value);
+            this.store.filter(Ext.create('Ext.util.Filter', {property: this.filters[filter].attribute, value: reg, root: 'data'}));
         }
     }
 };
@@ -16737,9 +18218,10 @@ AttributeManagerStore.prototype.disableFilter = function ( filterName ) {
 //Parametros: (ninguno)
 //------------------------------------------------------------------------------//
 AttributeManagerStore.prototype.checkFilters = function () {
-    console.log( this.store.isFiltered() );
+    console.log(this.store.isFiltered());
     return this.store.isFiltered();
 };
+
 
 //-----------------------clearFilters-------------------------------------------//
 //Descripcion:
@@ -16747,53 +18229,55 @@ AttributeManagerStore.prototype.checkFilters = function () {
 //Parametros: (ninguno)
 //------------------------------------------------------------------------------//
 AttributeManagerStore.prototype.clearFilters = function () {
-    this.store.clearFilter( false );
+    this.store.clearFilter(false);
 };
 
-AttributeManagerStore.prototype.loadJSON = function ( json ) {
+
+AttributeManagerStore.prototype.loadJSON = function (json) {
     this.attributes = [];
     this.columnsGrid = [];
-    console.log( json );
+    console.log(json);
     this.filters = json.filters;
 
     // add attributes
-    for ( var i = 0; i < json.attributes.length; i++ ) {
-        this.addAttribute( json.attributes[i].name, json.attributes[i].type, json.attributes[i].defaultValue );
+    for (var i = 0; i < json.attributes.length; i++) {
+        this.addAttribute(json.attributes[i].name, json.attributes[i].type, json.attributes[i].defaultValue);
     }
 
     // add rows
-    this.addRows( json.data, false );
+    this.addRows(json.data, false);
 };
 
-AttributeManagerStore.prototype.setName = function ( vertexId, newName ) {
-    var register = this.store.getAt( this.store.find( "Id", vertexId ) );
-    register.set( "Name", newName );
+AttributeManagerStore.prototype.setName = function (vertexId, newName) {
+    var register = this.store.getAt(this.store.find("id", vertexId));
+    register.set("Name", newName);
     register.commit();
 };
 
-AttributeManagerStore.prototype.setAttributeByName = function ( name, attribute, value ) {
-    var register = this.store.getAt( this.store.find( "Name", name ) );
-    if ( register ) { // if exists a row with this name
-        register.set( attribute, value );
+AttributeManagerStore.prototype.setAttributeByName = function (name, attribute, value) {
+    var register = this.store.getAt(this.store.find("Name", name));
+    if (register) { // if exists a row with this name
+        register.set(attribute, value);
         register.commit();
     }
 };
 
-AttributeManagerStore.prototype.exportToTab = function ( columns, clearFilter ) {
-    if ( clearFilter ) {
-        this.store.clearFilter( false );
+
+AttributeManagerStore.prototype.exportToTab = function (columns, clearFilter) {
+    if (clearFilter) {
+        this.store.clearFilter(false);
     }
 
     var colNames = [];
     var headerLine = "", typeLine = "", defValLine = "";
-    for ( var i = 0; i < columns.length; i++ ) {
+    for (var i = 0; i < columns.length; i++) {
         headerLine += columns[i].inputValue + "\t";
-        colNames.push( columns[i].inputValue );
+        colNames.push(columns[i].inputValue);
     }
 
-    for ( var i = 0; i < colNames.length; i++ ) {
-        for ( var j = 0; j < this.attributes.length; j++ ) {
-            if ( colNames[i] == this.attributes[j].name ) {
+    for (var i = 0; i < colNames.length; i++) {
+        for (var j = 0; j < this.attributes.length; j++) {
+            if (colNames[i] == this.attributes[j].name) {
                 typeLine += this.attributes[j].type + "\t";
                 defValLine += this.attributes[j].defaultValue + "\t";
                 break;
@@ -16807,19 +18291,19 @@ AttributeManagerStore.prototype.exportToTab = function ( columns, clearFilter ) 
     output += "#" + headerLine + "\n";
 
     var lines = this.store.getRange();
-    for ( var j = 0; j < lines.length; j++ ) {
-        for ( var i = 0; i < colNames.length; i++ ) {
+    for (var j = 0; j < lines.length; j++) {
+        for (var i = 0; i < colNames.length; i++) {
             output += lines[j].getData()[colNames[i]] + "\t";
         }
         output += "\n";
     }
 
-    if ( clearFilter ) {
-        for ( var filter in this.filters ) {
-            if ( this.filters[filter].active ) {
+    if (clearFilter) {
+        for (var filter in this.filters) {
+            if (this.filters[filter].active) {
                 //this.store.filter(this.filters[filterName].attribute, this.filters[filterName].value); //para filtrar cuando este escrito el nombre entero bien
-                var reg = new RegExp( "" + this.filters[filter].value );
-                this.store.filter( Ext.create( 'Ext.util.Filter', {property: this.filters[filter].attribute, value: reg, root: 'data'} ) );
+                var reg = new RegExp("" + this.filters[filter].value);
+                this.store.filter(Ext.create('Ext.util.Filter', {property: this.filters[filter].attribute, value: reg, root: 'data'}));
             }
         }
     }
@@ -16849,9 +18333,10 @@ AttributeManagerStore.prototype.exportToTab = function ( columns, clearFilter ) 
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function CircosVertexRenderer ( args ) {
+function CircosVertexRenderer(args) {
     var _this = this;
-    _.extend( this, Backbone.Events );
+    _.extend(this, Backbone.Events);
+
 
     this.complex = false;
 
@@ -16868,12 +18353,12 @@ function CircosVertexRenderer ( args ) {
     this.labelPositionY = 0;
     this.labelText = '';
 
-    if ( localStorage.getItem( 'CELLMAPS_SESSION' ) !== null ) {
-        var config = JSON.parse( localStorage.getItem( 'CELLMAPS_SESSION' ) );
-        if ( typeof config.vertexDefaults !== 'undefined' ) {
-            _.extend( this, config.vertexDefaults );
-        }
-    }
+//    if (localStorage.getItem('CELLMAPS_SESSION') !== null) {
+//        var config = JSON.parse(localStorage.getItem('CELLMAPS_SESSION'));
+//        if (typeof config.vertexDefaults !== 'undefined') {
+//            _.extend(this, config.vertexDefaults);
+//        }
+//    }
 
     this.sliceArea = 1;
 
@@ -16892,6 +18377,7 @@ function CircosVertexRenderer ( args ) {
     this.vertex;
     this.selected = false;
 
+
     //draw parameters
     this.mid;
     this.figureSize;
@@ -16901,27 +18387,29 @@ function CircosVertexRenderer ( args ) {
     this.labelY = 0;
 
     //set instantiation args, must be last
-    _.extend( this, args );
+    _.extend(this, args);
+
 
 }
 
+
 CircosVertexRenderer.prototype = {
-    get: function ( attr ) {
+    get: function (attr) {
         return this[attr];
     },
-    set: function ( attr, value, update ) {
+    set: function (attr, value, update) {
         this[attr] = value;
-        switch ( attr ) {
+        switch (attr) {
             case 'opacity':
-                this.groupEl.setAttribute( 'opacity', this.opacity );
+                this.groupEl.setAttribute('opacity', this.opacity);
                 break;
             case "labelSize":
             case "labelPositionY":
             case "labelPositionX":
-                this.labelEl.setAttribute( 'font-size', this.labelSize );
+                this.labelEl.setAttribute('font-size', this.labelSize);
                 this._updateLabelElPosition();
-                this.labelEl.setAttribute( 'x', this.labelX );
-                this.labelEl.setAttribute( 'y', this.labelY );
+                this.labelEl.setAttribute('x', this.labelX);
+                this.labelEl.setAttribute('y', this.labelY);
                 break;
             case "shape":
             case 'size':
@@ -16929,16 +18417,16 @@ CircosVertexRenderer.prototype = {
             case 'strokeSize':
             case 'strokeColor':
             default:
-                if ( update !== false ) {
+                if (update !== false) {
                     this.update();
                 }
         }
 
     },
-    setConfig: function ( args ) {
-        _.extend( this, args );
+    setConfig: function (args) {
+        _.extend(this, args);
     },
-    render: function ( args ) {
+    render: function (args) {
         this.targetEl = args.target;
         this.vertex = args.vertex;
         this.coords = args.coords;
@@ -16946,14 +18434,14 @@ CircosVertexRenderer.prototype = {
         this._render();
     },
     remove: function () {
-        $( this.groupEl ).remove();
+        $(this.groupEl).remove();
     },
     update: function () {
         this.remove();
         this._render();
-        console.log( "update" )
+        console.log("update")
     },
-    updateComplex: function ( slicesMap, defaults ) {
+    updateComplex: function (slicesMap, defaults) {
         this.color = defaults['pieSlices'].color;
         this.size = defaults['pieSlices'].size;
         this.strokeColor = defaults['donutSlices'].color;
@@ -16961,17 +18449,17 @@ CircosVertexRenderer.prototype = {
 
         this.pieSlices = slicesMap['pieSlices'];
         this.donutSlices = slicesMap['donutSlices'];
-        if ( typeof this.pieSlices === 'undefined' ) {
+        if (typeof this.pieSlices === 'undefined') {
             this.pieSlices = [
                 {size: defaults['pieSlices'].size, area: defaults['pieSlices'].area, color: defaults['pieSlices'].color, labelSize: this.labelSize, labelOffset: 0}
             ];
         }
-        if ( typeof this.donutSlices === 'undefined' ) {
+        if (typeof this.donutSlices === 'undefined') {
             this.donutSlices = [
                 {size: defaults['donutSlices'].size, area: defaults['donutSlices'].area, color: defaults['donutSlices'].color, labelSize: this.labelSize, labelOffset: 0}
             ];
         }
-        if ( typeof slicesMap['pieSlices'] === 'undefined' && typeof slicesMap['donutSlices'] === 'undefined' ) {
+        if (typeof slicesMap['pieSlices'] === 'undefined' && typeof slicesMap['donutSlices'] === 'undefined') {
             this.update();
         } else {
             this.complex = true;
@@ -16980,19 +18468,24 @@ CircosVertexRenderer.prototype = {
         }
     },
     select: function () {
-        $( this.groupEl ).prepend( this.selectEl );
+        $(this.groupEl).prepend(this.selectEl);
         this.selected = true;
     },
     deselect: function () {
         this._removeSelect();
         this.selected = false;
     },
-    move: function ( dispX, dispY ) {
-        this.groupEl.setAttribute( 'transform', "translate(" + [this.coords.x - this.mid, this.coords.y - this.mid].join( ',' ) + ")" );
+    move: function (dispX, dispY) {
+        this.groupEl.setAttribute('transform', "translate(" + [this.coords.x - this.mid, this.coords.y - this.mid].join(',') + ")");
     },
-    setLabelContent: function ( text ) {
+    setLabelContent: function (text) {
         this.labelText = text;
-        this.update();
+        if (this.labelEl) {
+            this._updateLabelElPosition();
+            this.labelEl.setAttribute('x', this.labelX);
+            this.labelEl.setAttribute('y', this.labelY);
+            this.labelEl.textContent = this.labelText;
+        }
     },
     getSize: function () {
         this._updateDrawParameters();
@@ -17027,25 +18520,25 @@ CircosVertexRenderer.prototype = {
     _updateComplexDrawParameters: function () {
         var midSize = (this.size + (this.strokeSize));
         this.mid = midSize / 2;
-        this.maxPieSize = this._slicesMax( this.pieSlices );
-        this.maxDonutSize = this._slicesMax( this.donutSlices );
+        this.maxPieSize = this._slicesMax(this.pieSlices);
+        this.maxDonutSize = this._slicesMax(this.donutSlices);
         this.figureSize = (this.maxPieSize + (this.maxDonutSize * 2));
         this._updateLabelElPosition();
     },
     _updateLabelElPosition: function () {
-        var labelSize = this._textWidthBySize( this.labelText, this.labelSize );
+        var labelSize = this._textWidthBySize(this.labelText, this.labelSize);
         this.labelX = this.labelPositionX + this.mid - (labelSize / 2);
         this.labelY = this.labelPositionY + this.mid + this.labelSize / 3;
     },
-    _textWidthBySize: function ( text, pixelFontSize ) {
+    _textWidthBySize: function (text, pixelFontSize) {
         return ((text.length * pixelFontSize / 2) + 0.5) | 0;//round up
     },
 
     _drawSelectShape: function () {
-        if ( this.complex === true ) {
+        if (this.complex === true) {
             this._drawSelectCircleShape();
         } else {
-            switch ( this.shape ) {
+            switch (this.shape) {
                 case "circle":
                     this._drawSelectCircleShape();
                     break;
@@ -17062,28 +18555,28 @@ CircosVertexRenderer.prototype = {
         }
     },
     _drawSelectCircleShape: function () {
-        this.selectEl = SVG.create( "circle", {
+        this.selectEl = SVG.create("circle", {
             r: this.figureSize / 2 * 1.30,
             cx: this.mid,
             cy: this.mid,
             opacity: '0.5',
             fill: '#999999',
             'network-type': 'select-vertex'
-        } );
+        });
     },
     _drawSelectEllipseShape: function () {
-        this.selectEl = SVG.create( "ellipse", {
+        this.selectEl = SVG.create("ellipse", {
             cx: this.mid,
             cy: this.mid,
-            rx: this.figureSize * 0.9,
+            rx: this.figureSize,
             ry: this.figureSize * 0.65,
             opacity: '0.5',
             fill: '#999999',
             'network-type': 'select-vertex'
-        } );
+        });
     },
     _drawSelectSquareShape: function () {
-        this.selectEl = SVG.create( "rect", {
+        this.selectEl = SVG.create("rect", {
             x: -this.mid * 0.3,
             y: -this.mid * 0.3,
             width: this.mid * 2.6,
@@ -17093,10 +18586,10 @@ CircosVertexRenderer.prototype = {
             opacity: '0.5',
             fill: '#999999',
             'network-type': 'select-vertex'
-        } );
+        });
     },
     _drawSelectRectangleShape: function () {
-        this.selectEl = SVG.create( "rect", {
+        this.selectEl = SVG.create("rect", {
             x: -this.mid * 0.8,
             y: -this.mid * 0.3,
             width: this.mid * 3.60,
@@ -17106,28 +18599,28 @@ CircosVertexRenderer.prototype = {
             opacity: '0.5',
             fill: '#999999',
             'network-type': 'select-vertex'
-        } );
+        });
     },
     _removeSelect: function () {
-        $( this.groupEl ).find( '[network-type="select-vertex"]' ).remove();
+        $(this.groupEl).find('[network-type="select-vertex"]').remove();
     },
     _render: function () {
-        if ( this.complex === true ) {
+        if (this.complex === true) {
             this._renderSlices();
             this._drawSelectShape();
         } else {
             this._updateDrawParameters();
             this._drawSelectShape();
-            this.groupEl = SVG.create( 'g', {
+            this.groupEl = SVG.create('g', {
                 "id": this.vertex.id,
-                "transform": "translate(" + [this.coords.x - this.mid, this.coords.y - this.mid].join( ',' ) + ")",
+                "transform": "translate(" + [this.coords.x - this.mid, this.coords.y - this.mid].join(',') + ")",
                 "cursor": "pointer",
                 opacity: this.opacity,
                 'network-type': 'vertex-svg'
-            } );
-            switch ( this.shape ) {
+            });
+            switch (this.shape) {
                 case "circle":
-                    var circle = SVG.addChild( this.groupEl, 'circle', {
+                    var circle = SVG.addChild(this.groupEl, 'circle', {
                         r: this.mid,
                         cx: this.mid,
                         cy: this.mid,
@@ -17135,10 +18628,10 @@ CircosVertexRenderer.prototype = {
                         'stroke-width': this.strokeSize,
                         fill: this.color,
                         'network-type': 'vertex'
-                    } );
+                    });
                     break;
                 case "ellipse":
-                    var ellipse = SVG.addChild( this.groupEl, "ellipse", {
+                    var ellipse = SVG.addChild(this.groupEl, "ellipse", {
                         cx: this.mid,
                         cy: this.mid,
                         rx: this.mid * 1.5,
@@ -17147,10 +18640,10 @@ CircosVertexRenderer.prototype = {
                         'stroke-width': this.strokeSize,
                         fill: this.color,
                         'network-type': 'vertex'
-                    } );
+                    });
                     break;
                 case "square":
-                    var square = SVG.addChild( this.groupEl, "rect", {
+                    var square = SVG.addChild(this.groupEl, "rect", {
                         x: 0,
                         y: 0,
                         width: this.mid * 2,
@@ -17159,10 +18652,10 @@ CircosVertexRenderer.prototype = {
                         'stroke-width': this.strokeSize,
                         fill: this.color,
                         'network-type': 'vertex'
-                    } );
+                    });
                     break;
                 case "rectangle":
-                    var rectangle = SVG.addChild( this.groupEl, "rect", {
+                    var rectangle = SVG.addChild(this.groupEl, "rect", {
                         x: -this.mid * 0.5,
                         y: 0,
                         width: this.mid * 3,
@@ -17171,57 +18664,57 @@ CircosVertexRenderer.prototype = {
                         'stroke-width': this.strokeSize,
                         fill: this.color,
                         'network-type': 'vertex'
-                    } );
+                    });
                     break;
             }
         }
-        this.labelEl = SVG.addChild( this.groupEl, "text", {
+        this.labelEl = SVG.addChild(this.groupEl, "text", {
             "x": this.labelX,
             "y": this.labelY,
             "font-size": this.labelSize,
             "fill": this.labelColor,
             'network-type': 'vertex-label'
-        } );
+        });
         this.labelEl.textContent = this.labelText;
-        this.targetEl.appendChild( this.groupEl );
-        if ( this.selected ) {
+        this.targetEl.appendChild(this.groupEl);
+        if (this.selected) {
             this.select();
         }
     },
     _renderSlices: function () {
         this._updateComplexDrawParameters();
-        this.groupEl = SVG.create( 'g', {
+        this.groupEl = SVG.create('g', {
             "id": this.vertex.id,
-            "transform": "translate(" + [this.coords.x - this.mid, this.coords.y - this.mid].join( ',' ) + ")",
+            "transform": "translate(" + [this.coords.x - this.mid, this.coords.y - this.mid].join(',') + ")",
             "cursor": "pointer",
             opacity: this.opacity,
             'network-type': 'vertex-svg'
-        } );
+        });
 
-        var totalAreas = this._sumAreas( this.pieSlices );
+        var totalAreas = this._sumAreas(this.pieSlices);
         var c = 359.999 / totalAreas;
         var angleOffset = 0;
-        for ( var i = 0; i < this.pieSlices.length; i++ ) {
+        for (var i = 0; i < this.pieSlices.length; i++) {
             var slice = this.pieSlices[i];
 
             var angleSize = slice.area * c;
             var angleStart = angleOffset;
             var angleEnd = angleStart + angleSize;
             angleOffset += angleSize;
-            var slice_d = SVG.describeArc( this.mid, this.mid, slice.size / 2 + 0.2, angleStart, angleEnd );
-            var curve = SVG.addChild( this.groupEl, "path", {
-                "d": slice_d + ['L', this.mid, this.mid].join( ' ' ),
+            var slice_d = SVG.describeArc(this.mid, this.mid, slice.size / 2 + 0.2, angleStart, angleEnd);
+            var curve = SVG.addChild(this.groupEl, "path", {
+                "d": slice_d + ['L', this.mid, this.mid].join(' '),
                 "fill": slice.color,
                 'network-type': 'vertex'
-            } );
-            if ( typeof slice.text !== 'undefined' ) {
+            });
+            if (typeof slice.text !== 'undefined') {
                 var angle = angleStart + angleSize / 2;
-                var l1 = SVG._polarToCartesian( this.mid, this.mid, this.maxPieSize / 2, angle );
-                var l2 = SVG._polarToCartesian( this.mid, this.mid, this.mid + slice.labelOffset, angle );
-                var labelWidth = this._textWidthBySize( slice.text, slice.labelSize );
+                var l1 = SVG._polarToCartesian(this.mid, this.mid, this.maxPieSize / 2, angle);
+                var l2 = SVG._polarToCartesian(this.mid, this.mid, this.mid + slice.labelOffset, angle);
+                var labelWidth = this._textWidthBySize(slice.text, slice.labelSize);
                 var textX, textY;
-                if ( l2.x > l1.x ) {
-                    if ( l1.y > l2.y ) {
+                if (l2.x > l1.x) {
+                    if (l1.y > l2.y) {
                         //Quadrant I
                         textX = l2.x;
                         textY = l2.y;
@@ -17231,7 +18724,7 @@ CircosVertexRenderer.prototype = {
                         textY = l2.y + slice.labelSize * 0.7;
                     }
                 } else {
-                    if ( l1.y > l2.y ) {
+                    if (l1.y > l2.y) {
                         //Quadrant II
                         textX = l2.x - labelWidth - 1;
                         textY = l2.y;
@@ -17241,8 +18734,8 @@ CircosVertexRenderer.prototype = {
                         textY = l2.y + slice.labelSize * 0.7;
                     }
                 }
-                if ( slice.labelOffset >= 0 ) {
-                    var line = SVG.addChild( this.groupEl, "line", {
+                if (slice.labelOffset >= 0) {
+                    var line = SVG.addChild(this.groupEl, "line", {
                         "x1": l1.x,
                         "y1": l1.y,
                         "x2": l2.x,
@@ -17250,45 +18743,45 @@ CircosVertexRenderer.prototype = {
                         'stroke': '#999999',
                         'stroke-width': '0.7',
                         'network-type': 'vertex-label'
-                    } );
+                    });
                 }
-                var label = SVG.addChild( this.groupEl, "text", {
+                var label = SVG.addChild(this.groupEl, "text", {
                     "x": textX,
                     "y": textY,
                     "font-size": slice.labelSize,
                     "fill": this.labelColor,
                     'network-type': 'vertex-label'
-                } );
+                });
                 label.textContent = slice.text;
             }
         }
 
-        var totalAreas = this._sumAreas( this.donutSlices );
+        var totalAreas = this._sumAreas(this.donutSlices);
         var c = 359.9999 / totalAreas;
         var angleOffset = 0;
-        for ( var i = 0; i < this.donutSlices.length; i++ ) {
+        for (var i = 0; i < this.donutSlices.length; i++) {
             var slice = this.donutSlices[i];
 
             var angleSize = slice.area * c;
             var angleStart = angleOffset;
             var angleEnd = angleStart + angleSize;
             angleOffset += angleSize;
-            var slice_d = SVG.describeArc( this.mid, this.mid, (this.maxPieSize / 2) + (slice.size / 2), angleStart, angleEnd );
-            var curve = SVG.addChild( this.groupEl, "path", {
+            var slice_d = SVG.describeArc(this.mid, this.mid, (this.maxPieSize / 2) + (slice.size / 2), angleStart, angleEnd);
+            var curve = SVG.addChild(this.groupEl, "path", {
                 "d": slice_d,
                 "stroke": slice.color,
                 "stroke-width": slice.size,
                 "fill": "none",
                 'network-type': 'vertex'
-            }, 0 );
-            if ( typeof slice.text !== 'undefined' ) {
+            }, 0);
+            if (typeof slice.text !== 'undefined') {
                 var angle = angleStart + angleSize / 2;
-                var l1 = SVG._polarToCartesian( this.mid, this.mid, this.mid + slice.labelOffset, angle );
-                var l2 = SVG._polarToCartesian( this.mid, this.mid, this.mid + slice.labelOffset, angle );
-                var labelWidth = this._textWidthBySize( slice.text, slice.labelSize );
+                var l1 = SVG._polarToCartesian(this.mid, this.mid, this.mid + slice.labelOffset, angle);
+                var l2 = SVG._polarToCartesian(this.mid, this.mid, this.mid + slice.labelOffset, angle);
+                var labelWidth = this._textWidthBySize(slice.text, slice.labelSize);
                 var textX, textY;
-                if ( l2.x > l1.x ) {
-                    if ( l1.y > l2.y ) {
+                if (l2.x > l1.x) {
+                    if (l1.y > l2.y) {
                         //Quadrant I
                         textX = l2.x;
                         textY = l2.y;
@@ -17298,7 +18791,7 @@ CircosVertexRenderer.prototype = {
                         textY = l2.y + slice.labelSize / 2;
                     }
                 } else {
-                    if ( l1.y > l2.y ) {
+                    if (l1.y > l2.y) {
                         //Quadrant II
                         textX = l2.x - labelWidth - 3;
                         textY = l2.y;
@@ -17308,8 +18801,8 @@ CircosVertexRenderer.prototype = {
                         textY = l2.y + slice.labelSize / 2;
                     }
                 }
-                if ( slice.labelOffset >= 0 ) {
-                    var line = SVG.addChild( this.groupEl, "line", {
+                if (slice.labelOffset >= 0) {
+                    var line = SVG.addChild(this.groupEl, "line", {
                         "x1": l1.x,
                         "y1": l1.y,
                         "x2": l2.x,
@@ -17317,31 +18810,31 @@ CircosVertexRenderer.prototype = {
                         'stroke': '#999999',
                         'stroke-width': '0.7',
                         'network-type': 'vertex-label'
-                    } );
+                    });
                 }
-                var label = SVG.addChild( this.groupEl, "text", {
+                var label = SVG.addChild(this.groupEl, "text", {
                     "x": textX,
                     "y": textY,
                     "font-size": slice.labelSize,
                     "fill": this.labelColor,
                     'network-type': 'vertex-label'
-                } );
+                });
                 label.textContent = slice.text;
             }
         }
     },
-    _sumAreas: function ( items ) {
+    _sumAreas: function (items) {
         var total = 0;
-        for ( var i = 0; i < items.length; i++ ) {
+        for (var i = 0; i < items.length; i++) {
             var item = items[i];
             total += item.area;
         }
         return total;
     },
-    _slicesMax: function ( items ) {
+    _slicesMax: function (items) {
         var max = 0;
-        for ( var i = 0; i < items.length; i++ ) {
-            max = Math.max( max, items[i].size );
+        for (var i = 0; i < items.length; i++) {
+            max = Math.max(max, items[i].size);
         }
         return max;
     },
@@ -17349,7 +18842,7 @@ CircosVertexRenderer.prototype = {
     /*********/
     /*********/
     /*********/
-    drawLink: function ( args ) {
+    drawLink: function (args) {
 //        var angleStart1 = args.angleStart1;
 //        var angleEnd1 = args.angleEnd1;
 //        var angleStart2 = args.angleStart2;
@@ -17367,18 +18860,19 @@ CircosVertexRenderer.prototype = {
 
         var r = this.radius - 10;
 
-        var coordsStart1 = SVG._polarToCartesian( coords.x, coords.y, r, angleStart1 );
-        var coordsEnd1 = SVG._polarToCartesian( coords.x, coords.y, r, angleEnd1 );
+        var coordsStart1 = SVG._polarToCartesian(coords.x, coords.y, r, angleStart1);
+        var coordsEnd1 = SVG._polarToCartesian(coords.x, coords.y, r, angleEnd1);
 
-        var coordsStart2 = SVG._polarToCartesian( coords.x, coords.y, r, angleStart2 );
-        var coordsEnd2 = SVG._polarToCartesian( coords.x, coords.y, r, angleEnd2 );
+        var coordsStart2 = SVG._polarToCartesian(coords.x, coords.y, r, angleStart2);
+        var coordsEnd2 = SVG._polarToCartesian(coords.x, coords.y, r, angleEnd2);
 
-        d += SVG.describeArc( coords.x, coords.y, r, angleStart1, angleEnd1 ) + ' ';
-        d += ['Q', coords.x, coords.y, coordsEnd2.x, coordsEnd2.y, ' '].join( ' ' );
-        d += SVG.describeArc( coords.x, coords.y, r, angleStart2, angleEnd2 ) + ' ';
-        d += [ 'Q', coords.x, coords.y, coordsEnd1.x, coordsEnd1.y, ' '].join( ' ' );
 
-        var curve = SVG.addChild( targetSvg, 'path', {
+        d += SVG.describeArc(coords.x, coords.y, r, angleStart1, angleEnd1) + ' ';
+        d += ['Q', coords.x, coords.y, coordsEnd2.x, coordsEnd2.y, ' '].join(' ');
+        d += SVG.describeArc(coords.x, coords.y, r, angleStart2, angleEnd2) + ' ';
+        d += [ 'Q', coords.x, coords.y, coordsEnd1.x, coordsEnd1.y, ' '].join(' ');
+
+        var curve = SVG.addChild(targetSvg, 'path', {
             d: d,
             'stroke': 'red',
             'stroke-width': 2,
@@ -17388,10 +18882,10 @@ CircosVertexRenderer.prototype = {
             'opacity': 0.7,
             'z-index': 10,
             'network-type': 'vertex'
-        } );
+        });
 
     },
-    drawSectors: function ( args ) {
+    drawSectors: function (args) {
         var coords = args.coords;
         var color = args.color;
         var targetSvg = args.target;
@@ -17399,23 +18893,23 @@ CircosVertexRenderer.prototype = {
         var separationPixels = 4;
         var separation = (separationPixels * 360) / (2 * Math.PI * this.radius);
 
-        var totalSize = this._calculateTotalSize( this.sectors );
+        var totalSize = this._calculateTotalSize(this.sectors);
         var c = 360 / totalSize;
         var angleOffset = 0;
         var genome_d = [];
         var sector;
-        for ( var i = 0; i < this.sectors.length; i++ ) {
+        for (var i = 0; i < this.sectors.length; i++) {
             sector = this.sectors[i];
             sector.angleSize = (sector.size * c) - separation;
             sector.angleStart = angleOffset + (separation / 2);
             sector.angleEnd = sector.angleStart + sector.angleSize;
             angleOffset += sector.angleSize + separation;
 
-            genome_d.push( SVG.describeArc( coords.x, coords.y, this.radius, sector.angleStart, sector.angleEnd ) + ' ' );
+            genome_d.push(SVG.describeArc(coords.x, coords.y, this.radius, sector.angleStart, sector.angleEnd) + ' ');
         }
 
-        for ( var i = 0; i < genome_d.length; i++ ) {
-            var curve = SVG.addChild( targetSvg, "path", {
+        for (var i = 0; i < genome_d.length; i++) {
+            var curve = SVG.addChild(targetSvg, "path", {
                 "d": genome_d[i],
 //                "stroke": 'lightblue',
 //                "stroke": Utils.colorLuminance(color, i/5),
@@ -17423,7 +18917,7 @@ CircosVertexRenderer.prototype = {
                 "stroke-width": 10,
                 "fill": "none",
                 'network-type': 'vertex'
-            } );
+            });
         }
     }
 }
@@ -17448,9 +18942,9 @@ CircosVertexRenderer.prototype = {
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function DefaultEdgeRenderer ( args ) {
+function DefaultEdgeRenderer(args) {
     var _this = this;
-    _.extend( this, Backbone.Events );
+    _.extend(this, Backbone.Events);
 
     //defaults
     this.shape = 'undirected';
@@ -17478,42 +18972,42 @@ function DefaultEdgeRenderer ( args ) {
     this.targetRenderer;
 
     //set instantiation args, must be last
-    _.extend( this, args );
+    _.extend(this, args);
 
 }
 
 DefaultEdgeRenderer.prototype = {
-    get: function ( attr ) {
+    get: function (attr) {
         return this[attr];
     },
-    set: function ( attr, value ) {
+    set: function (attr, value) {
         this[attr] = value;
-        switch ( attr ) {
+        switch (attr) {
             case "color":
-                this.edgeEl.setAttribute( 'stroke', this.color );
+                this.edgeEl.setAttribute('stroke', this.color);
                 this.updateShape();
                 break;
             case "size":
-                this.edgeEl.setAttribute( 'stroke-width', this.size );
+                this.edgeEl.setAttribute('stroke-width', this.size);
                 this.updateShape();
                 break;
             case "shape":
                 this.updateShape();
                 break;
             case "labelSize":
-                this.labelEl.setAttribute( 'font-size', this.labelSize );
+                this.labelEl.setAttribute('font-size', this.labelSize);
                 break;
             case "opacity":
-                this.edgeEl.setAttribute( 'opacity', this.opacity );
+                this.edgeEl.setAttribute('opacity', this.opacity);
                 break;
             default:
                 this.update();
         }
     },
-    setConfig: function ( args ) {
-        _.extend( this, args );
+    setConfig: function (args) {
+        _.extend(this, args);
     },
-    render: function ( args ) {
+    render: function (args) {
         this.edge = args.edge;
         this.targetEl = args.target;
         this.sourceCoords = args.sourceCoords;
@@ -17523,37 +19017,37 @@ DefaultEdgeRenderer.prototype = {
         this._render();
     },
     remove: function () {
-        $( this.el ).remove();
+        $(this.el).remove();
     },
     update: function () {
-        this.edgeEl.setAttribute( 'stroke', this.color );
-        this.edgeEl.setAttribute( 'stroke-width', this.size );
-        this.labelEl.setAttribute( 'font-size', this.labelSize );
+        this.edgeEl.setAttribute('stroke', this.color);
+        this.edgeEl.setAttribute('stroke-width', this.size);
+        this.labelEl.setAttribute('font-size', this.labelSize);
         this.updateShape();
     },
     updateShape: function () {
-        if ( this.shape === 'undirected' ) {
-            this.edgeEl.removeAttribute( 'marker-end' );
+        if (this.shape === 'undirected') {
+            this.edgeEl.removeAttribute('marker-end');
         } else {
-            this.edgeEl.setAttribute( 'marker-end', "url(" + this._getMarkerArrowId() + ")" );
+            this.edgeEl.setAttribute('marker-end', "url(" + this._getMarkerArrowId() + ")");
         }
         this.move();
     },
     select: function () {
-        if ( !this.selected ) {
+        if (!this.selected) {
             this._renderSelect();
         }
     },
     deselect: function () {
-        if ( this.selected ) {
+        if (this.selected) {
             this._removeSelect();
         }
     },
-    setLabelContent: function ( text ) {
+    setLabelContent: function (text) {
         this.labelText = text;
-        var textSvg = $( this.el ).find( 'text[network-type="edge-label"]' )[0];
+        var textSvg = $(this.el).find('text[network-type="edge-label"]')[0];
         var label = '';
-        if ( $.type( this.labelText ) === 'string' && this.labelText.length > 0 ) {
+        if ($.type(this.labelText) === 'string' && this.labelText.length > 0) {
             label = this.labelText;
         }
         textSvg.textContent = label;
@@ -17593,109 +19087,152 @@ DefaultEdgeRenderer.prototype = {
 //        text.setAttribute('y', y);
 //
 //    },
-    move: function ( coords ) {
+    move: function (coords) {
         var val = this._calculateEdgePath();
-        this.edgeEl.setAttribute( 'd', val.d );
-        this.labelEl.setAttribute( 'x', val.xl );
-        this.labelEl.setAttribute( 'y', val.yl );
+        this.edgeEl.setAttribute('d', val.d);
+        this.labelEl.setAttribute('x', val.xl);
+        this.labelEl.setAttribute('y', val.yl);
 
     },
     _calculateEdgePath: function () {
         var d, labelX, labelY;
-        if ( this.edge.source === this.edge.target ) {
+        if (this.edge.source === this.edge.target) {
             //calculate self edge
             var length1 = this.sourceRenderer.getSize() * 0.6;
-            var length2 = this.sourceRenderer.getSize() * 2;
+            var length2 = this.sourceRenderer.getSize() * 1.8;
             labelX = this.sourceCoords.x - this.sourceRenderer.getSize();
             labelY = this.sourceCoords.y - this.sourceRenderer.getSize();
-            d = ['M', this.sourceCoords.x, this.sourceCoords.y,
+
+
+            var rSize = this.sourceRenderer.getSize() / 2;
+
+            d = ['M', this.sourceCoords.x - rSize, this.sourceCoords.y ,
                 'L', this.sourceCoords.x - length1, this.sourceCoords.y,
                 'C', this.sourceCoords.x - length2, this.sourceCoords.y, this.sourceCoords.x, this.sourceCoords.y - length2,
                 this.sourceCoords.x , this.sourceCoords.y - length1,
-                'L', this.targetCoords.x, this.targetCoords.y].join( ' ' );
+                'L', this.targetCoords.x, this.targetCoords.y - rSize].join(' ');
         } else {
             //calculate bezier line
             var deltaX = this.targetCoords.x - this.sourceCoords.x;
             var deltaY = this.targetCoords.y - this.sourceCoords.y;
-            var angle = Math.atan( deltaY / deltaX );
-            if ( isNaN( angle ) ) {
+            var angle = Math.atan(deltaY / deltaX);
+            if (isNaN(angle)) {
                 angle = 0;
             }
 
-            var remainder = this.edge.overlapCount % 2;
-            var sum = ( remainder == 0) ? 0 : 1;
-            var sign = (remainder == 0) ? -1 : 1;
-            var controlPointOffset = (this.edge.overlapCount + sum) / 2 * 10 * (sign);
-            var controlPointOffsetLabel = controlPointOffset / 1.33;
 
             var midX = (this.sourceCoords.x + this.targetCoords.x) / 2;
             var midY = (this.sourceCoords.y + this.targetCoords.y) / 2;
-            var controlX = midX - (Math.sin( angle ) * controlPointOffset);
-            var controlY = midY + (Math.cos( angle ) * controlPointOffset);
+            var controlPath = '';
+            if (this.edge.overlapCount === 0) {
+                labelX = midX - (Math.sin(angle));
+                labelY = midY + (Math.cos(angle));
+            } else {
+                var separation = 15;
+                var remainder = this.edge.overlapCount % 2;
+                var sum = 1;
+                var sign = 1;
+                if (remainder === 0) {
+                    sum = 0;
+                    sign = -1
+                }
+                var controlPointOffset = (this.edge.overlapCount + sum) / 2 * separation * (sign);
+                var controlPointOffsetLabel = controlPointOffset / 1.33;
+                var controlX = midX - (Math.sin(angle) * controlPointOffset);
+                var controlY = midY + (Math.cos(angle) * controlPointOffset);
+                labelX = midX - (Math.sin(angle) * controlPointOffsetLabel);
+                labelY = midY + (Math.cos(angle) * controlPointOffsetLabel);
+                controlPath = ['C', controlX, controlY, controlX, controlY].join(' ');
+            }
+            var pp = this._getPerimeterPositions(angle);
 
-            labelX = midX - (Math.sin( angle ) * controlPointOffsetLabel);
-            labelY = midY + (Math.cos( angle ) * controlPointOffsetLabel);
-
-            d = ['M', this.sourceCoords.x, this.sourceCoords.y, 'C', controlX, controlY, controlX, controlY, this.targetCoords.x,
-                this.targetCoords.y].join( ' ' );
+//            d = ['M', this.sourceCoords.x, this.sourceCoords.y, 'C', controlX, controlY, controlX, controlY, this.targetCoords.x, this.targetCoords.y].join(' ');
+            d = ['M', pp.sx, pp.sy, controlPath, pp.tx, pp.ty].join(' ');
         }
         return {d: d, xl: labelX, yl: labelY};
     },
+    _getPerimeterPositions: function (angle) {
+        // Calculate source and target points of the perimeter - TODO ellipse, square, rectangle
+        var sign = this.targetCoords.x > this.sourceCoords.x ? 1 : -1;
+        var srHalfSize = this.sourceRenderer.getSize() / 2;
+        var trHalfSize = this.targetRenderer.getSize() / 2;
+        var cosAngle = Math.cos(angle);
+        var sinAngle = Math.sin(angle);
+        var absCosAngle = Math.abs(cosAngle);
+        var absSinAngle = Math.abs(sinAngle);
+        var sx, sy, tx, ty, magnitudeCos, magnitudeSin, magnitude;
+
+        //circle
+        // x = cx + r * cos(a)
+        // y = cy + r * sin(a)
+
+        //Square
+        // center + (cos(angle), sin(angle))*magnitude
+
+        //Source
+        switch (this.sourceRenderer.shape) {
+            case 'square':
+                magnitudeCos = srHalfSize / absCosAngle;
+                magnitudeSin = srHalfSize / absSinAngle;
+                magnitude = (magnitudeCos <= magnitudeSin) ? magnitudeCos : magnitudeSin;
+                sx = this.sourceCoords.x + (sign * cosAngle * magnitude);
+                sy = this.sourceCoords.y + (sign * sinAngle * magnitude);
+                break;
+            case 'rectangle':
+                magnitudeCos = srHalfSize * 1.4 / absCosAngle;
+                magnitudeSin = srHalfSize / absSinAngle;
+                magnitude = (magnitudeCos <= magnitudeSin) ? magnitudeCos : magnitudeSin;
+                sx = this.sourceCoords.x + (sign * cosAngle * magnitude);
+                sy = this.sourceCoords.y + (sign * sinAngle * magnitude);
+                break;
+            case 'ellipse':
+                sx = this.sourceCoords.x + (sign * cosAngle * srHalfSize * 1.4);
+                sy = this.sourceCoords.y + (sign * sinAngle * srHalfSize);
+                break;
+            case 'circle':
+            default:
+                sx = this.sourceCoords.x + (sign * cosAngle * srHalfSize);
+                sy = this.sourceCoords.y + (sign * sinAngle * srHalfSize);
+        }
+        //Target
+        switch (this.targetRenderer.shape) {
+            case 'square':
+                magnitudeCos = trHalfSize / absCosAngle;
+                magnitudeSin = trHalfSize / absSinAngle;
+                magnitude = (magnitudeCos <= magnitudeSin) ? magnitudeCos : magnitudeSin;
+                tx = this.targetCoords.x - (sign * cosAngle * magnitude);
+                ty = this.targetCoords.y - (sign * sinAngle * magnitude);
+                break;
+            case 'rectangle':
+                magnitudeCos = trHalfSize * 1.4 / absCosAngle;
+                magnitudeSin = trHalfSize / absSinAngle;
+                magnitude = (magnitudeCos <= magnitudeSin) ? magnitudeCos : magnitudeSin;
+                tx = this.targetCoords.x - (sign * cosAngle * magnitude);
+                ty = this.targetCoords.y - (sign * sinAngle * magnitude);
+                break;
+            case 'ellipse':
+                tx = this.targetCoords.x - (sign * cosAngle * trHalfSize * 1.4);
+                ty = this.targetCoords.y - (sign * sinAngle * trHalfSize);
+                break;
+            case 'circle':
+            default:
+                tx = this.targetCoords.x - (sign * cosAngle * trHalfSize);
+                ty = this.targetCoords.y - (sign * sinAngle * trHalfSize);
+        }
+        return {sx: sx, sy: sy, tx: tx, ty: ty};
+    },
     /* Private */
-//    _renderOff: function () {
-//        var groupSvg = SVG.create('g', {
-//            "cursor": "pointer",
-//            "id": this.edge.id,
-//            opacity: this.opacity,
-//            'network-type': 'edge-g'
-//        });
-//
-//        var linkSvg = SVG.addChild(groupSvg, "line", {
-//            "x1": this.sourceCoords.x,
-//            "y1": this.sourceCoords.y,
-//            "x2": this.targetCoords.x,
-//            "y2": this.targetCoords.y,
-//            opacity: this.opacity,
-//            "stroke": this.color,
-//            "stroke-width": this.size,
-//            "cursor": "pointer",
-//            "marker-end": "url(" + this._getMarkerArrowId() + ")",
-//            'network-type': 'edge'
-//        }, 0);
-//
-//        var x = (this.sourceCoords.x + this.targetCoords.x) / 2;
-//        var y = (this.sourceCoords.y + this.targetCoords.y) / 2;
-//
-//        var textOffset = this.sourceRenderer.getSize();
-//        var text = SVG.addChild(groupSvg, "text", {
-//            "x": x,
-//            "y": y,
-//            "font-size": this.labelSize,
-//            "fill": this.labelColor,
-//            'network-type': 'edge-label'
-//        });
-//        text.textContent = this.edge.id;
-//
-//        this.el = groupSvg;
-//        this.edgeEl = linkSvg;
-//        this.labelEl = text;
-//        SVG._insert(this.targetEl, groupSvg, 0);
-//
-//        if (this.selected) {
-//            this._renderSelect();
-//        }
-//    },
     _render: function () {
-        var groupSvg = SVG.create( 'g', {
+        var groupSvg = SVG.create('g', {
             "cursor": "pointer",
             "id": this.edge.id,
             opacity: this.opacity,
             'network-type': 'edge-g'
-        } );
+        });
 
         var val = this._calculateEdgePath();
 
-        var linkSvg = SVG.addChild( groupSvg, "path", {
+        var linkSvg = SVG.addChild(groupSvg, "path", {
             "d": val.d,
             opacity: this.opacity,
             "stroke": this.color,
@@ -17704,44 +19241,36 @@ DefaultEdgeRenderer.prototype = {
             fill: 'none',
             "marker-end": "url(" + this._getMarkerArrowId() + ")",
             'network-type': 'edge'
-        }, 0 );
+        }, 0);
 
         var textOffset = this.sourceRenderer.getSize();
-        var text = SVG.addChild( groupSvg, "text", {
+        var text = SVG.addChild(groupSvg, "text", {
             "x": val.xl,
             "y": val.yl,
             "font-size": this.labelSize,
             "fill": this.labelColor,
             'network-type': 'edge-label'
-        } );
+        });
         text.textContent = this.edge.id;
 
         this.el = groupSvg;
         this.edgeEl = linkSvg;
         this.labelEl = text;
-        SVG._insert( this.targetEl, groupSvg, 0 );
+        SVG._insert(this.targetEl, groupSvg, 0);
 
-        if ( this.selected ) {
+        if (this.selected) {
             this._renderSelect();
         }
-
-//        //Debugger only
-//        this.control = SVG.addChild(groupSvg, "circle", {
-//            "cx": control.x,
-//            "cy": control.y,
-//            r: 2,
-//            "fill": this.color
-//        });
     },
 
     _renderSelect: function () {
-        this.edgeEl.setAttribute( 'stroke-dasharray', '5, 2' );
+        this.edgeEl.setAttribute('stroke-dasharray', '5, 2');
 //        this.edgeEl.setAttribute('stroke-width', this.size + 1);
 
         this.selected = true;
     },
     _removeSelect: function () {
-        this.edgeEl.removeAttribute( 'stroke-dasharray' );
+        this.edgeEl.removeAttribute('stroke-dasharray');
 //        this.edgeEl.removeAttribute('stroke-width', this.size);
 
         this.selected = false;
@@ -17750,16 +19279,16 @@ DefaultEdgeRenderer.prototype = {
     _getMarkerArrowId: function () {
         var offset = this.targetRenderer.getSize() / 2;
         // if not exists this marker, add new one to defs
-        var markerArrowId = "arrow-" + this.shape + "-" + offset.toString().replace( ".", "_" ) + '-' + this.size.toString().replace( ".", "_" ) + '-'
-            + this.color.replace( '#', '' );
+        var markerArrowId = "arrow-" + this.shape + "-" + offset.toString().replace(".", "_") + '-' + this.size.toString().replace(".", "_") + '-' + this.color.replace('#', '');
         var markerArrowIdSel = '#' + markerArrowId;
-        if ( $( markerArrowIdSel ).length == 0 ) {
-            this._addArrowShape( this.shape, offset, this.color, this.size, this.targetEl, markerArrowId );
+        if ($(markerArrowIdSel).length == 0) {
+//            this._addArrowShape(this.shape, offset, this.color, this.size, this.targetEl, markerArrowId);
+            this._addArrowShape(this.shape, 0, this.color, this.size, this.targetEl, markerArrowId);
         }
         return markerArrowIdSel;
     },
-    _addArrowShape: function ( type, offset, color, edgeSize, targetSvg, markerArrowId ) {
-        if ( edgeSize === 0 ) {
+    _addArrowShape: function (type, offset, color, edgeSize, targetSvg, markerArrowId) {
+        if (edgeSize === 0) {
             var scale = 0;
         } else {
             var scale = 1 / edgeSize;
@@ -17775,32 +19304,32 @@ DefaultEdgeRenderer.prototype = {
 
         var halfSize = edgeSize / 2;
 
-        var defs = $( targetSvg ).find( 'defs' );
+        var defs = $(targetSvg).find('defs');
         var defsEl = defs[0]
-        if ( defs.length == 0 ) {
-            defsEl = SVG.addChild( targetSvg, "defs", {}, 0 );
+        if (defs.length == 0) {
+            defsEl = SVG.addChild(targetSvg, "defs", {}, 0);
         }
 
-        if ( typeof color === 'undefined' ) {
+        if (typeof color === 'undefined') {
             color = '#000000';
         }
-        var marker = SVG.addChild( defsEl, "marker", {
+        var marker = SVG.addChild(defsEl, "marker", {
             "id": markerArrowId,
             "orient": "auto",
             "refX": offset + headHeight,
             "refY": headWidth / 2,
             "angle": 10,
             "style": "overflow:visible;"
-        } );
+        });
 
-        switch ( type ) {
+        switch (type) {
             case "directed":
-                var arrow = SVG.addChild( marker, "path", {
+                var arrow = SVG.addChild(marker, "path", {
 //                    "transform": "scale(" + scale + ") rotate(0) translate(0,0)",
                     "fill": color,
-                    "d": ['M0,0', 'V', headWidth, 'L', headHeight, headWidth / 2, 'Z'].join( ' ' )//"M0,0 V10 L5,5 Z"
+                    "d": ['M0,0', 'V', headWidth, 'L', headHeight, headWidth / 2, 'Z'].join(' ')//"M0,0 V10 L5,5 Z"
 //                    "points": [-offset, -halfSize, -offset - headHeight, -headWidth, -offset - headHeight, headWidth, -offset, halfSize].join(' ')
-                } );
+                });
                 break;
 //            case "odirected":
 //                var arrow = SVG.addChild(marker, "polyline", {
@@ -17817,40 +19346,40 @@ DefaultEdgeRenderer.prototype = {
 //                });
 //                break;
             case "inhibited":
-                var arrow = SVG.addChild( marker, "path", {
+                var arrow = SVG.addChild(marker, "path", {
 //                    "transform": "scale(" + scale + ") rotate(0) translate(0,0)",
                     "fill": color,
-                    "d": ['M0,0', 'V', headWidth, 'L', headHeight, headWidth, 'L', headHeight, 0, 'Z'].join( ' ' )
+                    "d": ['M', headHeight , 0, 'V', headWidth, 'L', headHeight / 2, headWidth, 'L', headHeight / 2, 0, 'Z'].join(' ')
 //                    "x":0,
 //                    "y": 0,
 //                    "width": headWidth,
 //                    "height": headWidth * 2
-                } );
+                });
                 break;
             case "dot":
-                var arrow = SVG.addChild( marker, "circle", {
+                var arrow = SVG.addChild(marker, "circle", {
 //                    "transform": "scale(" + scale + ") rotate(0) translate(0,0)",
                     "fill": color,
                     "cx": headWidth / 2,
                     "cy": headHeight / 2,
                     "r": headRadius
-                } );
+                });
                 break;
             case "odot":
-                var arrow = SVG.addChild( marker, "circle", {
+                var arrow = SVG.addChild(marker, "circle", {
 //                    "transform": "scale(" + scale + ") rotate(0) translate(0,0)",
                     "fill": color,
                     "cx": headWidth / 2,
                     "cy": headHeight / 2,
                     "r": headRadius
-                } );
-                var arrow = SVG.addChild( marker, "circle", {
+                });
+                var arrow = SVG.addChild(marker, "circle", {
 //                    "transform": "scale(" + scale + ") rotate(0) translate(0,0)",
                     "fill": 'white',
                     "cx": headWidth / 2,
                     "cy": headHeight / 2,
                     "r": headRadius - 2
-                } );
+                });
                 break;
         }
     },
@@ -17867,7 +19396,6 @@ DefaultEdgeRenderer.prototype = {
             labelText: this.labelText
         };
     }
-
 }
 /*
  * Copyright (c) 2012 Francisco Salavert (ICM-CIPF)
@@ -19124,13 +20652,158 @@ NetworkConfig.prototype = {
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function Network ( args ) {
+function NetworkSession() {
+
+    this.general = {
+        vertexDefaults: {
+            shape: 'circle',
+            size: 40,
+//            color: '#9fc6e7',
+            color: '#fff',
+            strokeSize: 2,
+//            strokeColor: '#9fc6e7',
+            strokeColor: '#888888',
+            opacity: 0.8,
+            labelSize: 12,
+            labelColor: '#111111'
+        },
+        edgeDefaults: {
+            shape: 'undirected',
+            size: 1,
+            color: '#888888',
+//            color: '#cccccc',
+            opacity: 1,
+            labelSize: 0,
+            labelColor: '#111111'
+        },
+        visualSets: {},
+        zoom: 25,
+        backgroundImages: [],
+        backgroundColor: '#FFF',
+        center: {
+            x: 0,
+            y: 0
+        }
+    };
+    this.config = {
+        vertices: {},
+        edges: {}
+    };
+    this.graph = {
+        vertices: {},
+        edges: {}
+    };
+    this.attributes = {
+        vertices: {},
+        edges: {}
+    }
+}
+
+NetworkSession.prototype = {
+    loadGraph: function (graph) {
+        this.graph = graph.toJSON();
+    },
+    loadConfig: function (config) {
+        this.config = config;
+    },
+    loadVertexAttributes: function (attributeManager) {
+        this.attributes.vertices = attributeManager.toJSON();
+    },
+    loadEdgeAttributes: function (attributeManager) {
+        this.attributes.edges = attributeManager.toJSON();
+    },
+    getBackgroundImages: function () {
+        return this.general.backgroundImages;
+    },
+    setBackgroundImages: function (images) {
+        this.general.backgroundImages = images;
+    },
+    getBackgroundColor: function () {
+        return this.general.backgroundColor;
+    },
+    setBackgroundColor: function (color) {
+        this.general.backgroundColor = color;
+    },
+    setVertexDefault: function (key, value) {
+        this.general.vertexDefaults[key] = value;
+    },
+    setEdgeDefault: function (key, value) {
+        this.general.edgeDefaults[key] = value;
+    },
+    getVertexDefault: function (key) {
+        return this.general.vertexDefaults[key];
+    },
+    getEdgeDefault: function (key) {
+        return this.general.edgeDefaults[key];
+    },
+    getVertexDefaults: function () {
+        return this.general.vertexDefaults;
+    },
+    getEdgeDefaults: function () {
+        return this.general.edgeDefaults;
+    },
+    getVisualSets: function () {
+        return this.general.visualSets;
+    },
+    loadVisualSets: function (visualSets) {
+        this.general.visualSets = visualSets;
+    },
+    setVisualSet: function (key, value) {
+        this.general.visualSets[key] = value;
+    },
+    getZoom: function () {
+        return this.general.zoom;
+    },
+    setZoom: function (zoom) {
+        this.general.zoom = zoom;
+    },
+    loadJSON: function (o) {
+        _.extend(this, o)
+//        this.config = o.config;
+//        this.graph = o.graph;
+//        this.attributes = o.attributes;
+//        this.general = o.general;
+    },
+    toJSON: function () {
+        return {
+            general: this.general,
+            config: this.config,
+            graph: this.graph,
+            attributes: this.attributes
+        };
+    }
+};
+
+
+
+/*
+ * Copyright (c) 2012 Francisco Salavert (ICM-CIPF)
+ * Copyright (c) 2012 Ruben Sanchez (ICM-CIPF)
+ * Copyright (c) 2012 Ignacio Medina (ICM-CIPF)
+ *
+ * This file is part of JS Common Libs.
+ *
+ * JS Common Libs is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * JS Common Libs is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+function Network(args) {
     var _this = this;
-    _.extend( this, Backbone.Events );
-    this.id = Utils.genId( 'Network' );
+    _.extend(this, Backbone.Events);
+    this.id = Utils.genId('Network');
 
     //set instantiation args, must be last
-    _.extend( this, args );
+    _.extend(this, args);
 
     this.graph = new Graph();
     this.config = new NetworkConfig();
@@ -19138,341 +20811,353 @@ function Network ( args ) {
     // Default attributes for vertices and edges.
     // They cannot be deleted.
     var vertexAttributes = [
-        {name: "Id", type: "string", defaultValue: "none", locked: true},
+        {name: "id", type: "string", defaultValue: "none", locked: true},
         {name: "Name", type: "string", defaultValue: "none"}
     ];
     var edgeAttributes = [
-        {name: "Id", type: "string", defaultValue: "none", locked: true},
+        {name: "id", type: "string", defaultValue: "none", locked: true},
         {name: "Name", type: "string", defaultValue: "none"},
         {name: "Relation", type: "string", defaultValue: "none"}
     ];
-    this.vertexAttributeManager = new AttributeManagerStore( {
+
+    this.vertexAttributeManager = new AttributeManagerStore({
         attributes: vertexAttributes,
         handlers: {
-            'change:attributes': function ( e ) {
-                _this.trigger( 'change:vertexAttributes', e );
+            'change:attributes': function (e) {
+                _this.trigger('change:vertexAttributes', e);
             }
         }
-    } );
-    this.edgeAttributeManager = new AttributeManagerStore( {
+    });
+    this.edgeAttributeManager = new AttributeManagerStore({
         attributes: edgeAttributes,
         handlers: {
-            'change:attributes': function ( e ) {
-                _this.trigger( 'change:edgeAttributes', e );
+            'change:attributes': function (e) {
+                _this.trigger('change:edgeAttributes', e);
             }
         }
-    } );
+    });
+
 
     this.batchFlag = false;
 
-    this.on( this.handlers );
+    this.on(this.handlers);
 }
 
 Network.prototype = {
-    setGraph: function ( graph ) {
-        console.time( 'Network.setGraph' );
+    setGraph: function (graph) {
+        console.time('Network.setGraph');
         this.batchStart();
         this.clean();
         var edges = graph.edges;
         var vertices = graph.vertices;
-        for ( var i = 0, l = vertices.length; i < l; i++ ) {
+        for (var i = 0, l = vertices.length; i < l; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
-                this.addVertex( {
+            if (typeof vertex !== 'undefined') {
+                this.addVertex({
                     vertex: vertex,
-                    vertexConfig: new VertexConfig( {} )
-                } );
+                    vertexConfig: new VertexConfig({
+                        rendererConfig: this.session.getVertexDefaults()
+                    })
+                });
             }
         }
-        for ( var i = 0, l = edges.length; i < l; i++ ) {
+        for (var i = 0, l = edges.length; i < l; i++) {
             var edge = edges[i];
-            if ( typeof edge !== 'undefined' ) {
-                this.addEdge( {
+            if (typeof edge !== 'undefined') {
+                this.addEdge({
                     edge: edge,
-                    edgeConfig: new EdgeConfig( {} )
-                } );
+                    edgeConfig: new EdgeConfig({
+                        rendererConfig: this.session.getEdgeDefaults()
+                    })
+                });
             }
         }
         this.batchEnd();
-        console.timeEnd( 'Network.setGraph' );
+        console.timeEnd('Network.setGraph');
     },
     getGraph: function () {
         return this.graph;
     },
-    draw: function ( target ) {
-        console.time( 'Network.draw' );
+    draw: function (target) {
+        console.time('Network.draw');
         var parent = target.parentNode;
-        parent.removeChild( target );
+        parent.removeChild(target);
         this.batchStart();
         var edges = this.graph.edges;
         var vertices = this.graph.vertices;
-        for ( var i = 0, l = vertices.length; i < l; i++ ) {
+        for (var i = 0, l = vertices.length; i < l; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
-                this.renderVertex( vertex, target );
+            if (typeof vertex !== 'undefined') {
+                this.renderVertex(vertex, target);
             }
         }
-        for ( var i = 0, l = edges.length; i < l; i++ ) {
+        for (var i = 0, l = edges.length; i < l; i++) {
             var edge = edges[i];
-            if ( typeof edge !== 'undefined' ) {
-                this.renderEdge( edge, target );
+            if (typeof edge !== 'undefined') {
+                this.renderEdge(edge, target);
             }
         }
         this.batchEnd();
-        console.timeEnd( 'Network.draw' );
-        parent.appendChild( target );
-        this.trigger( 'draw' );
+        console.timeEnd('Network.draw');
+        parent.appendChild(target);
+        this.trigger('draw');
     },
-    addVertex: function ( args ) {
+    addVertex: function (args) {
         var vertex = args.vertex;
         var vertexConfig = args.vertexConfig;
         var target = args.target;
         var name = args.name;
 
-        var added = this.graph.addVertex( vertex );
-        if ( added ) {
+        var added = this.graph.addVertex(vertex);
+        if (added) {
 
             /* vertex config */
-            if ( typeof vertexConfig === 'undefined' ) {
-                vertexConfig = new VertexConfig( {} );
+            if (typeof vertexConfig === 'undefined') {
+                vertexConfig = new VertexConfig({
+                    rendererConfig: this.session.getVertexDefaults()
+                });
             }
             vertexConfig.id = vertex.id;
-            this.setVertexConfig( vertexConfig );
+            this.setVertexConfig(vertexConfig);
 
-            if ( typeof target !== 'undefined' ) {
-                this.renderVertex( vertex, target );
+            if (typeof target !== 'undefined') {
+                this.renderVertex(vertex, target);
             }
 
             var n = vertex.id;
             //attributes
-            if ( typeof name !== 'undefined' ) {
+            if (typeof name !== 'undefined') {
                 n = name;
             }
 
-            this.vertexAttributeManager.addRecord( {
-                'Id': vertex.id,
+            this.vertexAttributeManager.addRecord({
+                'id': vertex.id,
                 'Name': n
-            } );
+            });
 
-            if ( this.batchFlag == false ) {
-                this.trigger( 'add:vertex' );
+            if (this.batchFlag == false) {
+                this.trigger('add:vertex');
             }
         }
         return added;
     },
-    addEdge: function ( args ) {
+    addEdge: function (args) {
         var edge = args.edge;
         var edgeConfig = args.edgeConfig;
         var target = args.target;
 
-        var added = this.graph.addEdge( edge );
-        if ( added ) {
+
+        var added = this.graph.addEdge(edge);
+        if (added) {
 
             /* edge config */
-            if ( typeof edgeConfig === 'undefined' ) {
-                edgeConfig = new EdgeConfig( {} );
+            if (typeof edgeConfig === 'undefined') {
+                edgeConfig = new EdgeConfig({
+                    rendererConfig: this.session.getEdgeDefaults()
+                });
             }
             edgeConfig.id = edge.id;
-            this.setEdgeConfig( edgeConfig );
+            this.setEdgeConfig(edgeConfig);
 
-            if ( typeof target !== 'undefined' ) {
-                this.renderEdge( edge, target );
+
+            if (typeof target !== 'undefined') {
+                this.renderEdge(edge, target);
             }
 
             //attributes
-            this.edgeAttributeManager.addRecord( {
-                'Id': edge.id,
+            this.edgeAttributeManager.addRecord({
+                'id': edge.id,
                 'Name': edge.id,
                 'Relation': edge.relation
-            } );
+            });
 
-            if ( this.batchFlag == false ) {
-                this.trigger( 'add:edge' );
+            if (this.batchFlag == false) {
+                this.trigger('add:edge');
             }
         }
         return added;
     },
-    setVertexConfig: function ( vertexConfig ) {
-        this.config.setVertexConfig( vertexConfig );
+    setVertexConfig: function (vertexConfig) {
+        this.config.setVertexConfig(vertexConfig);
     },
-    setEdgeConfig: function ( edgeConfig ) {
-        this.config.setEdgeConfig( edgeConfig );
+    setEdgeConfig: function (edgeConfig) {
+        this.config.setEdgeConfig(edgeConfig);
     },
-    getVertexConfig: function ( vertex ) {
-        return this.config.getVertexConfig( vertex );
+    getVertexConfig: function (vertex) {
+        return this.config.getVertexConfig(vertex);
     },
-    getEdgeConfig: function ( edge ) {
-        return this.config.getEdgeConfig( edge );
+    getEdgeConfig: function (edge) {
+        return this.config.getEdgeConfig(edge);
     },
-    getVertexById: function ( vertexId ) {
-        return this.graph.getVertexById( vertexId );
+    getVertexById: function (vertexId) {
+        return this.graph.getVertexById(vertexId);
     },
-    getEdgeById: function ( edgeId ) {
-        return this.graph.getEdgeById( edgeId );
+    getEdgeById: function (edgeId) {
+        return this.graph.getEdgeById(edgeId);
     },
-    removeVertex: function ( vertex ) {
-        var vertexConfig = this.config.getVertexConfig( vertex );
+    removeVertex: function (vertex) {
+        var vertexConfig = this.config.getVertexConfig(vertex);
         vertexConfig.renderer.remove();
-        for ( var i = 0; i < vertex.edges.length; i++ ) {
+        for (var i = 0; i < vertex.edges.length; i++) {
             var edge = vertex.edges[i];
-            var edgeConfig = this.config.getEdgeConfig( edge );
+            var edgeConfig = this.config.getEdgeConfig(edge);
             edgeConfig.renderer.remove();
-            this.config.removeEdge( edge );
-            this.edgeAttributeManager.removeRecordById( edge.id );
+            this.config.removeEdge(edge);
+            this.edgeAttributeManager.removeRecordById(edge.id);
         }
-        this.graph.removeVertex( vertex );
-        this.config.removeVertex( vertex );
-        this.vertexAttributeManager.removeRecordById( vertex.id );
+        this.graph.removeVertex(vertex);
+        this.config.removeVertex(vertex);
+        this.vertexAttributeManager.removeRecordById(vertex.id);
 
-        if ( this.batchFlag == false ) {
-            this.trigger( 'remove:vertex' );
+        if (this.batchFlag == false) {
+            this.trigger('remove:vertex');
         }
 
     },
-    removeEdge: function ( edge ) {
-        var edgeConfig = this.config.getEdgeConfig( edge );
+    removeEdge: function (edge) {
+        var edgeConfig = this.config.getEdgeConfig(edge);
         edgeConfig.renderer.remove();
-        this.graph.removeEdge( edge );
-        this.config.removeEdge( edge );
-        this.edgeAttributeManager.removeRecordById( edge.id );
-        if ( this.batchFlag == false ) {
-            this.trigger( 'remove:edge' );
+        this.graph.removeEdge(edge);
+        this.config.removeEdge(edge);
+        this.edgeAttributeManager.removeRecordById(edge.id);
+        if (this.batchFlag == false) {
+            this.trigger('remove:edge');
         }
     },
-    removeVertices: function ( vertices ) {
+    removeVertices: function (vertices) {
         this.vertexAttributeManager.store.suspendEvents();
-        for ( var i = 0, li = vertices.length; i < li; i++ ) {
+        for (var i = 0, li = vertices.length; i < li; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
-                this.removeVertex( vertex, true );
+            if (typeof vertex !== 'undefined') {
+                this.removeVertex(vertex, true);
             }
         }
         this.vertexAttributeManager.store.resumeEvents();
-        this.vertexAttributeManager.store.fireEvent( 'refresh' );
-        this.trigger( 'remove:vertices' );
+        this.vertexAttributeManager.store.fireEvent('refresh');
+        this.trigger('remove:vertices');
     },
-    renderVertex: function ( vertex, target ) {
-        var vertexConfig = this.config.getVertexConfig( vertex );
-        vertexConfig.render( {
+    renderVertex: function (vertex, target) {
+        var vertexConfig = this.config.getVertexConfig(vertex);
+        vertexConfig.render({
             coords: vertexConfig.coords,
             vertex: vertex,
             target: target
-        } );
+        });
     },
-    renderEdge: function ( edge, target ) {
-        var edgeConfig = this.config.getEdgeConfig( edge );
-        var sourceConfig = this.config.getVertexConfig( edge.source );
-        var targetConfig = this.config.getVertexConfig( edge.target );
-        edgeConfig.render( {
+    renderEdge: function (edge, target) {
+        var edgeConfig = this.config.getEdgeConfig(edge);
+        var sourceConfig = this.config.getVertexConfig(edge.source);
+        var targetConfig = this.config.getVertexConfig(edge.target);
+        edgeConfig.render({
             sourceCoords: sourceConfig.coords,
             targetCoords: targetConfig.coords,
             sourceRenderer: sourceConfig.renderer,
             targetRenderer: targetConfig.renderer,
             edge: edge,
             target: target
-        } );
+        });
     },
-    setVertexLabel: function ( vertex, label ) {
-        this.vertexAttributeManager.setRecordAttributeById( vertex.id, 'Name', label );
+    setVertexLabel: function (vertex, label) {
+        this.vertexAttributeManager.setRecordAttributeById(vertex.id, 'Name', label);
     },
-    setVertexLabelByAttribute: function ( attributeName ) {
+    setVertexLabelByAttribute: function (attributeName) {
         var vertices = this.graph.vertices;
-        for ( var i = 0, l = vertices.length; i < l; i++ ) {
+        for (var i = 0, l = vertices.length; i < l; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
-                var vertexConfig = this.getVertexConfig( vertex );
+            if (typeof vertex !== 'undefined') {
+                var vertexConfig = this.getVertexConfig(vertex);
                 var id = vertex.id;
 
 //              /* Name attribute is unique */
-                var label = this.vertexAttributeManager.getValueByAttributeAndId( id, attributeName );
-                vertexConfig.renderer.setLabelContent( label );
+                var label = this.vertexAttributeManager.getValueByAttributeAndId(id, attributeName);
+                vertexConfig.renderer.setLabelContent(label);
             }
         }
     },
-    setEdgeLabel: function ( edge, label ) {
-        this.edgeAttributeManager.setRecordAttributeById( edge.id, 'Name', label );
+    setEdgeLabel: function (edge, label) {
+        this.edgeAttributeManager.setRecordAttributeById(edge.id, 'Name', label);
     },
-    setEdgeLabelByAttribute: function ( attributeName ) {
+    setEdgeLabelByAttribute: function (attributeName) {
         var edges = this.graph.edges;
-        for ( var i = 0, l = edges.length; i < l; i++ ) {
+        for (var i = 0, l = edges.length; i < l; i++) {
             var edge = edges[i];
-            if ( typeof edge !== 'undefined' ) {
-                var edgeConfig = this.getEdgeConfig( edge );
+            if (typeof edge !== 'undefined') {
+                var edgeConfig = this.getEdgeConfig(edge);
                 var id = edge.id;
 
                 /* Name attribute is unique */
-                var label = this.edgeAttributeManager.getValueByAttributeAndId( id, attributeName );
-                edgeConfig.renderer.setLabelContent( label );
+                var label = this.edgeAttributeManager.getValueByAttributeAndId(id, attributeName);
+                edgeConfig.renderer.setLabelContent(label);
             }
         }
     },
 
-    selectVertex: function ( vertex ) {
-        var vertexConfig = this.config.getVertexConfig( vertex );
+    selectVertex: function (vertex) {
+        var vertexConfig = this.config.getVertexConfig(vertex);
         vertexConfig.renderer.select();
-        this.vertexAttributeManager.setRecordAttributeById( vertex.id, 'Selected', true );
+        this.vertexAttributeManager.setRecordAttributeById(vertex.id, 'Selected', true);
     },
-    selectEdge: function ( edge ) {
-        var edgeConfig = this.config.getEdgeConfig( edge );
+    selectEdge: function (edge) {
+        var edgeConfig = this.config.getEdgeConfig(edge);
         edgeConfig.renderer.select();
-        this.edgeAttributeManager.setRecordAttributeById( edge.id, 'Selected', true );
+        this.edgeAttributeManager.setRecordAttributeById(edge.id, 'Selected', true);
     },
-    selectVerticesByIds: function ( vertexIds ) {
+    selectVerticesByIds: function (vertexIds) {
         var selectedVertices = []
-        for ( var i = 0, l = vertexIds.length; i < l; i++ ) {
+        for (var i = 0, l = vertexIds.length; i < l; i++) {
             var vertexId = vertexIds[i];
-            var vertex = this.getVertexById( vertexId );
-            var vertexConfig = this.config.getVertexConfig( vertex );
+            var vertex = this.getVertexById(vertexId);
+            var vertexConfig = this.config.getVertexConfig(vertex);
             vertexConfig.renderer.select();
-            selectedVertices.push( vertex );
+            selectedVertices.push(vertex);
         }
-        this.vertexAttributeManager.selectByItems( selectedVertices );
+        this.vertexAttributeManager.selectByItems(selectedVertices);
         return selectedVertices;
     },
-    selectByArea: function ( x, y, width, height ) {
+    selectByArea: function (x, y, width, height) {
         var selectedVertices = [];
         var selectedEdges = [];
         var vertices = this.graph.vertices;
-        for ( var i = 0, l = vertices.length; i < l; i++ ) {
+        for (var i = 0, l = vertices.length; i < l; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
-                var vertexConfig = this.getVertexConfig( vertex );
-                if ( vertexConfig.coords.x >= x && vertexConfig.coords.x <= x + width && vertexConfig.coords.y >= y && vertexConfig.coords.y <= y + height ) {
+            if (typeof vertex !== 'undefined') {
+                var vertexConfig = this.getVertexConfig(vertex);
+                if (vertexConfig.coords.x >= x && vertexConfig.coords.x <= x + width && vertexConfig.coords.y >= y && vertexConfig.coords.y <= y + height) {
                     vertexConfig.renderer.select();
-                    selectedVertices.push( vertex );
+                    selectedVertices.push(vertex);
 
-                    for ( var j = 0; j < vertex.edges.length; j++ ) {
+                    for (var j = 0; j < vertex.edges.length; j++) {
                         var edge = vertex.edges[j];
-                        var edgeConfig = this.config.getEdgeConfig( edge );
-                        if ( edgeConfig.renderer.selected === false ) {
+                        var edgeConfig = this.config.getEdgeConfig(edge);
+                        if (edgeConfig.renderer.selected === false) {
                             edgeConfig.renderer.select();
-                            selectedEdges.push( edge );
+                            selectedEdges.push(edge);
                         }
                     }
 
                 }
             }
         }
-        this.vertexAttributeManager.selectByItems( selectedVertices );
-        this.edgeAttributeManager.selectByItems( selectedEdges );
+        this.vertexAttributeManager.selectByItems(selectedVertices);
+        this.edgeAttributeManager.selectByItems(selectedEdges);
         return {vertices: selectedVertices, edges: selectedEdges};
     },
-    deselectVertex: function ( vertex ) {
-        var vertexConfig = this.config.getVertexConfig( vertex );
+    deselectVertex: function (vertex) {
+        var vertexConfig = this.config.getVertexConfig(vertex);
         vertexConfig.renderer.deselect();
-        this.vertexAttributeManager.setRecordAttributeById( vertex.id, 'Selected', false );
+        this.vertexAttributeManager.setRecordAttributeById(vertex.id, 'Selected', false);
     },
-    deselectEdge: function ( edge ) {
-        var edgeConfig = this.config.getEdgeConfig( edge );
+    deselectEdge: function (edge) {
+        var edgeConfig = this.config.getEdgeConfig(edge);
         edgeConfig.renderer.deselect();
-        this.edgeAttributeManager.setRecordAttributeById( edge.id, 'Selected', false );
+        this.edgeAttributeManager.setRecordAttributeById(edge.id, 'Selected', false);
     },
     deselectAllVertices: function () {
         var vertices = this.graph.vertices;
-        for ( var i = 0, l = vertices.length; i < l; i++ ) {
+        for (var i = 0, l = vertices.length; i < l; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
-                var vertexConfig = this.config.getVertexConfig( vertex );
+            if (typeof vertex !== 'undefined') {
+                var vertexConfig = this.config.getVertexConfig(vertex);
                 vertexConfig.renderer.deselect();
             }
         }
@@ -19480,10 +21165,10 @@ Network.prototype = {
     },
     deselectAllEdges: function () {
         var edges = this.graph.edges;
-        for ( var i = 0, l = edges.length; i < l; i++ ) {
+        for (var i = 0, l = edges.length; i < l; i++) {
             var edge = edges[i];
-            if ( typeof edge !== 'undefined' ) {
-                var edgeConfig = this.config.getEdgeConfig( edge );
+            if (typeof edge !== 'undefined') {
+                var edgeConfig = this.config.getEdgeConfig(edge);
                 edgeConfig.renderer.deselect();
             }
         }
@@ -19492,243 +21177,245 @@ Network.prototype = {
     selectAllVertices: function () {
         var selectedVertices = [];
         var vertices = this.graph.vertices;
-        for ( var i = 0, l = vertices.length; i < l; i++ ) {
+        for (var i = 0, l = vertices.length; i < l; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
-                var vertexConfig = this.config.getVertexConfig( vertex );
+            if (typeof vertex !== 'undefined') {
+                var vertexConfig = this.config.getVertexConfig(vertex);
                 vertexConfig.renderer.select();
-                selectedVertices.push( vertex );
+                selectedVertices.push(vertex);
             }
         }
         this.vertexAttributeManager.selectAll();
         return selectedVertices;
     },
-    selectVerticesNeighbour: function ( vertices ) {
+    selectVerticesNeighbour: function (vertices) {
         var selectedVertices = [];
         var selectedVerticesMap = {};
-        for ( var i = 0, l = vertices.length; i < l; i++ ) {
+        for (var i = 0, l = vertices.length; i < l; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
+            if (typeof vertex !== 'undefined') {
                 selectedVerticesMap[vertex.id] = vertex;
-                selectedVertices.push( vertex );
-                var vertexConfig = this.config.getVertexConfig( vertex );
+                selectedVertices.push(vertex);
+                var vertexConfig = this.config.getVertexConfig(vertex);
                 vertexConfig.renderer.select();
 
-                for ( var j = 0; j < vertex.edges.length; j++ ) {
+                for (var j = 0; j < vertex.edges.length; j++) {
                     var edge = vertex.edges[j];
-                    if ( typeof selectedVerticesMap[edge.source.id] === 'undefined' ) {
+                    if (typeof selectedVerticesMap[edge.source.id] === 'undefined') {
                         selectedVerticesMap[edge.source.id] = edge.source;
-                        selectedVertices.push( edge.source );
-                        var vertexConfig = this.config.getVertexConfig( edge.source );
+                        selectedVertices.push(edge.source);
+                        var vertexConfig = this.config.getVertexConfig(edge.source);
                         vertexConfig.renderer.select();
                     }
-                    if ( typeof selectedVerticesMap[edge.target.id] === 'undefined' ) {
+                    if (typeof selectedVerticesMap[edge.target.id] === 'undefined') {
                         selectedVerticesMap[edge.target.id] = edge.target;
-                        selectedVertices.push( edge.target );
-                        var vertexConfig = this.config.getVertexConfig( edge.target );
+                        selectedVertices.push(edge.target);
+                        var vertexConfig = this.config.getVertexConfig(edge.target);
                         vertexConfig.renderer.select();
                     }
                 }
             }
         }
-        this.vertexAttributeManager.selectByItems( selectedVertices );
+        this.vertexAttributeManager.selectByItems(selectedVertices);
         return selectedVertices;
     },
-    selectEdgesNeighbour: function ( vertices ) {
+    selectEdgesNeighbour: function (vertices) {
         var selectedEdges = [];
         var selectedEdgesMap = {};
-        for ( var i = 0, l = vertices.length; i < l; i++ ) {
+        for (var i = 0, l = vertices.length; i < l; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
-                for ( var j = 0; j < vertex.edges.length; j++ ) {
+            if (typeof vertex !== 'undefined') {
+                for (var j = 0; j < vertex.edges.length; j++) {
                     var edge = vertex.edges[j];
-                    if ( typeof selectedEdgesMap[edge.id] === 'undefined' ) {
+                    if (typeof selectedEdgesMap[edge.id] === 'undefined') {
                         selectedEdgesMap[edge.id] = edge;
-                        selectedEdges.push( edge );
-                        var edgeConfig = this.config.getEdgeConfig( edge );
+                        selectedEdges.push(edge);
+                        var edgeConfig = this.config.getEdgeConfig(edge);
                         edgeConfig.renderer.select();
                     }
                 }
             }
         }
-        this.edgeAttributeManager.selectByItems( selectedEdges );
+        this.edgeAttributeManager.selectByItems(selectedEdges);
         return selectedEdges;
     },
     selectVerticesInvert: function () {
         var selectedVertices = [];
         var vertices = this.graph.vertices;
-        for ( var i = 0, l = vertices.length; i < l; i++ ) {
+        for (var i = 0, l = vertices.length; i < l; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
-                var vertexConfig = this.config.getVertexConfig( vertex );
-                if ( vertexConfig.renderer.selected ) {
+            if (typeof vertex !== 'undefined') {
+                var vertexConfig = this.config.getVertexConfig(vertex);
+                if (vertexConfig.renderer.selected) {
                     vertexConfig.renderer.deselect();
                 } else {
-                    selectedVertices.push( vertex );
+                    selectedVertices.push(vertex);
                     vertexConfig.renderer.select();
                 }
             }
         }
-        this.vertexAttributeManager.selectByItems( selectedVertices );
+        this.vertexAttributeManager.selectByItems(selectedVertices);
         return selectedVertices;
     },
     selectAllEdges: function () {
         var selectedEdges = [];
         var edges = this.graph.edges;
-        for ( var i = 0, l = edges.length; i < l; i++ ) {
+        for (var i = 0, l = edges.length; i < l; i++) {
             var edge = edges[i];
-            if ( typeof edge !== 'undefined' ) {
-                var edgeConfig = this.config.getEdgeConfig( edge );
+            if (typeof edge !== 'undefined') {
+                var edgeConfig = this.config.getEdgeConfig(edge);
                 edgeConfig.renderer.select();
-                selectedEdges.push( edge );
+                selectedEdges.push(edge);
             }
         }
         this.edgeAttributeManager.selectAll();
         return selectedEdges;
     },
-    selectVerticesByAttribute: function ( attributeName, attributeValue ) {
+    selectVerticesByAttribute: function (attributeName, attributeValue) {
         var selectedVertices = [];
-        var ids = this.vertexAttributeManager.getIdsByAttributeValue( attributeName, attributeValue );
-        for ( var i = 0, l = ids.length; i < l; i++ ) {
+        var ids = this.vertexAttributeManager.getIdsByAttributeValue(attributeName, attributeValue);
+        for (var i = 0, l = ids.length; i < l; i++) {
             var id = ids[i];
-            var vertex = this.graph.getVertexById( id );
-            var vertexConfig = this.config.getVertexConfig( vertex );
+            var vertex = this.graph.getVertexById(id);
+            var vertexConfig = this.config.getVertexConfig(vertex);
             vertexConfig.renderer.select();
-            selectedVertices.push( vertex );
+            selectedVertices.push(vertex);
         }
-        this.vertexAttributeManager.selectByItems( selectedVertices );
+        this.vertexAttributeManager.selectByItems(selectedVertices);
         return selectedVertices;
     },
-    selectEdgesByAttribute: function ( attributeName, attributeValue ) {
+    selectEdgesByAttribute: function (attributeName, attributeValue) {
         var selectedEdges = [];
-        var ids = this.edgeAttributeManager.getIdsByAttributeValue( attributeName, attributeValue );
-        for ( var i = 0, l = ids.length; i < l; i++ ) {
+        var ids = this.edgeAttributeManager.getIdsByAttributeValue(attributeName, attributeValue);
+        for (var i = 0, l = ids.length; i < l; i++) {
             var id = ids[i];
-            var edge = this.graph.getEdgeById( id );
-            var edgeConfig = this.config.getEdgeConfig( edge );
+            var edge = this.graph.getEdgeById(id);
+            var edgeConfig = this.config.getEdgeConfig(edge);
             edgeConfig.renderer.select();
-            selectedEdges.push( edge );
+            selectedEdges.push(edge);
         }
-        this.vertexAttributeManager.selectByItems( selectedEdges );
+        this.vertexAttributeManager.selectByItems(selectedEdges);
         return selectedEdges;
     },
 
-    moveVertex: function ( vertex, dispX, dispY, dispZ ) {
-        var vertexConfig = this.config.getVertexConfig( vertex );
-        vertexConfig.move( dispX, dispY, dispZ );
 
-        this._updateEdgeCoords( vertex );
+    moveVertex: function (vertex, dispX, dispY, dispZ) {
+        var vertexConfig = this.config.getVertexConfig(vertex);
+        vertexConfig.move(dispX, dispY, dispZ);
+
+        this._updateEdgeCoords(vertex);
     },
-    _updateEdgeCoords: function ( vertex ) {
-        for ( var i = 0; i < vertex.edges.length; i++ ) {
+    _updateEdgeCoords: function (vertex) {
+        for (var i = 0; i < vertex.edges.length; i++) {
             var edge = vertex.edges[i];
-            var edgeConfig = this.getEdgeConfig( edge );
-            var sourceConfig = this.getVertexConfig( edge.source );
-            var targetConfig = this.getVertexConfig( edge.target );
+            var edgeConfig = this.getEdgeConfig(edge);
+            var sourceConfig = this.getVertexConfig(edge.source);
+            var targetConfig = this.getVertexConfig(edge.target);
 
-            if ( vertex === edge.source ) {
+            if (vertex === edge.source) {
 //                edgeConfig.renderer.moveSource(sourceConfig.coords);
-                edgeConfig.renderer.move( sourceConfig.coords );
+                edgeConfig.renderer.move(sourceConfig.coords);
             }
-            if ( vertex === edge.target ) {
+            if (vertex === edge.target) {
 //                edgeConfig.renderer.moveTarget(targetConfig.coords);
-                edgeConfig.renderer.move( targetConfig.coords );
+                edgeConfig.renderer.move(targetConfig.coords);
             }
         }
     },
-    setVertexCoords: function ( vertex, x, y, z ) {
-        var vertexConfig = this.config.getVertexConfig( vertex );
-        vertexConfig.setCoords( x, y, z );
+    setVertexCoords: function (vertex, x, y, z) {
+        var vertexConfig = this.config.getVertexConfig(vertex);
+        vertexConfig.setCoords(x, y, z);
 
-        this._updateEdgeCoords( vertex );
+        this._updateEdgeCoords(vertex);
     },
-    setVertexCoordsById: function ( vertexId, x, y, z ) {
-        var vertex = this.getVertexById( vertexId );
-        this.setVertexCoords( vertex, x, y, z );
+    setVertexCoordsById: function (vertexId, x, y, z) {
+        var vertex = this.getVertexById(vertexId);
+        this.setVertexCoords(vertex, x, y, z);
     },
-    getVertexCoords: function ( vertex ) {
-        var vertexConfig = this.config.getVertexConfig( vertex );
+    getVertexCoords: function (vertex) {
+        var vertexConfig = this.config.getVertexConfig(vertex);
         return vertexConfig.getCoords();
     },
 
-    isVertexSelected: function ( vertex ) {
-        var vertexConfig = this.config.getVertexConfig( vertex );
+    isVertexSelected: function (vertex) {
+        var vertexConfig = this.config.getVertexConfig(vertex);
         return vertexConfig.renderer.selected;
     },
-    isEdgeSelected: function ( edge ) {
-        var edgeConfig = this.config.getEdgeConfig( edge );
+    isEdgeSelected: function (edge) {
+        var edgeConfig = this.config.getEdgeConfig(edge);
         return edgeConfig.renderer.selected;
     },
 
+
     /* Config Renderer Attributes */
-    setVertexRendererAttribute: function ( vertex, rendererAttr, value, updateEdges ) {
-        var vertexConfig = this.config.getVertexConfig( vertex );
-        vertexConfig.renderer.set( rendererAttr, value );
+    setVertexRendererAttribute: function (vertex, rendererAttr, value, updateEdges) {
+        var vertexConfig = this.config.getVertexConfig(vertex);
+        vertexConfig.renderer.set(rendererAttr, value);
 
         //By default not update edges
-        if ( updateEdges === true ) {
-            this._updateVertexEdgesRenderer( vertex );
+        if (updateEdges === true) {
+            this._updateVertexEdgesRenderer(vertex);
         }
     },
-    _updateVertexEdgesRenderer: function ( vertex ) {
-        for ( var j = 0; j < vertex.edges.length; j++ ) {
+    _updateVertexEdgesRenderer: function (vertex) {
+        for (var j = 0; j < vertex.edges.length; j++) {
             var edge = vertex.edges[j];
-            if ( typeof edge !== 'undefined' ) {
-                var edgeConfig = this.getEdgeConfig( edge );
+            if (typeof edge !== 'undefined') {
+                var edgeConfig = this.getEdgeConfig(edge);
                 edgeConfig.renderer.updateShape();
             }
         }
     },
-    setVerticesRendererAttribute: function ( rendererAttr, value, updateEdges ) {
+    setVerticesRendererAttribute: function (rendererAttr, value, updateEdges) {
         var vertices = this.graph.vertices;
-        for ( var i = 0, l = vertices.length; i < l; i++ ) {
+        for (var i = 0, l = vertices.length; i < l; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
-                this.setVertexRendererAttribute( vertex, rendererAttr, value, updateEdges );
+            if (typeof vertex !== 'undefined') {
+                this.setVertexRendererAttribute(vertex, rendererAttr, value, updateEdges);
             }
         }
     },
-    setVerticesRendererAttributeMap: function ( rendererAttr, vertexAttribute, uniqueMap ) {
-        for ( var uniqueAttrValue in uniqueMap ) {
+    setVerticesRendererAttributeMap: function (rendererAttr, vertexAttribute, uniqueMap) {
+        for (var uniqueAttrValue in uniqueMap) {
             var rendererValue = uniqueMap[uniqueAttrValue];
-            var ids = this.vertexAttributeManager.getIdsByAttributeValue( vertexAttribute, uniqueAttrValue );
-            for ( var i = 0, l = ids.length; i < l; i++ ) {
+            var ids = this.vertexAttributeManager.getIdsByAttributeValue(vertexAttribute, uniqueAttrValue);
+            for (var i = 0, l = ids.length; i < l; i++) {
                 var id = ids[i];
-                var vertex = this.graph.getVertexById( id );
-                this.setVertexRendererAttribute( vertex, rendererAttr, rendererValue );
+                var vertex = this.graph.getVertexById(id);
+                this.setVertexRendererAttribute(vertex, rendererAttr, rendererValue);
             }
         }
     },
-    setVerticesRendererAttributeListMap: function ( args ) {
+    setVerticesRendererAttributeListMap: function (args) {
         var _this = this;
 
         var settings = args.settings;
         var defaults = args.defaults;
 
-        if ( settings.length > 0 ) {
-            var sortFunction = function ( a, b ) {
+        if (settings.length > 0) {
+            var sortFunction = function (a, b) {
                 return b.values.length - a.values.length;
             };
 
-            var checkEqualValuesLength = function ( list ) {
-                if ( list.length == 1 ) {
+            var checkEqualValuesLength = function (list) {
+                if (list.length == 1) {
                     return true;
                 } else {
                     var l = list[0].values.length;
-                    for ( var i = 1; i < list.length; i++ ) {
-                        if ( list[i].values.length !== l ) {
+                    for (var i = 1; i < list.length; i++) {
+                        if (list[i].values.length !== l) {
                             return false;
                         }
                     }
                     return true;
                 }
             };
-            var checkNotEqualValuesLength = function ( list ) {
-                if ( list.length > 1 ) {
+            var checkNotEqualValuesLength = function (list) {
+                if (list.length > 1) {
 //                var l0 = list[0].values.length;
-                    for ( var i = 1; i < list.length; i++ ) {
+                    for (var i = 1; i < list.length; i++) {
                         var li = list[i].values.length;
-                        if ( li > 1 ) {
+                        if (li > 1) {
                             return false;
                         }
                     }
@@ -19737,138 +21424,141 @@ Network.prototype = {
                 return false;
             };
 
-            this.vertexAttributeManager.eachRecord( function ( record ) {
+            this.vertexAttributeManager.eachRecord(function (record) {
+
 
                 var slicesMap = {};
 
-                var id = record.get( 'Id' );
+                var id = record.get('id');
 
 //                if(id === 'c'){
 //                    debugger
 //                }
 
-                var vertex = _this.graph.getVertexById( id );
-                var vertexConfig = _this.config.getVertexConfig( vertex );
+                var vertex = _this.graph.getVertexById(id);
+                var vertexConfig = _this.config.getVertexConfig(vertex);
 
-                for ( var s = 0; s < settings.length; s++ ) {
+                for (var s = 0; s < settings.length; s++) {
                     var configs = settings[s].configs;
                     var label = settings[s].label;
                     var slicesName = settings[s].slicesName;
                     var sliceDefault = defaults[slicesName];
 
-                    if ( configs.length > 0 ) {
+                    if (configs.length > 0) {
 
                         var valuesAndConfigList = [];
-                        for ( var i = 0; i < configs.length; i++ ) {
+                        for (var i = 0; i < configs.length; i++) {
                             var config = configs[i];
-                            if ( typeof config !== 'undefined' ) {
-                                var value = record.get( config.attribute );
-                                if ( typeof value !== 'undefined' ) {
-                                    var valueSplit = value.split( ',' );
-                                    valuesAndConfigList.push( {values: valueSplit, config: config} );
+                            if (typeof config !== 'undefined') {
+                                var value = record.get(config.attribute);
+                                if (value) {
+                                    var valueSplit = value.split(',');
+                                    valuesAndConfigList.push({values: valueSplit, config: config});
                                 }
                             }
                         }
 
-                        valuesAndConfigList.sort( sortFunction );
+                        valuesAndConfigList.sort(sortFunction);
 
                         var slices = [];
-                        if ( valuesAndConfigList.length > 0 ) {
-                            if ( checkEqualValuesLength( valuesAndConfigList ) ) {
+                        if (valuesAndConfigList.length > 0) {
+                            if (checkEqualValuesLength(valuesAndConfigList)) {
                                 var valuesLength = valuesAndConfigList[0].values.length;
-                                for ( var i = 0; i < valuesLength; i++ ) {
+                                for (var i = 0; i < valuesLength; i++) {
                                     var slice = {};
-                                    for ( var displayAttribute in sliceDefault ) {
+                                    for (var displayAttribute in sliceDefault) {
                                         slice[displayAttribute] = sliceDefault[displayAttribute];
                                     }
 
-                                    for ( var j = 0; j < valuesAndConfigList.length; j++ ) {
+                                    for (var j = 0; j < valuesAndConfigList.length; j++) {
                                         var valuesAndConfig = valuesAndConfigList[j];
                                         var val = valuesAndConfig.values[i];
                                         var renderValue = valuesAndConfig.config.map[val];
-                                        if ( label.enable && valuesAndConfig.config.attribute === label.attribute ) {
+                                        if (label.enable && valuesAndConfig.config.attribute === label.attribute) {
                                             slice['text'] = val;
                                             slice['labelSize'] = label.size;
                                             slice['labelOffset'] = label.offset;
                                         }
-                                        if ( typeof renderValue !== 'undefined' ) {
+                                        if (typeof renderValue !== 'undefined') {
                                             slice[valuesAndConfig.config.displayAttribute] = renderValue;
                                         }
                                     }
-                                    slices.push( slice );
+                                    slices.push(slice);
                                 }
-                            } else if ( checkNotEqualValuesLength( valuesAndConfigList ) ) {
+                            } else if (checkNotEqualValuesLength(valuesAndConfigList)) {
                                 var valuesLength = valuesAndConfigList[0].values.length;
-                                for ( var i = 0; i < valuesLength; i++ ) {
+                                for (var i = 0; i < valuesLength; i++) {
                                     var slice = {};
-                                    for ( var displayAttribute in sliceDefault ) {
+                                    for (var displayAttribute in sliceDefault) {
                                         slice[displayAttribute] = sliceDefault[displayAttribute];
                                     }
 
                                     var valuesAndConfig = valuesAndConfigList[0];
                                     var val = valuesAndConfig.values[i];
                                     var renderValue = valuesAndConfig.config.map[val];
-                                    if ( label.enable && valuesAndConfig.config.attribute === label.attribute ) {
+                                    if (label.enable && valuesAndConfig.config.attribute === label.attribute) {
                                         slice['text'] = val;
                                         slice['labelSize'] = label.size;
                                         slice['labelOffset'] = label.offset;
                                     }
-                                    if ( typeof renderValue !== 'undefined' ) {
+                                    if (typeof renderValue !== 'undefined') {
                                         slice[valuesAndConfig.config.displayAttribute] = renderValue;
                                     }
 
-                                    for ( var j = 1; j < valuesAndConfigList.length; j++ ) {
+                                    for (var j = 1; j < valuesAndConfigList.length; j++) {
                                         valuesAndConfig = valuesAndConfigList[j];
                                         val = valuesAndConfig.values[0];
-                                        if ( label.enable && valuesAndConfig.config.attribute === label.attribute ) {
+                                        if (label.enable && valuesAndConfig.config.attribute === label.attribute) {
                                             slice['text'] = val;
                                             slice['labelSize'] = label.size;
                                             slice['labelOffset'] = label.offset;
                                         }
                                         renderValue = valuesAndConfig.config.map[val];
-                                        if ( typeof renderValue !== 'undefined' ) {
+                                        if (typeof renderValue !== 'undefined') {
                                             slice[valuesAndConfig.config.displayAttribute] = renderValue;
                                         }
                                     }
-                                    slices.push( slice );
+                                    slices.push(slice);
                                 }
                             } else {
-                                console.log( record.get( 'Id' ) );
+                                console.log(record.get('id'));
                             }
                         }
-                        if ( slices.length > 0 ) {
+                        if (slices.length > 0) {
                             slicesMap[slicesName] = slices;
                         }
                     }
                 }
-                vertexConfig.renderer.updateComplex( slicesMap, defaults );
-            } );
+                vertexConfig.renderer.updateComplex(slicesMap, defaults);
+                _this._updateEdgeCoords(vertex);
+            });
         }
     },
-    setEdgeRendererAttribute: function ( edge, attr, value ) {
-        var edgeConfig = this.config.getEdgeConfig( edge );
-        edgeConfig.renderer.set( attr, value );
+    setEdgeRendererAttribute: function (edge, attr, value) {
+        var edgeConfig = this.config.getEdgeConfig(edge);
+        edgeConfig.renderer.set(attr, value);
     },
-    setEdgesRendererAttribute: function ( attr, value ) {
+    setEdgesRendererAttribute: function (attr, value) {
         var edges = this.graph.edges;
-        for ( var i = 0, l = edges.length; i < l; i++ ) {
+        for (var i = 0, l = edges.length; i < l; i++) {
             var edge = edges[i];
-            if ( typeof edge !== 'undefined' ) {
-                this.setEdgeRendererAttribute( edge, attr, value );
+            if (typeof edge !== 'undefined') {
+                this.setEdgeRendererAttribute(edge, attr, value);
             }
         }
     },
-    setEdgesRendererAttributeMap: function ( rendererAttr, vertexAttribute, uniqueMap ) {
-        for ( var uniqueAttrValue in uniqueMap ) {
+    setEdgesRendererAttributeMap: function (rendererAttr, vertexAttribute, uniqueMap) {
+        for (var uniqueAttrValue in uniqueMap) {
             var rendererValue = uniqueMap[uniqueAttrValue];
-            var ids = this.edgeAttributeManager.getIdsByAttributeValue( vertexAttribute, uniqueAttrValue );
-            for ( var i = 0, l = ids.length; i < l; i++ ) {
+            var ids = this.edgeAttributeManager.getIdsByAttributeValue(vertexAttribute, uniqueAttrValue);
+            for (var i = 0, l = ids.length; i < l; i++) {
                 var id = ids[i];
-                var edge = this.graph.getEdgeById( id );
-                this.setEdgeRendererAttribute( edge, rendererAttr, rendererValue );
+                var edge = this.graph.getEdgeById(id);
+                this.setEdgeRendererAttribute(edge, rendererAttr, rendererValue);
             }
         }
     },
+
 
     getVerticesLength: function () {
         return this.graph.numberOfVertices;
@@ -19879,10 +21569,10 @@ Network.prototype = {
     getVertices: function () {
         var items = [];
         var vertices = this.graph.vertices;
-        for ( var i = 0, l = vertices.length; i < l; i++ ) {
+        for (var i = 0, l = vertices.length; i < l; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
-                items.push( vertex );
+            if (typeof vertex !== 'undefined') {
+                items.push(vertex);
             }
         }
         return items;
@@ -19890,26 +21580,27 @@ Network.prototype = {
     getEdges: function () {
         var items = [];
         var edges = this.graph.edges;
-        for ( var i = 0, l = edges.length; i < l; i++ ) {
+        for (var i = 0, l = edges.length; i < l; i++) {
             var edge = edges[i];
-            if ( typeof edge !== 'undefined' ) {
-                items.push( edge );
+            if (typeof edge !== 'undefined') {
+                items.push(edge);
             }
         }
         return items;
     },
-    getVerticesOrdered: function ( attributeName ) {
+    getVerticesOrdered: function (attributeName) {
         var vertices = [];
-        var item = this.vertexAttributeManager.getOrderedIdsByAttribute( attributeName );
-        for ( var i = 0, l = item.length; i < l; i++ ) {
+        var item = this.vertexAttributeManager.getOrderedIdsByAttribute(attributeName);
+        for (var i = 0, l = item.length; i < l; i++) {
             var id = item[i].id;
-            var vertex = this.graph.getVertexById( id );
-            if ( typeof vertex !== 'undefined' ) {
-                vertices.push( vertex );
+            var vertex = this.graph.getVertexById(id);
+            if (typeof vertex !== 'undefined') {
+                vertices.push(vertex);
             }
         }
         return vertices;
     },
+
 
 //    /* Attribute Manager */
 //    addAttribute: function (name, type, defaultValue) {
@@ -19925,7 +21616,7 @@ Network.prototype = {
 //    },
 
     clean: function () {
-        console.time( 'Network.clean' )
+        console.time('Network.clean')
         /*  graph */
         this.graph.clean();
         this.config.clean();
@@ -19935,26 +21626,26 @@ Network.prototype = {
         this.edgeAttributeManager.clean();
 
         var vertexAttributes = [
-            {name: "Id", type: "string", defaultValue: "none", locked: true},
+            {name: "id", type: "string", defaultValue: "none", locked: true},
             {name: "Name", type: "string", defaultValue: "none"}
         ];
         var edgeAttributes = [
-            {name: "Id", type: "string", defaultValue: "none", locked: true},
+            {name: "id", type: "string", defaultValue: "none", locked: true},
             {name: "Name", type: "string", defaultValue: "none"},
             {name: "Relation", type: "string", defaultValue: "none"}
         ];
-        this.vertexAttributeManager.addAttributes( vertexAttributes );
-        this.edgeAttributeManager.addAttributes( edgeAttributes );
+        this.vertexAttributeManager.addAttributes(vertexAttributes);
+        this.edgeAttributeManager.addAttributes(edgeAttributes);
 
-        this.trigger( 'clean' );
-        console.timeEnd( 'Network.clean' )
+        this.trigger('clean');
+        console.timeEnd('Network.clean')
     },
 
-    getAsSIF: function ( separator ) {
-        return this.graph.getAsSIF( separator );
+    getAsSIF: function (separator) {
+        return this.graph.getAsSIF(separator);
     },
-    getAsSIFCustomRelation: function ( separator, relationColumn ) {
-        if ( typeof separator === 'undefined' ) {
+    getAsSIFCustomRelation: function (separator, relationColumn) {
+        if (typeof separator === 'undefined') {
             separator = '\t';
         }
 
@@ -19962,22 +21653,22 @@ Network.prototype = {
         var edges = this.graph.edges;
 
         var sifText = "";
-        for ( var i = 0; i < edges.length; i++ ) {
+        for (var i = 0; i < edges.length; i++) {
             var edge = edges[i];
-            if ( typeof edge !== 'undefined' ) {
+            if (typeof edge !== 'undefined') {
                 var line = "";
 
-                var attrValue = this.edgeAttributeManager.getValueByAttributeAndId( edge.id, relationColumn );
+                var attrValue = this.edgeAttributeManager.getValueByAttributeAndId(edge.id, relationColumn);
 
                 line = edge.source.id + separator + attrValue + separator + edge.target.id + "\n";
                 sifText += line;
             }
         }
-        for ( var i = 0; i < vertices.length; i++ ) {
+        for (var i = 0; i < vertices.length; i++) {
             var vertex = vertices[i];
-            if ( typeof vertex !== 'undefined' ) {
+            if (typeof vertex !== 'undefined') {
                 var line = "";
-                if ( vertex.edges.length == 0 ) {
+                if (vertex.edges.length == 0) {
                     line = vertex.id + separator + separator + "\n";
                 }
                 sifText += line;
@@ -19988,132 +21679,147 @@ Network.prototype = {
 
     /** JSON import/export **/
     /* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify */
-    toJSON: function () {
-        return {
-            graph: this.graph,
-            config: this.config,
-            vertexAttributes: this.vertexAttributeManager,
-            edgeAttributes: this.edgeAttributeManager
-        };
+    saveSession: function () {
+        this.session.loadGraph(this.graph);
+        this.session.loadConfig(this.config);
+        this.session.loadVertexAttributes(this.vertexAttributeManager);
+        this.session.loadEdgeAttributes(this.edgeAttributeManager);
+//        return {
+//            graph: this.graph,
+//            config: this.config,
+//            vertexAttributes: this.vertexAttributeManager,
+//            edgeAttributes: this.edgeAttributeManager
+//        };
     },
-    loadJSON: function ( content ) {
+    loadSession: function () {
         this.clean();
 
         this.batchStart();
-        console.time( 'Network.loadJSON' );
-        for ( var i = 0; i < content.graph.vertices.length; i++ ) {
-            var v = content.graph.vertices[i];
-            var vertex = new Vertex( {
+        console.time('Network.loadJSON');
+
+//        console.time('Network.loadJSON-Vertices');
+        for (var i = 0; i < this.session.graph.vertices.length; i++) {
+            var v = this.session.graph.vertices[i];
+            var vertex = new Vertex({
                 id: v.id
-            } );
+            });
 
             /* vertex config */
-            var config = content.config.vertices[v.id];
-            if ( typeof config === 'undefined' ) {
-                var vertexConfig = new VertexConfig( {} );
+            var config = this.session.config.vertices[v.id];
+//            console.time('Network.loadJSON-vertex');
+            if (typeof config === 'undefined') {
+                var vertexConfig = new VertexConfig({
+                    rendererConfig: this.session.getVertexDefaults()
+                });
             } else {
-                var vertexConfig = new VertexConfig( {
+                var vertexConfig = new VertexConfig({
                     id: v.id,
-                    coords: content.config.vertices[v.id].coords,
+                    coords: this.session.config.vertices[v.id].coords,
                     rendererConfig: config.renderer
-                } );
+                });
             }
+//            console.timeEnd('Network.loadJSON-vertex');
 
-            this.addVertex( {
+            this.addVertex({
                 vertex: vertex,
                 vertexConfig: vertexConfig
-            } );
+            });
         }
-        for ( var i = 0; i < content.graph.edges.length; i++ ) {
-            var e = content.graph.edges[i];
+//        console.timeEnd('Network.loadJSON-Vertices');
+//        console.time('Network.loadJSON-Edges');
+        for (var i = 0; i < this.session.graph.edges.length; i++) {
+            var e = this.session.graph.edges[i];
 
-            var source = this.getVertexById( e.source.id );
-            var target = this.getVertexById( e.target.id );
+            var source = this.getVertexById(e.source.id);
+            var target = this.getVertexById(e.target.id);
 
-            var edge = new Edge( {
+            var edge = new Edge({
                 id: e.id,
                 relation: e.relation,
                 source: source,
                 target: target
-            } );
+            });
 
             /* edge config */
-            var config = content.config.edges[v.id];
-            if ( typeof config === 'undefined' ) {
-                var edgeConfig = new EdgeConfig( {} );
+            var config = this.session.config.edges[e.id];
+            if (typeof config === 'undefined') {
+                var edgeConfig = new EdgeConfig({
+                    rendererConfig: this.session.getEdgeDefaults()
+                });
             } else {
-                var edgeConfig = new EdgeConfig( {
-                    id: v.id,
-                    coords: content.config.edges[v.id].coords,
+                var edgeConfig = new EdgeConfig({
+                    id: e.id,
+                    coords: this.session.config.edges[e.id].coords,
                     rendererConfig: config.renderer
-                } );
+                });
             }
 
-            this.addEdge( {
+            this.addEdge({
                 edge: edge,
                 edgeConfig: edgeConfig
-            } );
+            });
         }
+//        console.timeEnd('Network.loadJSON-Edges');
 
-        this._importAttributes( content.vertexAttributes, this.vertexAttributeManager );
-        this._importAttributes( content.edgeAttributes, this.edgeAttributeManager );
+        this._importAttributes(this.session.attributes.vertices, this.vertexAttributeManager);
+        this._importAttributes(this.session.attributes.edges, this.edgeAttributeManager);
 
         this.batchEnd();
-        this.trigger( 'load:json' );
-        console.timeEnd( 'Network.loadJSON' );
+        this.trigger('load:json');
+        console.timeEnd('Network.loadJSON');
     },
-    importVertexWithAttributes: function ( data ) {
-        console.time( 'Network.importVertexWithAttributes' );
+    importVertexWithAttributes: function (data) {
+        console.time('Network.importVertexWithAttributes');
         this.batchStart();
-        if ( data.createVertices ) {
-            for ( var i = 0; i < data.content.data.length; i++ ) {
+        if (data.createVertices) {
+            for (var i = 0; i < data.content.data.length; i++) {
                 var id = data.content.data[i][0];
 
-                var vertex = new Vertex( {
+                var vertex = new Vertex({
                     id: id
-                } );
+                });
 
-                this.addVertex( {
+                this.addVertex({
                     vertex: vertex
-                } );
+                });
             }
         }
         // add attributes
-        this._importAttributes( data.content, this.vertexAttributeManager );
+        this._importAttributes(data.content, this.vertexAttributeManager);
         this.batchEnd();
-        this.trigger( 'import:attributes' );
-        console.timeEnd( 'Network.importVertexWithAttributes' );
+        this.trigger('import:attributes');
+        console.timeEnd('Network.importVertexWithAttributes');
     },
-    _importAttributes: function ( data, attributeManager ) {
-        if ( data.attributes.length > 1 ) {
+    _importAttributes: function (data, attributeManager) {
+        if (data.attributes && data.attributes.length > 1) {
             var attributes = data.attributes;
-            attributeManager.addAttributes( attributes );
+            attributeManager.addAttributes(attributes);
             // add values for attributes
 //            console.time('Network._importAttributes');
             var values = [], recordObject, attr, value;
-            for ( var i = 0; i < data.data.length; i++ ) {
+            for (var i = 0; i < data.data.length; i++) {
                 recordObject = {
                     id: data.data[i][0]
                 };
-                for ( var j = 1; j < data.data[i].length; j++ ) {
+                for (var j = 1; j < data.data[i].length; j++) {
                     attr = attributes[j].name;
                     value = data.data[i][j];
                     recordObject[attr] = value;
                 }
-                values.push( recordObject );
+                values.push(recordObject);
             }
 //            console.timeEnd('Network._importAttributes');
-            attributeManager.setRecordAttributeByIds( values );
+            attributeManager.setRecordAttributeByIds(values);
         }
     },
-    importEdgesWithAttributes: function ( data ) {
-        console.time( 'Network.importEdgesWithAttributes' );
+    importEdgesWithAttributes: function (data) {
+        console.time('Network.importEdgesWithAttributes');
         this.batchStart();
         // add attributes
-        this._importAttributes( data.content, this.edgeAttributeManager );
+        this._importAttributes(data.content, this.edgeAttributeManager);
         this.batchEnd();
-        this.trigger( 'import:attributes' );
-        console.timeEnd( 'Network.importEdgesWithAttributes' );
+        this.trigger('import:attributes');
+        console.timeEnd('Network.importEdgesWithAttributes');
     },
     batchStart: function () {
         this.batchFlag = true;
@@ -20123,12 +21829,11 @@ Network.prototype = {
     batchEnd: function () {
         this.vertexAttributeManager.store.resumeEvents();
         this.edgeAttributeManager.store.resumeEvents();
-        this.vertexAttributeManager.store.fireEvent( 'refresh' );
-        this.edgeAttributeManager.store.fireEvent( 'refresh' );
+        this.vertexAttributeManager.store.fireEvent('refresh');
+        this.edgeAttributeManager.store.fireEvent('refresh');
         this.batchFlag = false;
-        this.trigger( 'batch:end' );
+        this.trigger('batch:end');
     }
-
 }
 /*
  * Copyright (c) 2012 Francisco Salavert (ICM-CIPF)
@@ -22436,9 +24141,9 @@ VCFDataAdapter.prototype.parse = function ( data, region ) {
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function AttributeNetworkDataAdapter ( args ) {
+function AttributeNetworkDataAdapter(args) {
     var _this = this;
-    _.extend( this, Backbone.Events );
+    _.extend(this, Backbone.Events);
 
     this.dataSource;
     this.async = true;
@@ -22446,26 +24151,27 @@ function AttributeNetworkDataAdapter ( args ) {
     this.ignoreColumns = {};
 
     //set instantiation args, must be last
-    _.extend( this, args );
+    _.extend(this, args);
 
     this.attributes = [];
     this.data = [];
 
-    this.on( this.handlers );
+    this.on(this.handlers);
 
-    if ( this.async ) {
-        this.dataSource.on( 'success', function ( data ) {
-            _this.parse( data );
-        } );
-        this.dataSource.fetch( this.async );
+    if (this.async) {
+        this.dataSource.on('success', function (data) {
+            _this.parse(data);
+        });
+        this.dataSource.fetch(this.async);
     } else {
-        var data = this.dataSource.fetch( this.async );
-        _this.parse( data );
+        var data = this.dataSource.fetch(this.async);
+        _this.parse(data);
     }
+
 
 };
 
-AttributeNetworkDataAdapter.prototype.parse = function ( data ) {
+AttributeNetworkDataAdapter.prototype.parse = function (data) {
     var _this = this;
 
 //    var lines = data.split("\n");
@@ -22493,58 +24199,73 @@ AttributeNetworkDataAdapter.prototype.parse = function ( data ) {
 //        }
 //    }
 
+
     try {
+        var lines = data.split("\n");
+        var firstLine = lines[0].replace(/^\s+|\s+$/g, "");
+        var columnNames = [];
+        if (firstLine.substr(0, 1) === "#") {
+            columnNames = firstLine.split("\t");
 
-        var lines = data.split( "\n" );
-        var firstLine = lines[0].replace( /^\s+|\s+$/g, "" );
-        var numColumns = firstLine.split( "\t" ).length;
-        for ( var i = 0; i < numColumns; i++ ) {
-            var name = "Column" + i;
-            if ( i == 0 ) {
-                name = "Id";
+            //search for first non header line "#"
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].replace(/^\s+|\s+$/g, "");
+                if(line.substr(0, 1) !== "#"){
+                    firstLine = line;
+                    break;
+                }
             }
+        }
 
-            if ( this.ignoreColumns[i] !== true ) {
-                this.attributes.push( {
+        var numColumns = firstLine.split("\t").length;
+        for (var i = 0; i < numColumns; i++) {
+            var name = (columnNames[i]) ? columnNames[i] : "Column" + i;
+            if (i == 0) {
+                name = "id";
+            }
+            if (this.ignoreColumns[i] !== true) {
+                this.attributes.push({
                     "name": name,
                     "type": "string",
                     "defaultValue": ""
-                } );
+                });
             }
         }
 
+
         //ignore attributes
-        if ( Object.keys( this.ignoreColumns ).length > 0 ) {
-            for ( var i = 0; i < lines.length; i++ ) {
-                var line = lines[i].replace( /^\s+|\s+$/g, "" );
-                if ( (line != null) && (line.length > 0) && line.substr( 0, 1 ) != "#" ) {
-                    var fields = line.split( "\t" );
+        if (Object.keys(this.ignoreColumns).length > 0) {
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].replace(/^\s+|\s+$/g, "");
+                if ((line != null) && (line.length > 0) && line.substr(0, 1) != "#") {
+                    var fields = line.split("\t");
 
                     var filteredFields = [];
-                    for ( var j = 0; j < fields.length; j++ ) {
-                        if ( this.ignoreColumns[j] !== true ) {
-                            filteredFields.push( fields[j] )
+                    for (var j = 0; j < fields.length; j++) {
+                        if (this.ignoreColumns[j] !== true) {
+                            filteredFields.push(fields[j])
                         }
                     }
 
-                    this.data.push( filteredFields );
+                    this.data.push(filteredFields);
                 }
             }
         } else {
-            for ( var i = 0; i < lines.length; i++ ) {
-                var line = lines[i].replace( /^\s+|\s+$/g, "" );
-                if ( (line != null) && (line.length > 0) && line.substr( 0, 1 ) != "#" ) {
-                    var fields = line.split( "\t" );
-                    this.data.push( fields );
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].replace(/^\s+|\s+$/g, "");
+                if ((line != null) && (line.length > 0) && line.substr(0, 1) != "#") {
+                    var fields = line.split("\t");
+                    this.data.push(fields);
                 }
             }
         }
 
-        this.trigger( 'data:load', {sender: this} );
-    } catch ( e ) {
-        console.log( e );
-        this.trigger( 'error:parse', {errorMsg: 'Parse error', sender: this} );
+        this.trigger('data:load', {sender: this});
+    } catch (e) {
+        console.log(e);
+        this.trigger('error:parse', {errorMsg: 'Parse error', sender: this});
     }
+
 
 };
 
@@ -22976,9 +24697,9 @@ SIFNetworkDataAdapter.prototype.parse = function ( data ) {
  * You should have received a copy of the GNU General Public License
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
-function TextNetworkDataAdapter ( args ) {
+function TextNetworkDataAdapter(args) {
     var _this = this;
-    _.extend( this, Backbone.Events );
+    _.extend(this, Backbone.Events);
 
     this.dataSource;
     this.async = true;
@@ -22986,23 +24707,24 @@ function TextNetworkDataAdapter ( args ) {
     this.separator = "\t";
     this.graph = new Graph();
 
-    //set instantiation args, must be last
-    _.extend( this, args );
 
-    this.on( this.handlers );
+    //set instantiation args, must be last
+    _.extend(this, args);
+
+    this.on(this.handlers);
 
     this.rawData;
 
-    if ( this.async ) {
-        this.dataSource.on( 'success', function ( data ) {
+    if (this.async) {
+        this.dataSource.on('success', function (data) {
             _this.rawData = data;
-            _this.parse( data );
-        } );
-        this.dataSource.fetch( this.async );
+            _this.parse(data);
+        });
+        this.dataSource.fetch(this.async);
     } else {
-        var data = this.dataSource.fetch( this.async );
+        var data = this.dataSource.fetch(this.async);
         _this.rawData = data;
-        this.parse( data );
+        this.parse(data);
     }
 
     this.columnLength;
@@ -23016,48 +24738,48 @@ TextNetworkDataAdapter.prototype.getGraph = function () {
     return this.graph;
 };
 
-TextNetworkDataAdapter.prototype.parse = function ( data ) {
+TextNetworkDataAdapter.prototype.parse = function (data) {
 
     try {
-        if ( typeof data === 'undefined' ) {
+        if (typeof data === 'undefined') {
             data = this.rawData;
         }
 
-        var lines = data.split( "\n" );
+        var lines = data.split("\n");
         this.lines = [];
         this.columnLength = 0;
         var firstLineColumnLength = 0;
-        for ( var i = 0; i < lines.length; i++ ) {
-            var line = lines[i].replace( /^\s+|\s+$/g, "" );
-            if ( (line != null) && (line.length > 0) ) {
-                var fields = line.split( this.separator );
-                if ( fields[0].substr( 0, 1 ) != "#" ) {
-                    this.lines.push( fields );
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].replace(/^\s+|\s+$/g, "");
+            if ((line != null) && (line.length > 0)) {
+                var fields = line.split(this.separator);
+                if (fields[0].substr(0, 1) != "#") {
+                    this.lines.push(fields);
 
-                    if ( firstLineColumnLength === 0 ) {
+                    if (firstLineColumnLength === 0) {
                         firstLineColumnLength = fields.length;
                         this.columnLength = firstLineColumnLength;
                     }
 
-                    if ( fields.length !== firstLineColumnLength ) {
-                        this.trigger( 'error:parse', {errorMsg: 'Different number of columns.', sender: this} );
+                    if (fields.length !== firstLineColumnLength) {
+                        this.trigger('error:parse', {errorMsg: 'Different number of columns.', sender: this});
                     }
                 }
             }
         }
-        this.trigger( 'data:load', {graph: this.lines, sender: this} );
-    } catch ( e ) {
-        console.log( e );
-        this.trigger( 'error:parse', {errorMsg: 'Parse error', sender: this} );
+        this.trigger('data:load', {graph: this.lines, sender: this});
+    } catch (e) {
+        console.log(e);
+        this.trigger('error:parse', {errorMsg: 'Parse error', sender: this});
     }
 };
 
-TextNetworkDataAdapter.prototype.parseColumns = function ( sourceIndex, relationIndex, targetIndex ) {
+TextNetworkDataAdapter.prototype.parseColumns = function (sourceIndex, relationIndex, targetIndex) {
     this.graph = new Graph();
     this.addedVertex = {};
     this.addedEdges = {};
 
-    for ( var i = 0; i < this.lines.length; i++ ) {
+    for (var i = 0; i < this.lines.length; i++) {
         var fields = this.lines[i];
 
         var sourceName = fields[sourceIndex];
@@ -23065,36 +24787,36 @@ TextNetworkDataAdapter.prototype.parseColumns = function ( sourceIndex, relation
         var targetName = fields[targetIndex];
 
         /** create source vertex **/
-        if ( typeof this.addedVertex[sourceName] === 'undefined' ) {
-            var sourceVertex = new Vertex( {
+        if (typeof this.addedVertex[sourceName] === 'undefined') {
+            var sourceVertex = new Vertex({
                 id: sourceName
-            } );
-            this.graph.addVertex( sourceVertex );
+            });
+            this.graph.addVertex(sourceVertex);
             this.addedVertex[sourceName] = sourceVertex;
         }
 
         /** create target vertex **/
-        if ( typeof this.addedVertex[targetName] === 'undefined' ) {
-            var targetVertex = new Vertex( {
+        if (typeof this.addedVertex[targetName] === 'undefined') {
+            var targetVertex = new Vertex({
                 id: targetName
-            } );
-            this.graph.addVertex( targetVertex );
+            });
+            this.graph.addVertex(targetVertex);
             this.addedVertex[targetName] = targetVertex;
         }
 
         var edgeId = sourceName + '_' + edgeName + '_' + targetName;
 
         /** create edge **/
-        if ( typeof this.addedEdges[edgeId] === 'undefined' ) {
-            var edge = new Edge( {
+        if (typeof this.addedEdges[edgeId] === 'undefined') {
+            var edge = new Edge({
                 id: edgeId,
                 relation: edgeName,
                 source: this.addedVertex[sourceName],
                 target: this.addedVertex[targetName],
                 weight: 1,
                 directed: true
-            } );
-            this.graph.addEdge( edge );
+            });
+            this.graph.addEdge(edge);
             this.addedEdges[edgeId] = edge;
         }
 
@@ -24200,64 +25922,61 @@ BamCache.prototype.clear = function () {
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function NavigationBar ( args ) {
+function NavigationBar(args) {
 
     // Using Underscore 'extend' function to extend and add Backbone Events
-    _.extend( this, Backbone.Events );
+    _.extend(this, Backbone.Events);
 
     var _this = this;
 
-    this.id = Utils.genId( "NavigationBar" );
+    this.id = Utils.genId("NavigationBar");
 
-    this.cellBaseHost;
-    this.cellBaseVersion;
+    this.cellBaseHost = 'http://www.ebi.ac.uk/cellbase/webservices/rest';
+    this.cellBaseVersion = 'v3';
 
-    this.species;
+    this.species = 'Homo sapiens';
     this.increment = 3;
     this.componentsConfig = {};
 
     //set instantiation args, must be last
-    _.extend( this, args );
+    _.extend(this, args);
 
     //set new region object
-    this.region = new Region( this.region );
+    this.region = new Region(this.region);
 
     this.currentChromosomeList = [];
 
-    this.on( this.handlers );
+    this.on(this.handlers);
+
 
     this.els = {};
     this.zoomChanging = false;
     this.regionChanging = false;
 
     this.rendered = false;
-    if ( this.autoRender ) {
+    if (this.autoRender) {
         this.render();
     }
 };
 
 NavigationBar.prototype = {
 
-    render: function ( targetId ) {
+    render: function (targetId) {
         var _this = this;
         this.targetId = (targetId) ? targetId : this.targetId;
-        this.targetDiv = (this.targetId instanceof HTMLElement ) ? this.targetId : $( '#' + this.targetId )[0];
-        if ( this.targetDiv === 'undefined' ) {
-            console.log( 'targetId not found' );
+        this.targetDiv = (this.targetId instanceof HTMLElement ) ? this.targetId : $('#' + this.targetId)[0];
+        if (this.targetDiv === 'undefined') {
+            console.log('targetId not found');
             return;
         }
 
         var navgationHtml = '' +
             '<div style="width: 1350px">' +
-            /*
-             '   <div class="btn-group">' +
-            '       <button id="restoreDefaultRegionButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="glyphicon glyphicon-repeat"></span></button>'
-            +
-            '   </div>' +
-             */
             '   <div class="btn-group">' +
-            '       <button id="regionHistoryButton" class="btn btn-default btn-xs custom-xs dropdown-toggle" data-toggle="dropdown"  type="button" ><span class="glyphicon glyphicon-time"></span> <span class="caret"></button>'
-            +
+            '       <button id="restoreDefaultRegionButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="glyphicon glyphicon-repeat"></span></button>' +
+            '   </div>' +
+            '   <div class="btn-group">' +
+            '       <button id="regionHistoryButton" class="btn btn-default btn-xs custom-xs dropdown-toggle" data-toggle="dropdown"  type="button" ><span class="glyphicon glyphicon-time"></span> <span class="caret"></button>' +
             '       <ul id="regionHistoryMenu" class="dropdown-menu" role="menu">' +
             '       </ul>' +
             '   </div>' +
@@ -24277,26 +25996,23 @@ NavigationBar.prototype = {
             '       </ul>' +
             '   </div>' +
             '   <div class="btn-group" data-toggle="buttons">' +
-            '       <button id="karyotypeButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-karyotype"></span></button>'
-            +
-            '       <button id="chromosomeButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-chromosome"></span></button>'
-            +
+            '       <button id="karyotypeButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-karyotype"></span></button>' +
+            '       <button id="chromosomeButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-chromosome"></span></button>' +
             '       <button id="regionButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-region"></span></button>' +
             '   </div>' +
+
 
             '   <div id="zoomControl" class="btn-group" style="margin-left:5px;">' +
             '       <button id="zoomMinButton" class="btn btn-default custom-xs" type="button" style="width:31px">0</button>' +
             '       <button id="zoomOutButton" class="btn btn-default custom-xs" type="button"><span class="glyphicon glyphicon-minus"></span></button>' +
-            '       <div id="progressBarCont" class="progress pull-left" style="width:120px;height:22px;margin:0px;background-color: #d5d5d5;border-radius: 0px;">'
-            +
-            '           <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="' + this.zoom
-            + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + this.zoom + '%">'
-            +
+            '       <div id="progressBarCont" class="progress pull-left" style="width:120px;height:22px;margin:0px;background-color: #d5d5d5;border-radius: 0px;">' +
+            '           <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">' +
             '           </div>' +
             '       </div>' +
             '       <button id="zoomInButton" class="btn btn-default custom-xs" type="button"><span class="glyphicon glyphicon-plus"></span></button>' +
             '       <button id="zoomMaxButton" class="btn btn-default custom-xs" type="button" style="width:31px">100</button>' +
             '   </div>' +
+
 
             '   <div id="windowSizeControl" class="btn-group" style="width:150px">' +
             '   <div class="input-group input-group-sm">' +
@@ -24304,6 +26020,7 @@ NavigationBar.prototype = {
             '       <input id="windowSizeField" type="text" class="form-control custom-xs" placeholder="Window size">' +
             '   </div>' +
             '   </div>' +
+
 
             '   <div id="positionControl" class="btn-group" style="width:250px">' +
             '   <div class="input-group input-group-sm">' +
@@ -24315,23 +26032,18 @@ NavigationBar.prototype = {
             '   </div>' +
             '   </div>' +
 
+
             '   <div id="moveControl" class="btn-group">' +
-            '       <button id="moveFurtherLeftButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-arrow-w-bold"></span></button>'
-            +
-            '       <button id="moveLeftButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-arrow-w"></span></button>'
-            +
-            '       <button id="moveRightButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-arrow-e"></span></button>'
-            +
-            '       <button id="moveFurtherRightButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-arrow-e-bold"></span></button>'
-            +
+            '       <button id="moveFurtherLeftButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-arrow-w-bold"></span></button>' +
+            '       <button id="moveLeftButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-arrow-w"></span></button>' +
+            '       <button id="moveRightButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-arrow-e"></span></button>' +
+            '       <button id="moveFurtherRightButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-arrow-e-bold"></span></button>' +
             '   </div>' +
             '   <div class="btn-group">' +
-            '       <button id="autoheightButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-track-autoheight"></span></button>'
-            +
+            '       <button id="autoheightButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon ocb-icon-track-autoheight"></span></button>' +
             '   </div>' +
             '    <div class="btn-group">' +
-            '       <button id="compactButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon glyphicon glyphicon-compressed"></span></button>'
-            +
+            '       <button id="compactButton" class="btn btn-default btn-xs custom-xs" type="button"><span class="ocb-icon glyphicon glyphicon-compressed"></span></button>' +
             '   </div>' +
 
             '   <div id="searchControl" class="btn-group" style="width:250px">' +
@@ -24341,8 +26053,7 @@ NavigationBar.prototype = {
             '       <datalist id="searchDataList">' +
             '       </datalist>' +
             '       <div class="input-group-btn">' +
-            '           <button id="quickSearchButton" class="btn btn-default btn-sm custom-xs" type="button"><span class="glyphicon glyphicon-search"></span></button>'
-            +
+            '           <button id="quickSearchButton" class="btn btn-default btn-sm custom-xs" type="button"><span class="glyphicon glyphicon-search"></span></button>' +
             '       </div>' +
             '   </div>' +
             '   </div>' +
@@ -24361,112 +26072,116 @@ NavigationBar.prototype = {
             '</div>' +
             '';
 
-        this.div = $( '<div id="navigation-bar" class="gv-navigation-bar unselectable">' + navgationHtml + '</div>' )[0];
-        $( this.div ).css( {
-            height: '32px'
-        } );
-        $( this.targetDiv ).append( this.div );
 
-        $( this.div ).find( '.custom-xs' ).css( {
+        this.div = $('<div id="navigation-bar" class="gv-navigation-bar unselectable">' + navgationHtml + '</div>')[0];
+        $(this.div).css({
+            height: '32px'
+        });
+        $(this.targetDiv).append(this.div);
+
+        $(this.div).find('.custom-xs').css({
             padding: '2px 4px',
             height: '22px',
             lineHeight: '16px',
             fontSize: '14px'
-        } );
+        });
 
-        var els = $( this.div ).find( '*[id]' );
-        for ( var i = 0; i < els.length; i++ ) {
-            var elid = els[i].getAttribute( 'id' );
-            if ( elid ) {
+        var els = $(this.div).find('*[id]');
+        for (var i = 0; i < els.length; i++) {
+            var elid = els[i].getAttribute('id');
+            if (elid) {
                 this.els[elid] = els[i];
             }
         }
 
         /**Check components config**/
-        for ( var key in this.componentsConfig ) {
-            if ( !this.componentsConfig[key] ) {
-                $( this.els[key] ).hide();
+        for (var key in this.componentsConfig) {
+            if (!this.componentsConfig[key]) {
+                $(this.els[key]).hide();
             }
         }
         /*****/
 
         /*** ***/
-        $( this.els.restoreDefaultRegionButton ).click( function ( e ) {
-            _this.trigger( 'restoreDefaultRegion:click', {clickEvent: e, sender: {}} )
-        } );
+        $(this.els.restoreDefaultRegionButton).click(function (e) {
+            _this.trigger('restoreDefaultRegion:click', {clickEvent: e, sender: {}})
+        });
 
-        this._addRegionHistoryMenuItem( this.region );
+        this._addRegionHistoryMenuItem(this.region);
         this._setChromosomeMenu();
         this._setSpeciesMenu();
-        $( this.els.chromosomesText ).text( this.region.chromosome );
-        $( this.els.speciesText ).text( this.species.text );
+        $(this.els.chromosomesText).text(this.region.chromosome);
+        $(this.els.speciesText).text(this.species.text);
 
-        $( this.els.karyotypeButton ).click( function () {
-            _this.trigger( 'karyotype-button:change', {selected: $( this ).hasClass( 'active' ), sender: _this} );
-        } );
-        $( this.els.chromosomeButton ).click( function () {
-            _this.trigger( 'chromosome-button:change', {selected: $( this ).hasClass( 'active' ), sender: _this} );
-        } );
-        $( this.els.regionButton ).click( function () {
-            _this.trigger( 'region-button:change', {selected: $( this ).hasClass( 'active' ), sender: _this} );
-        } );
 
-        $( this.els.zoomOutButton ).click( function () {
+        $(this.els.karyotypeButton).click(function () {
+            _this.trigger('karyotype-button:change', {selected: $(this).hasClass('active'), sender: _this});
+        });
+        $(this.els.chromosomeButton).click(function () {
+            _this.trigger('chromosome-button:change', {selected: $(this).hasClass('active'), sender: _this});
+        });
+        $(this.els.regionButton).click(function () {
+            _this.trigger('region-button:change', {selected: $(this).hasClass('active'), sender: _this});
+        });
+
+
+        $(this.els.zoomOutButton).click(function () {
             _this._handleZoomOutButton();
-        } );
-        $( this.els.zoomInButton ).click( function () {
+        });
+        $(this.els.zoomInButton).click(function () {
             _this._handleZoomInButton();
-        } );
-        $( this.els.zoomMaxButton ).click( function () {
-            _this._handleZoomSlider( 100 );
-        } );
-        $( this.els.zoomMinButton ).click( function () {
-            _this._handleZoomSlider( 0 );
-        } );
-        $( this.els.progressBarCont ).click( function ( e ) {
-            var offsetX = e.clientX - $( this ).offset().left;
-            console.log( 'offsetX ' + offsetX );
-            console.log( 'e.offsetX ' + e.offsetX );
-            var zoom = 100 / $( this ).width() * offsetX;
-            _this._handleZoomSlider( zoom );
-        } );
+        });
+        $(this.els.zoomMaxButton).click(function () {
+            _this._handleZoomSlider(100);
+        });
+        $(this.els.zoomMinButton).click(function () {
+            _this._handleZoomSlider(0);
+        });
+        $(this.els.progressBarCont).click(function (e) {
+            var offsetX = e.clientX - $(this).offset().left;
+            console.log('offsetX ' + offsetX);
+            console.log('e.offsetX ' + e.offsetX);
+            var zoom = 100 / $(this).width() * offsetX;
+            _this._handleZoomSlider(zoom);
+        });
 
-        $( this.els.regionField ).val( this.region.toString() );
-        $( this.els.regionField ).bind( "keyup", function ( event ) {
-            if ( event.which === 13 ) {
-                _this._triggerRegionChange( {region: new Region( $( _this.els.regionField ).val() ), sender: _this} );
+        $(this.els.regionField).val(this.region.toString());
+        $(this.els.regionField).bind("keyup", function (event) {
+            if (event.which === 13) {
+                _this._triggerRegionChange({region: new Region($(_this.els.regionField).val()), sender: _this});
 //                _this._goRegion();
             }
-        } );
-        $( this.els.goButton ).click( function () {
-            _this._triggerRegionChange( {region: new Region( $( _this.els.regionField ).val() ), sender: _this} );
+        });
+        $(this.els.goButton).click(function () {
+            _this._triggerRegionChange({region: new Region($(_this.els.regionField).val()), sender: _this});
 //            _this._goRegion($(_this.els.regionField).val());
-        } );
+        });
 
-        $( this.els.moveFurtherLeftButton ).click( function () {
-            _this._handleMoveRegion( 10 );
-        } );
+        $(this.els.moveFurtherLeftButton).click(function () {
+            _this._handleMoveRegion(10);
+        });
 
-        $( this.els.moveFurtherRightButton ).click( function () {
-            _this._handleMoveRegion( -10 );
-        } );
+        $(this.els.moveFurtherRightButton).click(function () {
+            _this._handleMoveRegion(-10);
+        });
 
-        $( this.els.moveLeftButton ).click( function () {
-            _this._handleMoveRegion( 1 );
-        } );
+        $(this.els.moveLeftButton).click(function () {
+            _this._handleMoveRegion(1);
+        });
 
-        $( this.els.moveRightButton ).click( function () {
-            _this._handleMoveRegion( -1 );
-        } );
+        $(this.els.moveRightButton).click(function () {
+            _this._handleMoveRegion(-1);
+        });
 
-        $( this.els.autoheightButton ).click( function ( e ) {
-            _this.trigger( 'autoHeight-button:click', {clickEvent: e, sender: _this} );
-        } );
+        $(this.els.autoheightButton).click(function (e) {
+            _this.trigger('autoHeight-button:click', {clickEvent: e, sender: _this});
+        });
 
-        $( this.els.compactButton ).click( function ( e ) {
-            _this.trigger( 'autoHeight-button:click', {clickEvent: e, sender: _this} );
-            $( ".ocb-compactable" ).toggle();
-        } );
+        $(this.els.compactButton).click(function (e) {
+            _this.trigger('autoHeight-button:click', {clickEvent: e, sender: _this});
+            $(".ocb-compactable").toggle();
+        });
+
 
 //        var speciesCode = Utils.getSpeciesCode(this.species.text).substr(0, 3);
 //        var url = CellBaseManager.url({
@@ -24504,83 +26219,83 @@ NavigationBar.prototype = {
 //        });
 
         var lastQuery = '';
-        $( this.els.searchField ).bind( "keyup", function ( event ) {
-            var query = $( this ).val();
-            if ( query.length > 2 && lastQuery !== query && event.which !== 13 ) {
-                _this._setQuickSearchMenu( query );
+        $(this.els.searchField).bind("keyup", function (event) {
+            var query = $(this).val();
+            if (query.length > 2 && lastQuery !== query && event.which !== 13) {
+                _this._setQuickSearchMenu(query);
                 lastQuery = query;
             }
-            if ( event.which === 13 ) {
+            if (event.which === 13) {
                 var item = _this.quickSearchDataset[query];
-                _this.trigger( 'quickSearch:select', {item: item, sender: _this} );
+                _this.trigger('quickSearch:select', {item: item, sender: _this});
             }
-        } );
+        });
 
-        $( this.els.quickSearchButton ).click( function () {
-            var query = $( _this.els.searchField ).val();
+        $(this.els.quickSearchButton).click(function () {
+            var query = $(_this.els.searchField).val();
             var item = _this.quickSearchDataset[query];
-            _this.trigger( 'quickSearch:go', {item: item, sender: _this} );
-        } );
+            _this.trigger('quickSearch:go', {item: item, sender: _this});
+        });
 
-        $( this.els.windowSizeField ).val( this.region.length() );
-        $( this.els.windowSizeField ).bind( "keyup", function ( event ) {
-            var value = $( this ).val();
+        $(this.els.windowSizeField).val(this.region.length());
+        $(this.els.windowSizeField).bind("keyup", function (event) {
+            var value = $(this).val();
             var pattern = /^([0-9])+$/;
-            if ( event.which === 13 && pattern.test( value ) ) {
-                var regionSize = parseInt( value );
-                var haflRegionSize = Math.floor( regionSize / 2 );
-                var region = new Region( {
+            if (event.which === 13 && pattern.test(value)) {
+                var regionSize = parseInt(value);
+                var haflRegionSize = Math.floor(regionSize / 2);
+                var region = new Region({
                     chromosome: _this.region.chromosome,
                     start: _this.region.center() - haflRegionSize,
                     end: _this.region.center() + haflRegionSize
-                } );
-                _this._triggerRegionChange( {region: region, sender: _this} )
+                });
+                _this._triggerRegionChange({region: region, sender: _this})
             }
-        } );
+        });
         this.rendered = true;
     },
 
-    _addRegionHistoryMenuItem: function ( region ) {
+    _addRegionHistoryMenuItem: function (region) {
         var _this = this;
-        var menuEntry = $( '<li role="presentation"><a tabindex="-1" role="menuitem">' + region.toString() + '</a></li>' )[0];
-        $( this.els.regionHistoryMenu ).append( menuEntry );
-        $( menuEntry ).click( function () {
-            var region = new Region( $( this ).text() );
-            _this._triggerRegionChange( {region: region, sender: _this} )
-        } );
+        var menuEntry = $('<li role="presentation"><a tabindex="-1" role="menuitem">' + region.toString() + '</a></li>')[0];
+        $(this.els.regionHistoryMenu).append(menuEntry);
+        $(menuEntry).click(function () {
+            var region = new Region($(this).text());
+            _this._triggerRegionChange({region: region, sender: _this})
+        });
     },
 
-    _setQuickSearchMenu: function ( query ) {
-        if ( typeof this.quickSearchResultFn === 'function' ) {
-            $( this.els.searchDataList ).empty();
+    _setQuickSearchMenu: function (query) {
+        if (typeof this.quickSearchResultFn === 'function') {
+            $(this.els.searchDataList).empty();
             this.quickSearchDataset = {};
-            var items = this.quickSearchResultFn( query );
-            for ( var i = 0; i < items.length; i++ ) {
+            var items = this.quickSearchResultFn(query);
+            for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 var itemKey = item;
-                if ( $.type( this.quickSearchDisplayKey ) === "string" ) {
+                if ($.type(this.quickSearchDisplayKey) === "string") {
                     itemKey = item[this.quickSearchDisplayKey];
                 }
                 this.quickSearchDataset[itemKey] = item;
-                var menuEntry = $( '<option value="' + itemKey + '">' )[0];
-                $( this.els.searchDataList ).append( menuEntry );
+                var menuEntry = $('<option value="' + itemKey + '">')[0];
+                $(this.els.searchDataList).append(menuEntry);
             }
         } else {
-            console.log( 'the quickSearchResultFn function is not valid' );
+            console.log('the quickSearchResultFn function is not valid');
         }
     },
 
     _setChromosomeMenu: function () {
         var _this = this;
 
-        $( this.els.chromosomesMenu ).empty();
+        $(this.els.chromosomesMenu).empty();
 
         //find species object
         var list = [];
-        for ( var i in this.availableSpecies.items ) {
-            for ( var j in this.availableSpecies.items[i].items ) {
+        for (var i in this.availableSpecies.items) {
+            for (var j in this.availableSpecies.items[i].items) {
                 var species = this.availableSpecies.items[i].items[j];
-                if ( species.text === this.species.text ) {
+                if (species.text === this.species.text) {
                     list = species.chromosomes;
                     break;
                 }
@@ -24589,85 +26304,85 @@ NavigationBar.prototype = {
 
         this.currentChromosomeList = list;
         //add bootstrap elements to the menu
-        for ( var i in list ) {
-            var menuEntry = $( '<li role="presentation"><a tabindex="-1" role="menuitem">' + list[i] + '</a></li>' )[0];
-            $( this.els.chromosomesMenu ).append( menuEntry );
-            $( menuEntry ).click( function () {
-                var region = new Region( {
-                    chromosome: $( this ).text(),
+        for (var i in list) {
+            var menuEntry = $('<li role="presentation"><a tabindex="-1" role="menuitem">' + list[i] + '</a></li>')[0];
+            $(this.els.chromosomesMenu).append(menuEntry);
+            $(menuEntry).click(function () {
+                var region = new Region({
+                    chromosome: $(this).text(),
                     start: _this.region.start,
                     end: _this.region.end
-                } );
-                _this._triggerRegionChange( {region: region, sender: _this} )
-            } );
+                });
+                _this._triggerRegionChange({region: region, sender: _this})
+            });
         }
     },
 
     _setSpeciesMenu: function () {
         var _this = this;
 
-        var createEntry = function ( species ) {
-            var menuEntry = $( '<li role="presentation"><a tabindex="-1" role="menuitem">' + species.text + '</a></li>' )[0];
-            $( _this.els.speciesMenu ).append( menuEntry );
-            $( menuEntry ).click( function () {
+        var createEntry = function (species) {
+            var menuEntry = $('<li role="presentation"><a tabindex="-1" role="menuitem">' + species.text + '</a></li>')[0];
+            $(_this.els.speciesMenu).append(menuEntry);
+            $(menuEntry).click(function () {
                 _this.species = species;
-                $( _this.els.speciesText ).text( $( this ).text() );
+                $(_this.els.speciesText).text($(this).text());
                 _this._setChromosomeMenu();
-                _this.trigger( 'species:change', {species: species, sender: _this} );
-            } );
+                _this.trigger('species:change', {species: species, sender: _this});
+            });
         };
         //find species object
         var list = [];
-        for ( var i in this.availableSpecies.items ) {
-            for ( var j in this.availableSpecies.items[i].items ) {
+        for (var i in this.availableSpecies.items) {
+            for (var j in this.availableSpecies.items[i].items) {
                 var species = this.availableSpecies.items[i].items[j];
-                createEntry( species );
+                createEntry(species);
             }
         }
     },
-    _goRegion: function ( value ) {
+    _goRegion: function (value) {
         var reg = new Region();
-        if ( !reg.parse( value ) || reg.start < 0 || reg.end < 0 || _.indexOf( this.currentChromosomeList, reg.chromosome ) == -1 ) {
-            $( this.els.regionField ).css( {opacity: 0.0} );
-            $( this.els.regionField ).animate( {opacity: 1}, 700 );
+        if (!reg.parse(value) || reg.start < 0 || reg.end < 0 || _.indexOf(this.currentChromosomeList, reg.chromosome) == -1) {
+            $(this.els.regionField).css({opacity: 0.0});
+            $(this.els.regionField).animate({opacity: 1}, 700);
         } else {
-            this._triggerRegionChange( {region: reg, sender: this} );
+            this._triggerRegionChange({region: reg, sender: this});
         }
     },
 
     _handleZoomOutButton: function () {
-        this._handleZoomSlider( Math.max( 0, this.zoom - 1 ) );
+        this._handleZoomSlider(Math.max(0, this.zoom - 1));
     },
-    _handleZoomSlider: function ( value ) {
+    _handleZoomSlider: function (value) {
         var _this = this;
-        if ( !this.zoomChanging ) {
+        if (!this.zoomChanging) {
             this.zoomChanging = true;
             /**/
             this.zoom = value;
-            this.trigger( 'zoom:change', {zoom: this.zoom, sender: this} );
+            this.trigger('zoom:change', {zoom: this.zoom, sender: this});
             /**/
-            setTimeout( function () {
+            setTimeout(function () {
                 _this.zoomChanging = false;
-            }, 700 );
+            }, 700);
         }
     },
     _handleZoomInButton: function () {
-        this._handleZoomSlider( Math.min( 100, this.zoom + 1 ) );
+        this._handleZoomSlider(Math.min(100, this.zoom + 1));
     },
 
-    _handleMoveRegion: function ( positions ) {
+    _handleMoveRegion: function (positions) {
         var pixelBase = (this.width - this.svgCanvasWidthOffset) / this.region.length();
-        var disp = Math.round( (positions * 10) / pixelBase );
+        var disp = Math.round((positions * 10) / pixelBase);
         this.region.start -= disp;
         this.region.end -= disp;
-        $( this.regionField ).val( this.region.toString() );
-        this.trigger( 'region:move', {region: this.region, disp: disp, sender: this} );
+        $(this.regionField).val(this.region.toString());
+        this.trigger('region:move', {region: this.region, disp: disp, sender: this});
     },
 
-    setVisible: function ( obj ) {
-        for ( key in obj ) {
-            var query = $( this.els[key] );
-            if ( obj[key] ) {
+    setVisible: function (obj) {
+        for (key in obj) {
+            var query = $(this.els[key]);
+            if (obj[key]) {
                 query.show();
             } else {
                 query.hide();
@@ -24675,49 +26390,49 @@ NavigationBar.prototype = {
         }
     },
 
-    setRegion: function ( region, zoom ) {
-        this.region.load( region );
-        if ( zoom ) {
+    setRegion: function (region, zoom) {
+        this.region.load(region);
+        if (zoom) {
             this.zoom = zoom;
         }
         this.updateRegionControls();
-        this._addRegionHistoryMenuItem( region );
+        this._addRegionHistoryMenuItem(region);
     },
-    moveRegion: function ( region ) {
-        this.region.load( region );
-        $( this.els.chromosomesText ).text( this.region.chromosome );
-        $( this.els.regionField ).val( this.region.toString() );
+    moveRegion: function (region) {
+        this.region.load(region);
+        $(this.els.chromosomesText).text(this.region.chromosome);
+        $(this.els.regionField).val(this.region.toString());
     },
 
-    setWidth: function ( width ) {
+    setWidth: function (width) {
         this.width = width;
     },
     draw: function () {
-        if ( !this.rendered ) {
-            console.info( this.id + ' is not rendered yet' );
+        if (!this.rendered) {
+            console.info(this.id + ' is not rendered yet');
             return;
         }
     },
 
-    _triggerRegionChange: function ( event ) {
+    _triggerRegionChange: function (event) {
         var _this = this;
-        if ( !this.regionChanging ) {
+        if (!this.regionChanging) {
             this.regionChanging = true;
             /**/
-            this.trigger( 'region:change', event );
+            this.trigger('region:change', event);
             /**/
-            setTimeout( function () {
+            setTimeout(function () {
                 _this.regionChanging = false;
-            }, 700 );
+            }, 700);
         } else {
             this.updateRegionControls();
         }
     },
     updateRegionControls: function () {
-        $( this.els.chromosomesText ).text( this.region.chromosome );
-        $( this.els.regionField ).val( this.region.toString() );
-        $( this.els.windowSizeField ).val( this.region.length() );
-        $( this.els.progressBar ).css( "width", this.zoom + '%' );
+        $(this.els.chromosomesText).text(this.region.chromosome);
+        $(this.els.regionField).val(this.region.toString());
+        $(this.els.windowSizeField).val(this.region.length());
+        $(this.els.progressBar).css("width", this.zoom + '%');
     }
 
 }
@@ -29630,12 +31345,12 @@ VcfMultisampleRenderer.prototype.render = function ( features, args ) {
  * along with JS Common Libs. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function GenomeViewer ( args ) {
+function GenomeViewer(args) {
     // Using Underscore 'extend' function to extend and add Backbone Events
-    _.extend( this, Backbone.Events );
+    _.extend(this, Backbone.Events);
 
     var _this = this;
-    this.id = Utils.genId( "GenomeViewer" );
+    this.id = Utils.genId("GenomeViewer");
 
     //set default args
     this.version = 'Genome Viewer';
@@ -29679,12 +31394,8 @@ function GenomeViewer ( args ) {
             {
                 "text": "Vertebrates",
                 "items": [
-                    {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "13", "start": 32889611, "end": 32889611}, "chromosomes": ["1",
-                        "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y",
-                        "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
-                    {"text": "Mus musculus", "assembly": "GRCm38.p1", "region": {"chromosome": "1", "start": 18422009, "end": 18422009}, "chromosomes": ["1",
-                        "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "X", "Y",
-                        "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"}
+                    {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "13", "start": 32889611, "end": 32889611}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
+                    {"text": "Mus musculus", "assembly": "GRCm38.p1", "region": {"chromosome": "1", "start": 18422009, "end": 18422009}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"}
                 ]
             }
         ]
@@ -29696,16 +31407,17 @@ function GenomeViewer ( args ) {
     this.chromosomeList;
 
     //set instantiation args, must be last
-    _.extend( this, args );
+    _.extend(this, args);
 
-    this.defaultRegion = new Region( this.region );
+    this.defaultRegion = new Region(this.region);
 
     this.width;
     this.height;
     this.sidePanelWidth = (this.sidePanel) ? 25 : 0;
 
+
     //events attachments
-    this.on( this.handlers );
+    this.on(this.handlers);
 
     this.fullscreen = false;
     this.resizing = false;
@@ -29713,98 +31425,100 @@ function GenomeViewer ( args ) {
     this.changingRegion = false;
 
     this.rendered = false;
-    if ( this.autoRender ) {
+    if (this.autoRender) {
         this.render();
     }
 }
 
 GenomeViewer.prototype = {
 
-    render: function ( targetId ) {
+    render: function (targetId) {
         var _this = this;
         this.targetId = (targetId) ? targetId : this.targetId;
-        this.targetDiv = (this.targetId instanceof HTMLElement ) ? this.targetId : $( '#' + this.targetId )[0];
-        if ( this.targetDiv === 'undefined' ) {
-            console.log( 'targetId not found' );
+        this.targetDiv = (this.targetId instanceof HTMLElement ) ? this.targetId : $('#' + this.targetId)[0];
+        if (this.targetDiv === 'undefined') {
+            console.log('targetId not found');
             return;
         }
 
-        this.div = $( '<div class="bootstrap ocb-gv ocb-box-vertical" id="' + this.id + '"></div>' )[0];
+        this.div = $('<div class="bootstrap ocb-gv ocb-box-vertical" id="' + this.id + '"></div>')[0];
 
-        if ( this.border ) {
-            var border = (_.isString( this.border )) ? this.border : '1px solid lightgray';
-            $( this.targetDiv ).css( {border: border} );
+        if (this.border) {
+            var border = (_.isString(this.border)) ? this.border : '1px solid lightgray';
+            $(this.targetDiv).css({border: border});
         }
 
-        if ( typeof this.width === 'undefined' ) {
+        if (typeof this.width === 'undefined') {
             //try to define a width
-            this.width = $( this.targetDiv ).innerWidth();
-            if ( this.width === 0 ) {
-                this.width = $( 'body' ).width();
+            this.width = $(this.targetDiv).innerWidth();
+            if (this.width === 0) {
+                this.width = $('body').width();
             }
         }
-        $( this.div ).width( this.width );
-        $( this.targetDiv ).width( this.width );
+        $(this.div).width(this.width);
+        $(this.targetDiv).width(this.width);
 
-        if ( typeof this.height !== 'undefined' ) {
-            $( this.div ).height( this.height );
-            $( this.targetDiv ).height( this.height );
+        if (typeof this.height !== 'undefined') {
+            $(this.div).height(this.height);
+            $(this.targetDiv).height(this.height);
         }
 
-        this.navigationbarDiv = $( '<div id="navigation-' + this.id + '" class="ocb-gv-navigation"></div>' )[0];
-        $( this.div ).append( this.navigationbarDiv );
 
-        this.centerPanelDiv = $( '<div id="center-' + this.id + '" class="ocb-gv-center"></div>' )[0];
-        $( this.div ).append( this.centerPanelDiv );
+        this.navigationbarDiv = $('<div id="navigation-' + this.id + '" class="ocb-gv-navigation"></div>')[0];
+        $(this.div).append(this.navigationbarDiv);
 
-        this.statusbarDiv = $( '<div id="statusbar-' + this.id + '" class="ocb-gv-status"></div>' )[0];
-        $( this.div ).append( this.statusbarDiv );
+        this.centerPanelDiv = $('<div id="center-' + this.id + '" class="ocb-gv-center"></div>')[0];
+        $(this.div).append(this.centerPanelDiv);
 
-        this.rightSidebarDiv = $( '<div id="rightsidebar-' + this.id + '" style="position:absolute; z-index:50;right:0px;"></div>' )[0];
-        this.leftSidebarDiv = $( '<div id="leftsidebar-' + this.id + '" style="position:absolute; z-index:50;left:0px;"></div>' )[0];
-        $( this.centerPanelDiv ).append( this.rightSidebarDiv );
-        $( this.centerPanelDiv ).append( this.leftSidebarDiv );
+        this.statusbarDiv = $('<div id="statusbar-' + this.id + '" class="ocb-gv-status"></div>')[0];
+        $(this.div).append(this.statusbarDiv);
 
-        this.karyotypeDiv = $( '<div id="karyotype-' + this.id + '"></div>' )[0];
-        $( this.centerPanelDiv ).append( this.karyotypeDiv );
 
-        this.chromosomeDiv = $( '<div id="chromosome-' + this.id + '"></div>' )[0];
-        $( this.centerPanelDiv ).append( this.chromosomeDiv );
+        this.rightSidebarDiv = $('<div id="rightsidebar-' + this.id + '" style="position:absolute; z-index:50;right:0px;"></div>')[0];
+        this.leftSidebarDiv = $('<div id="leftsidebar-' + this.id + '" style="position:absolute; z-index:50;left:0px;"></div>')[0];
+        $(this.centerPanelDiv).append(this.rightSidebarDiv);
+        $(this.centerPanelDiv).append(this.leftSidebarDiv);
 
-        this.trackListPanelsDiv = $( '<div id="trackListPanels-' + this.id + '" class="trackListPanels" ></div>' )[0];
-        $( this.centerPanelDiv ).append( this.trackListPanelsDiv );
 
-        this.regionDiv = $( '<div id="region-' + this.id + '" ></div>' )[0];
-        $( this.trackListPanelsDiv ).append( this.regionDiv );
+        this.karyotypeDiv = $('<div id="karyotype-' + this.id + '"></div>')[0];
+        $(this.centerPanelDiv).append(this.karyotypeDiv);
 
-        this.tracksDiv = $( '<div id="tracks-' + this.id + '" ></div>' )[0];
-        $( this.trackListPanelsDiv ).append( this.tracksDiv );
+        this.chromosomeDiv = $('<div id="chromosome-' + this.id + '"></div>')[0];
+        $(this.centerPanelDiv).append(this.chromosomeDiv);
+
+        this.trackListPanelsDiv = $('<div id="trackListPanels-' + this.id + '" class="trackListPanels" ></div>')[0];
+        $(this.centerPanelDiv).append(this.trackListPanelsDiv);
+
+        this.regionDiv = $('<div id="region-' + this.id + '" ></div>')[0];
+        $(this.trackListPanelsDiv).append(this.regionDiv);
+
+        this.tracksDiv = $('<div id="tracks-' + this.id + '" ></div>')[0];
+        $(this.trackListPanelsDiv).append(this.tracksDiv);
+
 
         /****************************/
         /****************************/
         /****************************/
+
 
         this.chromosomes = this.getChromosomes();
 
-
-        this._checkAndSetMinimumRegion( this.region, this.getSVGCanvasWidth() )
-        this.zoom = 50;
-        console.log(this.zoom);
-        //this.zoom = this._calculateZoomByRegion( this.region );
+        this._checkAndSetMinimumRegion(this.region, this.getSVGCanvasWidth())
+        this.zoom = this._calculateZoomByRegion(this.region);
 
         // Resize
-        if ( this.resizable ) {
-            $( window ).resize( function ( event ) {
-                if ( event.target == window ) {
-                    if ( !_this.resizing ) {//avoid multiple resize events
+        if (this.resizable) {
+            $(window).resize(function (event) {
+                if (event.target == window) {
+                    if (!_this.resizing) {//avoid multiple resize events
                         _this.resizing = true;
-                        _this.setWidth( $( _this.targetDiv ).width() );
-                        setTimeout( function () {
+                        _this.setWidth($(_this.targetDiv).width());
+                        setTimeout(function () {
                             _this.resizing = false;
-                        }, 400 );
+                        }, 400);
                     }
                 }
-            } );
+            });
 //            $(this.targetDiv).resizable({
 //                handles: 'e',
 //                ghost: true,
@@ -29815,92 +31529,95 @@ GenomeViewer.prototype = {
         }
 
         /* Navigation Bar */
-        if ( this.drawNavigationBar ) {
-            this.navigationBar = this._createNavigationBar( this.navigationbarDiv );
+        if (this.drawNavigationBar) {
+            this.navigationBar = this._createNavigationBar(this.navigationbarDiv);
         }
 
+
         /*karyotype Panel*/
-        if ( this.drawKaryotypePanel ) {
-            this.karyotypePanel = this._drawKaryotypePanel( this.karyotypeDiv );
+        if (this.drawKaryotypePanel) {
+            this.karyotypePanel = this._drawKaryotypePanel(this.karyotypeDiv);
         }
 
         /* Chromosome Panel */
-        if ( this.drawChromosomePanel ) {
-            this.chromosomePanel = this._drawChromosomePanel( this.chromosomeDiv );
+        if (this.drawChromosomePanel) {
+            this.chromosomePanel = this._drawChromosomePanel(this.chromosomeDiv);
         }
 
         /* Region Panel, is a TrackListPanel Class */
-        if ( this.drawOverviewTrackListPanel ) {
-            this.overviewTrackListPanel = this._createOverviewTrackListPanel( this.regionDiv );
+        if (this.drawOverviewTrackListPanel) {
+            this.overviewTrackListPanel = this._createOverviewTrackListPanel(this.regionDiv);
         }
         /*TrackList Panel*/
-        this.trackListPanel = this._createTrackListPanel( this.tracksDiv );
+        this.trackListPanel = this._createTrackListPanel(this.tracksDiv);
 
         /*Status Bar*/
-        if ( this.drawStatusBar ) {
-            this.statusBar = this._createStatusBar( this.statusbarDiv );
+        if (this.drawStatusBar) {
+            this.statusBar = this._createStatusBar(this.statusbarDiv);
         }
 
-        this.on( 'region:change region:move', function ( event ) {
-            if ( event.sender != _this ) {
-                _this.region.load( event.region );
+
+        this.on('region:change region:move', function (event) {
+            if (event.sender != _this) {
+                _this.region.load(event.region);
             }
-        } );
-        this.on( 'width:change', function ( event ) {
-            if ( event.sender != _this ) {
+        });
+        this.on('width:change', function (event) {
+            if (event.sender != _this) {
                 _this.width = event.width;
-                $( _this.div ).width( event.width );
-                $( _this.targetDiv ).width( event.width );
+                $(_this.div).width(event.width);
+                $(_this.targetDiv).width(event.width);
             }
-        } );
-        this.on( 'species:change', function ( event ) {
+        });
+        this.on('species:change', function (event) {
             _this.species = event.species;
             _this.chromosomes = _this.getChromosomes();
-        } );
+        });
 
-        $( "html" ).bind( 'keydown.genomeViewer', function ( e ) {
-            switch ( e.keyCode ) {
+        $("html").bind('keydown.genomeViewer', function (e) {
+            switch (e.keyCode) {
                 case 40://down arrow
                 case 109://minus key
-                    if ( e.shiftKey ) {
-                        _this.increaseZoom( -10 );
+                    if (e.shiftKey) {
+                        _this.increaseZoom(-10);
                     }
                     break;
                 case 38://up arrow
                 case 107://plus key
-                    if ( e.shiftKey ) {
-                        _this.increaseZoom( 10 );
+                    if (e.shiftKey) {
+                        _this.increaseZoom(10);
                     }
                     break;
             }
-        } );
+        });
 
         /****************************/
         /****************************/
         /****************************/
+
 
         this.rendered = true;
     },
     draw: function () {
-        if ( !this.rendered ) {
-            console.info( 'Genome Viewer is not rendered yet' );
+        if (!this.rendered) {
+            console.info('Genome Viewer is not rendered yet');
             return;
         }
-        $( this.targetDiv ).append( this.div );
+        $(this.targetDiv).append(this.div);
     },
 
     destroy: function () {
-        $( this.div ).remove();
+        $(this.div).remove();
         this.off();
         this.rendered = false;
-        $( "html" ).unbind( ".genomeViewer" );
-        $( "body" ).unbind( ".genomeViewer" );
+        $("html").unbind(".genomeViewer");
+        $("body").unbind(".genomeViewer");
         delete this;
     },
     getChromosomes: function () {
-        var saveChromosomes = function ( chromsomeList ) {
+        var saveChromosomes = function (chromsomeList) {
             var chromosomes = {};
-            for ( var i = 0; i < chromsomeList.length; i++ ) {
+            for (var i = 0; i < chromsomeList.length; i++) {
                 var chromosome = chromsomeList[i];
                 chromosomes[chromosome.name] = chromosome;
             }
@@ -29908,10 +31625,10 @@ GenomeViewer.prototype = {
         }
 
         var chromosomes;
-        if ( typeof this.chromosomeList !== 'undefined' ) {
-            chromosomes = saveChromosomes( this.chromosomeList );
+        if (typeof this.chromosomeList !== 'undefined') {
+            chromosomes = saveChromosomes(this.chromosomeList);
         } else {
-            CellBaseManager.get( {
+            CellBaseManager.get({
                 host: this.cellBaseHost,
                 version: this.cellBaseVersion,
                 species: this.species,
@@ -29919,13 +31636,13 @@ GenomeViewer.prototype = {
                 subCategory: 'chromosome',
                 resource: 'all',
                 async: false,
-                success: function ( data ) {
-                    chromosomes = saveChromosomes( data.response.result.chromosomes );
+                success: function (data) {
+                    chromosomes = saveChromosomes(data.response.result.chromosomes);
                 },
-                error: function ( data ) {
-                    console.log( 'Could not get chromosome list' );
+                error: function (data) {
+                    console.log('Could not get chromosome list');
                 }
-            } );
+            });
         }
         return chromosomes;
     },
@@ -29933,15 +31650,15 @@ GenomeViewer.prototype = {
     /*Components*/
     /**/
 
-    _createNavigationBar: function ( targetId ) {
+    _createNavigationBar: function (targetId) {
         var _this = this;
 
-        if ( !$.isFunction( this.quickSearchResultFn ) ) {
-            this.quickSearchResultFn = function ( query ) {
+        if (!$.isFunction(this.quickSearchResultFn)) {
+            this.quickSearchResultFn = function (query) {
                 var results = [];
-                var speciesCode = Utils.getSpeciesCode( this.species.text ).substr( 0, 3 );
+                var speciesCode = Utils.getSpeciesCode(this.species.text).substr(0, 3);
 
-                CellBaseManager.get( {
+                CellBaseManager.get({
                     host: _this.cellBaseHost,
                     version: _this.cellBaseVersion,
 //                    host: 'http://ws.bioinfo.cipf.es/cellbase/rest',
@@ -29955,26 +31672,23 @@ GenomeViewer.prototype = {
                         of: 'json'
                     },
                     async: false,
-                    success: function ( data, textStatus, jqXHR ) {
-                        for ( var i in data[0] ) {
-                            results.push( data[0][i].displayId );
+                    success: function (data, textStatus, jqXHR) {
+                        for (var i in data[0]) {
+                            results.push(data[0][i].displayId);
                         }
                     }
-                } );
+                });
                 return results;
             };
         }
 
-        var goFeature = function ( featureName ) {
-            if ( featureName != null ) {
-                if ( featureName.slice( 0, "rs".length ) == "rs" || featureName.slice( 0, "AFFY_".length ) == "AFFY_" || featureName.slice( 0, "SNP_".length )
-                    == "SNP_" || featureName.slice( 0, "VAR_".length ) == "VAR_" || featureName.slice( 0, "CRTAP_".length ) == "CRTAP_" || featureName.slice( 0,
-                    "FKBP10_".length ) == "FKBP10_" || featureName.slice( 0, "LEPRE1_".length ) == "LEPRE1_" || featureName.slice( 0, "PPIB_".length )
-                    == "PPIB_" ) {
-                    this.openSNPListWidget( featureName );
+        var goFeature = function (featureName) {
+            if (featureName != null) {
+                if (featureName.slice(0, "rs".length) == "rs" || featureName.slice(0, "AFFY_".length) == "AFFY_" || featureName.slice(0, "SNP_".length) == "SNP_" || featureName.slice(0, "VAR_".length) == "VAR_" || featureName.slice(0, "CRTAP_".length) == "CRTAP_" || featureName.slice(0, "FKBP10_".length) == "FKBP10_" || featureName.slice(0, "LEPRE1_".length) == "LEPRE1_" || featureName.slice(0, "PPIB_".length) == "PPIB_") {
+                    this.openSNPListWidget(featureName);
                 } else {
-                    console.log( featureName );
-                    CellBaseManager.get( {
+                    console.log(featureName);
+                    CellBaseManager.get({
                         host: _this.cellBaseHost,
                         version: _this.cellBaseVersion,
                         species: _this.species,
@@ -29985,17 +31699,17 @@ GenomeViewer.prototype = {
                         params: {
                             include: 'chromosome,start,end'
                         },
-                        success: function ( data ) {
+                        success: function (data) {
                             var feat = data.response[0].result[0];
-                            var region = new Region( feat );
-                            _this._regionChangeHandler( {region: region} );
+                            var region = new Region(feat);
+                            _this._regionChangeHandler({region: region});
                         }
-                    } );
+                    });
                 }
             }
         };
 
-        var navigationBar = new NavigationBar( {
+        var navigationBar = new NavigationBar({
             targetId: targetId,
             cellBaseHost: this.cellBaseHost,
             cellBaseVersion: this.cellBaseVersion,
@@ -30010,93 +31724,93 @@ GenomeViewer.prototype = {
             quickSearchDisplayKey: this.quickSearchDisplayKey,
             componentsConfig: this.navigationBarConfig.componentsConfig,
             handlers: {
-                'region:change': function ( event ) {
-                    _this._regionChangeHandler( event );
+                'region:change': function (event) {
+                    _this._regionChangeHandler(event);
                 },
-                'region:move': function ( event ) {
-                    _this._regionMoveHandler( event );
+                'region:move': function (event) {
+                    _this._regionMoveHandler(event);
                 },
-                'zoom:change': function ( event ) {
-                    _this._zoomChangeHandler( event );
+                'zoom:change': function (event) {
+                    _this._zoomChangeHandler(event);
                 },
-                'species:change': function ( event ) {
-                    _this._speciesChangeHandler( event );
+                'species:change': function (event) {
+                    _this._speciesChangeHandler(event);
                 },
 
-                'karyotype-button:change': function ( event ) {
-                    if ( event.selected ) {
+                'karyotype-button:change': function (event) {
+                    if (event.selected) {
                         _this.karyotypePanel.show();
                     } else {
                         _this.karyotypePanel.hide();
                     }
                 },
-                'chromosome-button:change': function ( event ) {
-                    if ( event.selected ) {
+                'chromosome-button:change': function (event) {
+                    if (event.selected) {
                         _this.chromosomePanel.show();
                     } else {
                         _this.chromosomePanel.hide();
                     }
                 },
-                'region-button:change': function ( event ) {
-                    if ( event.selected ) {
+                'region-button:change': function (event) {
+                    if (event.selected) {
                         _this.overviewTrackListPanel.show();
                     } else {
                         _this.overviewTrackListPanel.hide();
                     }
                 },
-                'fullscreen:click': function ( event ) {
-                    if ( _this.fullscreen ) {
-                        $( _this.div ).css( {width: 'auto'} );
+                'fullscreen:click': function (event) {
+                    if (_this.fullscreen) {
+                        $(_this.div).css({width: 'auto'});
                         Utils.cancelFullscreen();//no need to pass the dom object;
                         _this.fullscreen = false;
                     } else {
-                        $( _this.div ).css( {width: screen.width} );
-                        Utils.launchFullScreen( _this.div );
+                        $(_this.div).css({width: screen.width});
+                        Utils.launchFullScreen(_this.div);
                         _this.fullscreen = true;
                     }
                 },
-                'restoreDefaultRegion:click': function ( event ) {
-                    _this._regionChangeHandler( event );
+                'restoreDefaultRegion:click': function (event) {
+                    _this._regionChangeHandler(event);
 //                    event.region = _this._checkRegion(event.region);
 //                    _this.setMinRegion(_this.defaultRegion, _this.getSVGCanvasWidth());
 //                    event.region = _this.defaultRegion;
 //                    _this.trigger('region:change', event);
                 },
-                'autoHeight-button:click': function ( event ) {
+                'autoHeight-button:click': function (event) {
                     _this.enableAutoHeight();
                 },
-                'quickSearch:select': function ( event ) {
-                    goFeature( event.item );
-                    _this.trigger( 'quickSearch:select', event );
+                'quickSearch:select': function (event) {
+                    goFeature(event.item);
+                    _this.trigger('quickSearch:select', event);
                 },
-                'quickSearch:go': function ( event ) {
-                    goFeature( event.item );
+                'quickSearch:go': function (event) {
+                    goFeature(event.item);
                 }
             }
-        } );
+        });
 
-        this.on( 'region:change', function ( event ) {
+        this.on('region:change', function (event) {
 //            if (event.sender != navigationBar) {
-            _this.navigationBar.setRegion( event.region, _this.zoom );
+            _this.navigationBar.setRegion(event.region, _this.zoom);
 //            }
-        } );
-        this.on( 'region:move', function ( event ) {
-            if ( event.sender != navigationBar ) {
-                _this.navigationBar.moveRegion( event.region );
+        });
+        this.on('region:move', function (event) {
+            if (event.sender != navigationBar) {
+                _this.navigationBar.moveRegion(event.region);
             }
-        } );
-        this.on( 'width:change', function ( event ) {
-            _this.navigationBar.setWidth( event.width );
-        } );
+        });
+        this.on('width:change', function (event) {
+            _this.navigationBar.setWidth(event.width);
+        });
 
         navigationBar.draw();
 
         return navigationBar;
     },
 
-    _drawKaryotypePanel: function ( targetId ) {
+    _drawKaryotypePanel: function (targetId) {
         var _this = this;
-        karyotypePanel = new KaryotypePanel( {
+        karyotypePanel = new KaryotypePanel({
             targetId: targetId,
             cellBaseHost: this.cellBaseHost,
             cellBaseVersion: this.cellBaseVersion,
@@ -30109,33 +31823,33 @@ GenomeViewer.prototype = {
             region: this.region,
             autoRender: true,
             handlers: {
-                'region:change': function ( event ) {
-                    _this._regionChangeHandler( event );
+                'region:change': function (event) {
+                    _this._regionChangeHandler(event);
                 }
             }
-        } );
+        });
 
-        this.on( 'region:change region:move', function ( event ) {
+        this.on('region:change region:move', function (event) {
 //            if (event.sender != karyotypePanel) {
-            karyotypePanel.setRegion( event.region );
+            karyotypePanel.setRegion(event.region);
 //            }
-        } );
-        this.on( 'width:change', function ( event ) {
-            karyotypePanel.setWidth( event.width - _this.sidePanelWidth );
-        } );
-        this.on( 'species:change', function ( event ) {
-            karyotypePanel.setSpecies( event.species );
-        } );
+        });
+        this.on('width:change', function (event) {
+            karyotypePanel.setWidth(event.width - _this.sidePanelWidth);
+        });
+        this.on('species:change', function (event) {
+            karyotypePanel.setSpecies(event.species);
+        });
 
         karyotypePanel.draw();
 
         return karyotypePanel;
     },
 
-    _drawChromosomePanel: function ( targetId ) {
+    _drawChromosomePanel: function (targetId) {
         var _this = this;
 
-        var chromosomePanel = new ChromosomePanel( {
+        var chromosomePanel = new ChromosomePanel({
             targetId: targetId,
             cellBaseHost: this.cellBaseHost,
             cellBaseVersion: this.cellBaseVersion,
@@ -30148,32 +31862,32 @@ GenomeViewer.prototype = {
             collapsible: this.chromosomePanelConfig.collapsible,
             region: this.region,
             handlers: {
-                'region:change': function ( event ) {
-                    _this._regionChangeHandler( event );
+                'region:change': function (event) {
+                    _this._regionChangeHandler(event);
                 }
             }
-        } );
+        });
 
-        this.on( 'region:change region:move', function ( event ) {
+        this.on('region:change region:move', function (event) {
 //            if (event.sender != chromosomePanel) {
-            chromosomePanel.setRegion( event.region );
+            chromosomePanel.setRegion(event.region);
 //            }
-        } );
-        this.on( 'width:change', function ( event ) {
-            chromosomePanel.setWidth( event.width - _this.sidePanelWidth );
-        } );
-        this.on( 'species:change', function ( event ) {
-            chromosomePanel.setSpecies( event.species );
-        } );
+        });
+        this.on('width:change', function (event) {
+            chromosomePanel.setWidth(event.width - _this.sidePanelWidth);
+        });
+        this.on('species:change', function (event) {
+            chromosomePanel.setSpecies(event.species);
+        });
 
         chromosomePanel.draw();
 
         return chromosomePanel;
     },
 
-    _createOverviewTrackListPanel: function ( targetId ) {
+    _createOverviewTrackListPanel: function (targetId) {
         var _this = this;
-        var trackListPanel = new TrackListPanel( {
+        var trackListPanel = new TrackListPanel({
             cellBaseHost: this.cellBaseHost,
             cellBaseVersion: this.cellBaseVersion,
             targetId: targetId,
@@ -30185,39 +31899,39 @@ GenomeViewer.prototype = {
             collapsible: this.regionPanelConfig.collapsible,
             region: this.region,
             handlers: {
-                'region:change': function ( event ) {
+                'region:change': function (event) {
                     event.sender = undefined;
-                    _this._regionChangeHandler( event );
+                    _this._regionChangeHandler(event);
                 },
-                'region:move': function ( event ) {
-                    _this._regionMoveHandler( event );
+                'region:move': function (event) {
+                    _this._regionMoveHandler(event);
                 }
             }
-        } );
+        });
 
-        this.on( 'region:change', function ( event ) {
-            if ( event.sender != trackListPanel ) {
-                trackListPanel.setRegion( event.region );
+        this.on('region:change', function (event) {
+            if (event.sender != trackListPanel) {
+                trackListPanel.setRegion(event.region);
             }
-        } );
-        this.on( 'region:move', function ( event ) {
-            if ( event.sender != trackListPanel ) {
-                trackListPanel.moveRegion( event );
+        });
+        this.on('region:move', function (event) {
+            if (event.sender != trackListPanel) {
+                trackListPanel.moveRegion(event);
             }
-        } );
-        this.on( 'width:change', function ( event ) {
-            trackListPanel.setWidth( event.width - _this.sidePanelWidth );
-        } );
-        this.on( 'species:change', function ( event ) {
-            trackListPanel.setSpecies( event.species );
-        } );
+        });
+        this.on('width:change', function (event) {
+            trackListPanel.setWidth(event.width - _this.sidePanelWidth);
+        });
+        this.on('species:change', function (event) {
+            trackListPanel.setSpecies(event.species);
+        });
 
         return  trackListPanel;
     },
 
-    _createTrackListPanel: function ( targetId ) {
+    _createTrackListPanel: function (targetId) {
         var _this = this;
-        var trackListPanel = new TrackListPanel( {
+        var trackListPanel = new TrackListPanel({
             targetId: targetId,
             cellBaseHost: this.cellBaseHost,
             cellBaseVersion: this.cellBaseVersion,
@@ -30226,83 +31940,86 @@ GenomeViewer.prototype = {
             title: this.trackListTitle,
             region: this.region,
             handlers: {
-                'region:change': function ( event ) {
+                'region:change': function (event) {
                     event.sender = undefined;
-                    _this._regionChangeHandler( event );
+                    _this._regionChangeHandler(event);
                 },
-                'region:move': function ( event ) {
-                    _this._regionMoveHandler( event );
+                'region:move': function (event) {
+                    _this._regionMoveHandler(event);
                 }
             }
-        } );
+        });
 
-        this.on( 'region:change', function ( event ) {
-            if ( event.sender != trackListPanel ) {
-                trackListPanel.setRegion( event.region );
+        this.on('region:change', function (event) {
+            if (event.sender != trackListPanel) {
+                trackListPanel.setRegion(event.region);
             }
-        } );
-        this.on( 'region:move', function ( event ) {
-            if ( event.sender != trackListPanel ) {
-                trackListPanel.moveRegion( event );
+        });
+        this.on('region:move', function (event) {
+            if (event.sender != trackListPanel) {
+                trackListPanel.moveRegion(event);
             }
-        } );
-        this.on( 'width:change', function ( event ) {
-            trackListPanel.setWidth( event.width - _this.sidePanelWidth );
-        } );
-        this.on( 'species:change', function ( event ) {
-            trackListPanel.setSpecies( event.species );
-        } );
+        });
+        this.on('width:change', function (event) {
+            trackListPanel.setWidth(event.width - _this.sidePanelWidth);
+        });
+        this.on('species:change', function (event) {
+            trackListPanel.setSpecies(event.species);
+        });
 
-        this.on( 'feature:highlight', function ( event ) {
-            trackListPanel.highlight( event );
-        } );
+        this.on('feature:highlight', function (event) {
+            trackListPanel.highlight(event);
+        });
+
 
         return  trackListPanel;
     },
 
-    _createStatusBar: function ( targetId ) {
+    _createStatusBar: function (targetId) {
         var _this = this;
-        var statusBar = new StatusBar( {
+        var statusBar = new StatusBar({
             targetId: targetId,
             autoRender: true,
             region: this.region,
             width: this.width,
             version: this.version
-        } );
+        });
 
-        this.on( 'region:change', function ( event ) {
-            statusBar.setRegion( event );
-        } );
+        this.on('region:change', function (event) {
+            statusBar.setRegion(event);
+        });
 
-        this.trackListPanel.on( 'mousePosition:change', function ( event ) {
-            statusBar.setMousePosition( event );
-        } );
+
+        this.trackListPanel.on('mousePosition:change', function (event) {
+            statusBar.setMousePosition(event);
+        });
 
         return  statusBar;
     },
 
+
     /*****************/
     /** PRIVATE HELPER METHODS **/
     /*****************/
-    _checkAndSetNewChromosomeRegion: function ( region ) {
+    _checkAndSetNewChromosomeRegion: function (region) {
         var newChr = this.chromosomes[region.chromosome];
-        if ( region.chromosome !== this.region.chromosome ) {
-            if ( region.start > newChr.size || region.end > newChr.size ) {
-                region.start = Math.round( newChr.size / 2 );
-                region.end = Math.round( newChr.size / 2 );
+        if (region.chromosome !== this.region.chromosome) {
+            if (region.start > newChr.size || region.end > newChr.size) {
+                region.start = Math.round(newChr.size / 2);
+                region.end = Math.round(newChr.size / 2);
             }
         }
     },
-    _checkAndSetMinimumRegion: function ( region, width ) {
-        var minLength = Math.floor( width / 10 );
-        if ( region.length() < minLength ) {
+    _checkAndSetMinimumRegion: function (region, width) {
+        var minLength = Math.floor(width / 10);
+        if (region.length() < minLength) {
             var centerPosition = region.center();
-            var aux = Math.ceil( (minLength / 2) - 1 );
-            region.start = Math.floor( centerPosition - aux );
-            region.end = Math.floor( centerPosition + aux );
+            var aux = Math.ceil((minLength / 2) - 1);
+            region.start = Math.floor(centerPosition - aux);
+            region.end = Math.floor(centerPosition + aux);
         }
     },
-    _calculateRegionByZoom: function ( zoom ) {
+    _calculateRegionByZoom: function (zoom) {
         // mrl = minimum region length
         // zlm = zoom level multiplier
 
@@ -30313,28 +32030,28 @@ GenomeViewer.prototype = {
         var minNtPixels = 10; // 10 is the minimum pixels per nt
         var chr = this.chromosomes[this.region.chromosome];
         var minRegionLength = this.getSVGCanvasWidth() / minNtPixels;
-        var zoomLevelMultiplier = Math.pow( chr.size / minRegionLength, 0.01 ); // 0.01 = 1/100  100 zoom levels
+        var zoomLevelMultiplier = Math.pow(chr.size / minRegionLength, 0.01); // 0.01 = 1/100  100 zoom levels
 
 //      regionLength = mrl * (Math.pow(zlm,ZOOM))
-        var regionLength = minRegionLength * (Math.pow( zoomLevelMultiplier, 100 - zoom )); // invert   100 - zoom
+        var regionLength = minRegionLength * (Math.pow(zoomLevelMultiplier, 100 - zoom)); // invert   100 - zoom
 
         var centerPosition = this.region.center();
-        var aux = Math.ceil( (regionLength / 2) - 1 );
-        var start = Math.floor( centerPosition - aux );
-        var end = Math.floor( centerPosition + aux );
+        var aux = Math.ceil((regionLength / 2) - 1);
+        var start = Math.floor(centerPosition - aux);
+        var end = Math.floor(centerPosition + aux);
 
         return {start: start, end: end};
     },
-    _calculateZoomByRegion: function ( region ) {
+    _calculateZoomByRegion: function (region) {
         var minNtPixels = 10; // 10 is the minimum pixels per nt
         var chr = this.chromosomes[this.region.chromosome];
         var minRegionLength = this.getSVGCanvasWidth() / minNtPixels;
-        var zoomLevelMultiplier = Math.pow( chr.size / minRegionLength, 0.01 ); // 0.01 = 1/100  100 zoom levels
+        var zoomLevelMultiplier = Math.pow(chr.size / minRegionLength, 0.01); // 0.01 = 1/100  100 zoom levels
 
         var regionLength = region.length();
 
 //      zoom = Math.log(REGIONLENGTH/mrl) / Math.log(zlm);
-        var zoom = Math.log( regionLength / minRegionLength ) / Math.log( zoomLevelMultiplier );
+        var zoom = Math.log(regionLength / minRegionLength) / Math.log(zoomLevelMultiplier);
         return 100 - zoom;
     },
     /*****************/
@@ -30399,13 +32116,13 @@ GenomeViewer.prototype = {
 //    },
 
     _checkChangingRegion: function () {
-        if ( typeof this.overviewTrackListPanel !== 'undefined' ) {
-            if ( !this.overviewTrackListPanel.checkTracksReady() ) {
+        if (typeof this.overviewTrackListPanel !== 'undefined') {
+            if (!this.overviewTrackListPanel.checkTracksReady()) {
                 return false;
             }
         }
-        if ( typeof this.trackListPanel !== 'undefined' ) {
-            if ( !this.trackListPanel.checkTracksReady() ) {
+        if (typeof this.trackListPanel !== 'undefined') {
+            if (!this.trackListPanel.checkTracksReady()) {
                 return false;
             }
         }
@@ -30420,44 +32137,44 @@ GenomeViewer.prototype = {
     /*****************/
     /** EVENT METHODS **/
     /*****************/
-    _regionChangeHandler: function ( event ) {
-        if ( this._checkChangingRegion() ) {
+    _regionChangeHandler: function (event) {
+        if (this._checkChangingRegion()) {
 
             /**/
-            this._checkAndSetNewChromosomeRegion( event.region );
-            this._checkAndSetMinimumRegion( event.region, this.getSVGCanvasWidth() );
-            this.zoom = this._calculateZoomByRegion( event.region );
+            this._checkAndSetNewChromosomeRegion(event.region);
+            this._checkAndSetMinimumRegion(event.region, this.getSVGCanvasWidth());
+            this.zoom = this._calculateZoomByRegion(event.region);
             //Relaunch
-            this.trigger( 'region:change', event );
+            this.trigger('region:change', event);
             /**/
 
         } else {
-            if ( event.sender ) {
-                if ( event.sender.updateRegionControls ) {
+            if (event.sender) {
+                if (event.sender.updateRegionControls) {
                     event.sender.updateRegionControls();
                 }
             }
-            console.log( '****************************' );
-            console.log( '**************************** region change already in progress' );
-            console.log( '****************************' );
+            console.log('****************************');
+            console.log('**************************** region change already in progress');
+            console.log('****************************');
         }
 
     },
-    _regionMoveHandler: function ( event ) {
+    _regionMoveHandler: function (event) {
         //Relaunch
-        this.trigger( 'region:move', event );
+        this.trigger('region:move', event);
     },
-    _zoomChangeHandler: function ( event ) {
-        event.zoom = Math.min( 100, event.zoom );
-        event.zoom = Math.max( 0, event.zoom );
+    _zoomChangeHandler: function (event) {
+        event.zoom = Math.min(100, event.zoom);
+        event.zoom = Math.max(0, event.zoom);
         this.zoom = event.zoom;
-        this.region.load( this._calculateRegionByZoom( event.zoom ) );
-        this.setRegion( this.region );
+        this.region.load(this._calculateRegionByZoom(event.zoom));
+        this.setRegion(this.region);
     },
-    _speciesChangeHandler: function ( event ) {
+    _speciesChangeHandler: function (event) {
         //Relaunch
-        this.trigger( 'species:change', event );
-        this.setRegion( new Region( event.species.region ) );
+        this.trigger('species:change', event);
+        this.setRegion(event.species.region);
     },
 
     /*****************/
@@ -30466,27 +32183,27 @@ GenomeViewer.prototype = {
     /*****************/
     /** API METHODS **/
     /*****************/
-    setRegion: function ( region ) {
-        this._regionChangeHandler( {region: region} );
+    setRegion: function (region) {
+        this._regionChangeHandler({region: region});
     },
-    moveRegion: function ( disp ) {
+    moveRegion: function (disp) {
         this.region.start += disp;
         this.region.end += disp;
-        this.trigger( 'region:move', {region: this.region, disp: -disp, sender: this} );
+        this.trigger('region:move', {region: this.region, disp: -disp, sender: this});
     },
-    setWidth: function ( width ) {
-        this.trigger( 'width:change', {width: width} );
+    setWidth: function (width) {
+        this.trigger('width:change', {width: width});
     },
-    setZoom: function ( zoom ) {
-        zoom = Math.min( 100, zoom );
-        zoom = Math.max( 0, zoom );
+    setZoom: function (zoom) {
+        zoom = Math.min(100, zoom);
+        zoom = Math.max(0, zoom);
         this.zoom = zoom;
-        this.region.load( this._calculateRegionByZoom( zoom ) );
-        this.setRegion( this.region );
+        this.region.load(this._calculateRegionByZoom(zoom));
+        this.setRegion(this.region);
     },
-    increaseZoom: function ( zoomToIncrease ) {
+    increaseZoom: function (zoomToIncrease) {
         var zoom = this.zoom + zoomToIncrease;
-        this.setZoom( zoom );
+        this.setZoom(zoom);
     },
     /*****************/
     /*****************/
@@ -30503,45 +32220,46 @@ GenomeViewer.prototype = {
 
 
 
-    mark: function ( args ) {
+    mark: function (args) {
         var attrName = args.attrName || 'feature_id';
         var cssClass = args.class || 'feature-emph';
-        if ( 'attrValues' in args ) {
-            args.attrValues = ($.isArray( args.attrValues )) ? args.attrValues : [args.attrValues];
-            for ( var key in args.attrValues ) {
-                $( 'rect[' + attrName + '~=' + args.attrValues[key] + ']' ).attr( 'class', cssClass );
+        if ('attrValues' in args) {
+            args.attrValues = ($.isArray(args.attrValues)) ? args.attrValues : [args.attrValues];
+            for (var key in args.attrValues) {
+                $('rect[' + attrName + '~=' + args.attrValues[key] + ']').attr('class', cssClass);
             }
 
         }
     },
-    unmark: function ( args ) {
+    unmark: function (args) {
         var attrName = args.attrName || 'feature_id';
-        if ( 'attrValues' in args ) {
-            args.attrValues = ($.isArray( args.attrValues )) ? args.attrValues : [args.attrValues];
-            for ( var key in args.attrValues ) {
-                $( 'rect[' + attrName + '~=' + args.attrValues[key] + ']' ).attr( 'class', '' );
+        if ('attrValues' in args) {
+            args.attrValues = ($.isArray(args.attrValues)) ? args.attrValues : [args.attrValues];
+            for (var key in args.attrValues) {
+                $('rect[' + attrName + '~=' + args.attrValues[key] + ']').attr('class', '');
             }
 
         }
     },
 
-    highlight: function ( args ) {
-        this.trigger( 'feature:highlight', args );
+    highlight: function (args) {
+        this.trigger('feature:highlight', args);
     },
+
 
     getRightSidePanelId: function () {
-        return $( this.rightSidebarDiv ).attr( 'id' );
+        return $(this.rightSidebarDiv).attr('id');
     },
     getLeftSidePanelId: function () {
-        return $( this.leftSidebarDiv ).attr( 'id' );
+        return $(this.leftSidebarDiv).attr('id');
     },
     getNavigationPanelId: function () {
-        return $( this.navigationbarDiv ).attr( 'id' );
+        return $(this.navigationbarDiv).attr('id');
     },
     getStatusPanelId: function () {
-        return $( this.statusbarDiv ).attr( 'id' );
+        return $(this.statusbarDiv).attr('id');
     },
-    setNavigationBar: function ( navigationBar ) {
+    setNavigationBar: function (navigationBar) {
         this.navigationBar = navigationBar;
         var config = {
             availableSpecies: this.availableSpecies,
@@ -30550,8 +32268,8 @@ GenomeViewer.prototype = {
             width: this.width,
             svgCanvasWidthOffset: this.trackPanelScrollWidth + this.sidePanelWidth
         };
-        _.extend( this.navigationBar, config );
-        navigationBar.render( this.getNavigationPanelId() );
+        _.extend(this.navigationBar, config);
+        navigationBar.render(this.getNavigationPanelId());
     },
 
     enableAutoHeight: function () {
@@ -30563,83 +32281,85 @@ GenomeViewer.prototype = {
         this.overviewTrackListPanel.updateHeight();
     },
 
-    setSpeciesVisible: function ( bool ) {
-        this.navigationBar.setSpeciesVisible( bool );
+
+    setSpeciesVisible: function (bool) {
+        this.navigationBar.setSpeciesVisible(bool);
     },
 
-    setChromosomesVisible: function ( bool ) {
-        this.navigationBar.setChromosomeMenuVisible( bool );
+    setChromosomesVisible: function (bool) {
+        this.navigationBar.setChromosomeMenuVisible(bool);
     },
 
-    setKaryotypePanelVisible: function ( bool ) {
-        this.karyotypePanel.setVisible( bool );
-        this.navigationBar.setVisible( {'karyotype': bool} );
+    setKaryotypePanelVisible: function (bool) {
+        this.karyotypePanel.setVisible(bool);
+        this.navigationBar.setVisible({'karyotype': bool});
     },
 
-    setChromosomePanelVisible: function ( bool ) {
-        this.chromosomePanel.setVisible( bool );
-        this.navigationBar.setVisible( {'chromosome': bool} );
+    setChromosomePanelVisible: function (bool) {
+        this.chromosomePanel.setVisible(bool);
+        this.navigationBar.setVisible({'chromosome': bool});
     },
 
-    setRegionOverviewPanelVisible: function ( bool ) {
-        this.overviewTrackListPanel.setVisible( bool );
-        this.navigationBar.setVisible( {'region': bool} );
+    setRegionOverviewPanelVisible: function (bool) {
+        this.overviewTrackListPanel.setVisible(bool);
+        this.navigationBar.setVisible({'region': bool});
     },
-    setRegionTextBoxVisible: function ( bool ) {
-        this.navigationBar.setRegionTextBoxVisible( bool );
+    setRegionTextBoxVisible: function (bool) {
+        this.navigationBar.setRegionTextBoxVisible(bool);
     },
-    setSearchVisible: function ( bool ) {
-        this.navigationBar.setSearchVisible( bool );
+    setSearchVisible: function (bool) {
+        this.navigationBar.setSearchVisible(bool);
     },
-    setFullScreenVisible: function ( bool ) {
-        this.navigationBar.setFullScreenButtonVisible( bool );
+    setFullScreenVisible: function (bool) {
+        this.navigationBar.setFullScreenButtonVisible(bool);
     },
 
     /*Track management*/
-    addOverviewTrack: function ( trackData, args ) {
-        this.overviewTrackListPanel.addTrack( trackData, args );
+    addOverviewTrack: function (trackData, args) {
+        this.overviewTrackListPanel.addTrack(trackData, args);
     },
 
-    addTrack: function ( trackData, args ) {
-        this.trackListPanel.addTrack( trackData, args );
+    addTrack: function (trackData, args) {
+        this.trackListPanel.addTrack(trackData, args);
     },
 
-    getTrackSvgById: function ( trackId ) {
-        return this.trackListPanel.getTrackSvgById( trackId );
+    getTrackSvgById: function (trackId) {
+        return this.trackListPanel.getTrackSvgById(trackId);
     },
 
-    removeTrack: function ( trackId ) {
-        return this.trackListPanel.removeTrack( trackId );
+    removeTrack: function (trackId) {
+        return this.trackListPanel.removeTrack(trackId);
     },
 
-    restoreTrack: function ( trackSvg, index ) {
-        return this.trackListPanel.restoreTrack( trackSvg, index );
+    restoreTrack: function (trackSvg, index) {
+        return this.trackListPanel.restoreTrack(trackSvg, index);
     },
 
-    setTrackIndex: function ( trackId, newIndex ) {
-        return this.trackListPanel.setTrackIndex( trackId, newIndex );
+    setTrackIndex: function (trackId, newIndex) {
+        return this.trackListPanel.setTrackIndex(trackId, newIndex);
     },
 
-    scrollToTrack: function ( trackId ) {
-        return this.trackListPanel.scrollToTrack( trackId );
+    scrollToTrack: function (trackId) {
+        return this.trackListPanel.scrollToTrack(trackId);
     },
 
-    showTrack: function ( trackId ) {
-        this.trackListPanel._showTrack( trackId );
+    showTrack: function (trackId) {
+        this.trackListPanel._showTrack(trackId);
     },
 
-    hideTrack: function ( trackId ) {
-        this.trackListPanel._hideTrack( trackId );
+    hideTrack: function (trackId) {
+        this.trackListPanel._hideTrack(trackId);
     },
+
 
     // TODO - DEPRECATED
-    checkRenderedTrack: function ( trackId ) {
-        console.log( 'DEPRECATED METHOD' )
-        console.log( this.checkRenderedTrack );
-        this.trackExists( trackId );
+    checkRenderedTrack: function (trackId) {
+        console.log('DEPRECATED METHOD')
+        console.log(this.checkRenderedTrack);
+        this.trackExists(trackId);
     },
-    trackExists: function ( trackId ) {
-        if ( this.trackListPanel.swapHash[trackId] ) {
+    trackExists: function (trackId) {
+        if (this.trackListPanel.swapHash[trackId]) {
             return true;
         }
         return false;

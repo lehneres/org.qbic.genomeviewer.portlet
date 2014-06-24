@@ -1,3 +1,259 @@
+function run() {
+
+        /* region and species configuration */
+        var region = new Region( {chromosome: "13", start: 32889611, end: 32973805} );
+        var availableSpecies = {
+            "text": "Species",
+            "items": [
+                {
+                    "text": "Vertebrates",
+                    "items": [
+                        {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "13", "start": 32889611, "end": 32889611}, "chromosomes": ["1",
+                            "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y",
+                            "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
+                        {"text": "Mus musculus", "assembly": "GRCm38.p1", "region": {"chromosome": "1", "start": 18422009, "end": 18422009}, "chromosomes": ["1",
+                            "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "X", "Y",
+                            "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"}
+                    ]
+                }
+            ]
+        };
+        var species = availableSpecies.items[0].items[0];
+
+        genomeViewer = new GenomeViewer( {
+            cellBaseHost: 'http://www.ebi.ac.uk/cellbase/webservices/rest',
+            cellBaseVersion: 'v3',
+            targetId: 'application',
+            region: region,
+            availableSpecies: availableSpecies,
+            species: species,
+            sidePanel: false,
+            autoRender: true,
+            border: true,
+            resizable: true,
+//        quickSearchResultFn:quickSearchResultFn,
+//        quickSearchDisplayKey:,
+            karyotypePanelConfig: {
+                collapsed: true,
+                collapsible: true
+            },
+            chromosomePanelConfig: {
+                collapsed: true,
+                collapsible: true
+            },
+            navigationBarConfig: {
+                componentsConfig: {
+//                restoreDefaultRegionButton:false,
+//                regionHistoryButton:false,
+//                speciesButton:false,
+//                chromosomesButton:false,
+//                karyotypeButton:false,
+//                chromosomeButton:false,
+//                regionButton:false,
+//                zoomControl:false,
+//                windowSizeControl:false,
+//                positionControl:false,
+//                moveControl:false,
+//                autoheightButton:false,
+//                compactButton:false,
+//                searchControl:false
+                }
+            },
+            handlers: {
+                'region:change': function ( e ) {
+                    console.log( e )
+                }
+            }
+//        chromosomeList:[]
+//            trackListTitle: ''
+//            drawNavigationBar = true;
+//            drawKaryotypePanel: false,
+//            drawChromosomePanel: false,
+//            drawOverviewTrackListPanel: false
+
+        } ); //the div must exist
+
+        tracks = [];
+        this.sequence = new SequenceTrack( {
+            targetId: null,
+            id: 1,
+//        title: 'Sequence',
+            height: 30,
+            visibleRegionSize: 200,
+
+            renderer: new SequenceRenderer(),
+
+            dataAdapter: new SequenceAdapter( {
+                category: "genomic",
+                subCategory: "region",
+                resource: "sequence",
+                species: genomeViewer.species
+            } )
+        } );
+
+        tracks.push( this.sequence );
+
+        var renderer = new GeneRenderer( FEATURE_TYPES.gene );
+        renderer.on( 'feature:click', function ( event ) {
+                // feature click event example
+                new GeneInfoWidget( null, genomeViewer.species, {host: genomeViewer.cellBaseHost, version: genomeViewer.cellBaseVersion} ).draw( event );
+            }
+        );
+
+        this.gene = new GeneTrack( {
+            targetId: null,
+            id: 2,
+            title: 'Gene',
+            minHistogramRegionSize: 20000000,
+            maxLabelRegionSize: 10000000,
+            minTranscriptRegionSize: 200000,
+            height: 140,
+
+            renderer: renderer,
+
+            dataAdapter: new CellBaseAdapter( {
+                category: "genomic",
+                subCategory: "region",
+                resource: "gene",
+                species: genomeViewer.species,
+                params: {
+                    exclude: 'transcripts.tfbs,transcripts.xrefs,transcripts.exons.sequence'
+                },
+                cacheConfig: {
+                    chunkSize: 100000
+                }
+            } )
+        } );
+
+        tracks.push( this.gene );
+
+        var renderer = new FeatureRenderer( FEATURE_TYPES.gene );
+        renderer.on( 'feature:click', function ( event ) {
+                // feature click event example
+                new GeneInfoWidget( null, genomeViewer.species, {host: genomeViewer.cellBaseHost, version: genomeViewer.cellBaseVersion} ).draw( event );
+            }
+        );
+
+        var gene = new FeatureTrack( {
+            targetId: null,
+            id: 2,
+//        title: 'Gene overview',
+            minHistogramRegionSize: 20000000,
+            maxLabelRegionSize: 10000000,
+            height: 100,
+
+            renderer: renderer,
+
+            dataAdapter: new CellBaseAdapter( {
+                category: "genomic",
+                subCategory: "region",
+                resource: "gene",
+                params: {
+                    exclude: 'transcripts,chunkIds'
+                },
+                species: genomeViewer.species,
+                cacheConfig: {
+                    chunkSize: 100000
+                }
+            } )
+        } );
+        genomeViewer.addOverviewTrack( gene );
+
+        var renderer = new FeatureRenderer( FEATURE_TYPES.snp );
+        renderer.on('feature:click', function (e) {
+            new SnpInfoWidget( null, genomeViewer.species, {host: genomeViewer.cellBaseHost, version: genomeViewer.cellBaseVersion} ).draw( e );
+        });
+
+        this.snp = new FeatureTrack( {
+            targetId: null,
+            id: 4,
+            title: 'SNP',
+            featureType: 'SNP',
+            minHistogramRegionSize: 10000,
+            maxLabelRegionSize: 3000,
+            height: 100,
+
+            renderer: renderer,
+
+            dataAdapter: new CellBaseAdapter( {
+                category: "genomic",
+                subCategory: "region",
+                resource: "snp",
+                params: {
+                    exclude: 'transcriptVariations,xrefs,samples'
+                },
+                species: genomeViewer.species,
+                cacheConfig: {
+                    chunkSize: 10000
+                }
+            } )
+        } );
+
+        tracks.push( this.snp );
+
+        var mutationTrack = new FeatureTrack({
+            targetId: null,
+            id: 5,
+            title: 'Mutation',
+            featureType: 'mutation',
+            minHistogramRegionSize: 100000,
+            maxLabelRegionSize: 50000,
+            visibleRegionSize: 100000,
+            height: 120,
+
+            renderer: renderer,
+
+            dataAdapter: new CellBaseAdapter({
+                category: "genomic",
+                subCategory: "region",
+                resource: "mutation",
+                params: {
+//                        exclude: ''
+                },
+                species: genomeViewer.species,
+                cacheConfig: {
+                    chunkSize: 50000
+                },
+                filters: {},
+                options: {}
+            })
+        });
+
+        tracks.push(mutationTrack);
+
+//    /***************************************/
+        /*var geneEnsembl = new FeatureTrack({
+         targetId: null,
+         id: 5,
+         title: 'Gene Ensembl',
+         minHistogramRegionSize: 20000000,
+         maxLabelRegionSize: 10000000,
+         height: 100,
+         titleVisibility: 'hidden',
+         featureTypes: FEATURE_TYPES,
+
+         renderer: new FeatureRenderer('gene'),
+
+         dataAdapter: new EnsemblAdapter({
+         category: "feature",
+         subCategory: "region",
+         params: {
+         feature: 'gene'
+         },
+         species: 'human',
+         cacheConfig: {
+         chunkSize: 50000
+         }
+         })
+         });
+         tracks.push(geneEnsembl);*/
+//    /***************************************/
+
+        genomeViewer.addTrack( tracks );
+
+        genomeViewer.draw();
+}
+
 FEATURE_CONFIG = {
     gene: {
         filters: [
@@ -665,291 +921,3 @@ FEATURE_TYPES = {
     }
 };
 
-function run() {
-
-    /* region and species configuration */
-    var region = new Region( {
-        chromosome: "13",
-        start: 32889611,
-        end: 32973805
-    } );
-    var availableSpecies = {
-        "text": "Species",
-        "items": [
-            {
-                "text": "Vertebrates",
-                "items": [
-                    {
-                        "text": "Homo sapiens",
-                        "assembly": "GRCh37.p10",
-                        "region": {
-                            "chromosome": "13",
-                            "start": 32889611,
-                            "end": 32889611
-                        },
-                        "chromosomes": ["1",
-                            "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y",
-                            "MT"
-                        ],
-                        "url": "ftp://ftp.ensembl.org/pub/release-71/"
-                    },
-                    {
-                        "text": "Mus musculus",
-                        "assembly": "GRCm38.p1",
-                        "region": {
-                            "chromosome": "1",
-                            "start": 18422009,
-                            "end": 18422009
-                        },
-                        "chromosomes": ["1",
-                            "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "X", "Y",
-                            "MT"
-                        ],
-                        "url": "ftp://ftp.ensembl.org/pub/release-71/"
-                    }
-                ]
-            }
-        ]
-    };
-    var species = availableSpecies.items[0].items[0];
-
-    genomeViewer = new GenomeViewer( {
-        cellBaseHost: 'http://www.ebi.ac.uk/cellbase/webservices/rest',
-        cellBaseVersion: 'v3',
-        targetId: 'application',
-        region: region,
-        availableSpecies: availableSpecies,
-        species: species,
-        sidePanel: false,
-        autoRender: true,
-        border: true,
-        resizable: true,
-        //        quickSearchResultFn:quickSearchResultFn,
-        //        quickSearchDisplayKey:,
-        karyotypePanelConfig: {
-            collapsed: true,
-            collapsible: true
-        },
-        chromosomePanelConfig: {
-            collapsed: true,
-            collapsible: true
-        },
-        navigationBarConfig: {
-            componentsConfig: {
-                //                restoreDefaultRegionButton:false,
-                //                regionHistoryButton:false,
-                //                speciesButton:false,
-                //                chromosomesButton:false,
-                //                karyotypeButton:false,
-                //                chromosomeButton:false,
-                //                regionButton:false,
-                //                zoomControl:false,
-                //                windowSizeControl:false,
-                //                positionControl:false,
-                //                moveControl:false,
-                //                autoheightButton:false,
-                //                compactButton:false,
-                //                searchControl:false
-            }
-        },
-        handlers: {
-            'region:change': function ( e ) {
-                console.log( e )
-            }
-        }
-        //        chromosomeList:[]
-        //            trackListTitle: ''
-        //            drawNavigationBar = true;
-        //            drawKaryotypePanel: false,
-        //            drawChromosomePanel: false,
-        //            drawOverviewTrackListPanel: false
-
-    } ); //the div must exist
-
-    tracks = [];
-    this.sequence = new SequenceTrack( {
-        targetId: null,
-        id: 1,
-        //        title: 'Sequence',
-        height: 30,
-        visibleRegionSize: 200,
-
-        renderer: new SequenceRenderer(),
-
-        dataAdapter: new SequenceAdapter( {
-            category: "genomic",
-            subCategory: "region",
-            resource: "sequence",
-            species: genomeViewer.species
-        } )
-    } );
-
-    tracks.push( this.sequence );
-
-    var renderer = new GeneRenderer( FEATURE_TYPES.gene );
-    renderer.on( 'feature:click', function ( event ) {
-        // feature click event example
-        new GeneInfoWidget( null, genomeViewer.species, {
-            host: genomeViewer.cellBaseHost,
-            version: genomeViewer.cellBaseVersion
-        } ).draw( event );
-    } );
-
-    this.gene = new GeneTrack( {
-        targetId: null,
-        id: 2,
-        title: 'Gene',
-        minHistogramRegionSize: 20000000,
-        maxLabelRegionSize: 10000000,
-        minTranscriptRegionSize: 200000,
-        height: 140,
-
-        renderer: renderer,
-
-        dataAdapter: new CellBaseAdapter( {
-            category: "genomic",
-            subCategory: "region",
-            resource: "gene",
-            species: genomeViewer.species,
-            params: {
-                exclude: 'transcripts.tfbs,transcripts.xrefs,transcripts.exons.sequence'
-            },
-            cacheConfig: {
-                chunkSize: 100000
-            }
-        } )
-    } );
-
-    tracks.push( this.gene );
-
-    var renderer = new FeatureRenderer( FEATURE_TYPES.gene );
-    renderer.on( 'feature:click', function ( event ) {
-        // feature click event example
-        new GeneInfoWidget( null, genomeViewer.species, {
-            host: genomeViewer.cellBaseHost,
-            version: genomeViewer.cellBaseVersion
-        } ).draw( event );
-    } );
-
-    var gene = new FeatureTrack( {
-        targetId: null,
-        id: 2,
-        //        title: 'Gene overview',
-        minHistogramRegionSize: 20000000,
-        maxLabelRegionSize: 10000000,
-        height: 100,
-
-        renderer: renderer,
-
-        dataAdapter: new CellBaseAdapter( {
-            category: "genomic",
-            subCategory: "region",
-            resource: "gene",
-            params: {
-                exclude: 'transcripts,chunkIds'
-            },
-            species: genomeViewer.species,
-            cacheConfig: {
-                chunkSize: 100000
-            }
-        } )
-    } );
-    genomeViewer.addOverviewTrack( gene );
-
-    var renderer = new FeatureRenderer( FEATURE_TYPES.snp );
-    renderer.on( 'feature:click', function ( e ) {
-        new SnpInfoWidget( null, genomeViewer.species, {
-            host: genomeViewer.cellBaseHost,
-            version: genomeViewer.cellBaseVersion
-        } ).draw( e );
-    } );
-
-    this.snp = new FeatureTrack( {
-        targetId: null,
-        id: 4,
-        title: 'SNP',
-        featureType: 'SNP',
-        minHistogramRegionSize: 10000,
-        maxLabelRegionSize: 3000,
-        height: 100,
-
-        renderer: renderer,
-
-        dataAdapter: new CellBaseAdapter( {
-            category: "genomic",
-            subCategory: "region",
-            resource: "snp",
-            params: {
-                exclude: 'transcriptVariations,xrefs,samples'
-            },
-            species: genomeViewer.species,
-            cacheConfig: {
-                chunkSize: 10000
-            }
-        } )
-    } );
-
-    tracks.push( this.snp );
-
-    var mutationTrack = new FeatureTrack( {
-        targetId: null,
-        id: 5,
-        title: 'Mutation',
-        featureType: 'mutation',
-        minHistogramRegionSize: 100000,
-        maxLabelRegionSize: 50000,
-        visibleRegionSize: 100000,
-        height: 120,
-
-        renderer: renderer,
-
-        dataAdapter: new CellBaseAdapter( {
-            category: "genomic",
-            subCategory: "region",
-            resource: "mutation",
-            params: {
-                //                        exclude: ''
-            },
-            species: genomeViewer.species,
-            cacheConfig: {
-                chunkSize: 50000
-            },
-            filters: {},
-            options: {}
-        } )
-    } );
-
-    tracks.push( mutationTrack );
-
-    //    /***************************************/
-    /*var geneEnsembl = new FeatureTrack({
-     targetId: null,
-     id: 5,
-     title: 'Gene Ensembl',
-     minHistogramRegionSize: 20000000,
-     maxLabelRegionSize: 10000000,
-     height: 100,
-     titleVisibility: 'hidden',
-     featureTypes: FEATURE_TYPES,
-
-     renderer: new FeatureRenderer('gene'),
-
-     dataAdapter: new EnsemblAdapter({
-     category: "feature",
-     subCategory: "region",
-     params: {
-     feature: 'gene'
-     },
-     species: 'human',
-     cacheConfig: {
-     chunkSize: 50000
-     }
-     })
-     });
-     tracks.push(geneEnsembl);*/
-    //    /***************************************/
-
-    genomeViewer.addTrack( tracks );
-
-    genomeViewer.draw();
-}
